@@ -1,10 +1,10 @@
+import { LoginPage } from "./components/loginPage";
 
 export default function Home() {
   return (
     <main >
-      <div >
-        Axel bebe
-      </div>
+      
+      <LoginPage />
     </main>
   )
 }
