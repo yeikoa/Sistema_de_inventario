@@ -5,6 +5,7 @@ export default function Home() {
     <main >
       
       <LoginPage />
+      
     </main>
   )
 }
