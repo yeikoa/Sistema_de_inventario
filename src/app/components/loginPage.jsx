@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import { RecoverPass } from "./RecoverPass";
+import { RecoverPass } from "./recoverPass";
 
 export function LoginPage() {
   const [username, setUsername] = useState("");

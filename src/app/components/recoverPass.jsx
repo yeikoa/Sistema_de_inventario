@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import { ChangePass } from "./ChangePass"; // Importa el componente ChangePass
+import { ChangePass } from "./changePass"; // Importa el componente ChangePass
 
 export function RecoverPass() {
   const [Gmail, setGmail] = useState("");

@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import { LoginPage } from "./LoginPage";
+import { LoginPage } from "./loginPage";
 
 export function ChangePass() {
   const [showLoginPage, setShowLoginPage] = useState(false);
