@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import { RecoverPass } from "./recoverPass";
+import Navbar from "./navbar";
 //import { useRouter } from "next/router";
 
 export function LoginPage() {
@@ -8,14 +9,18 @@ export function LoginPage() {
   const [password, setPassword] = useState("");
   const [showRecoverPass, setShowRecoverPass] = useState(false);
   //const router = useRouter();
-
+  const [showNavBar, setShowNavBar] = useState(false);
+  
   const handleLogin = () => {
     console.log("Iniciar sesión con:", username, password);
     // Va a ir la logica de autenticacion aqui
-    
+    setShowNavBar(true);
 
     //router.push("/navbar")
   };
+  if(showNavBar){
+    return <Navbar/>
+  }
 
   const handleShowRecoverPass = () => {
     setShowRecoverPass(true);
