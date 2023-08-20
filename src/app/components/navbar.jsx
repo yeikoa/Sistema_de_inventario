@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaHome, FaWrench, FaCalendar, FaWarehouse, FaRegListAlt, FaAddressCard,FaChevronDown, FaBars } from 'react-icons/fa';
+import { FaHome, FaUserFriends, FaWarehouse, FaRegListAlt, FaUserCog,FaChevronDown, FaBars } from 'react-icons/fa';
 
 const Navbar = () => {
   const [activeDropdown, setActiveDropdown] = useState("");
@@ -21,10 +21,10 @@ const Navbar = () => {
   ];
 
   const singleRoutes = [
-    { href: '/maintenance/reactive', name: 'Mantenimiento', icon: <FaWrench className="h-5 w-5" /> },
-    { href: '/calendario', name: 'Calendario', icon: <FaCalendar className="h-5 w-5" /> },
+    
+    { href: '/proveedores', name: 'Proveedores', icon: <FaUserFriends className="h-5 w-5" /> },
     { href: '/registro', name: 'Registro', icon: <FaRegListAlt className="h-5 w-5" /> },
-    { href: '/contacto', name: 'Contacto', icon: <FaAddressCard className="h-5 w-5" /> },
+    { href: '/usuarios', name: 'Usuarios', icon: <FaUserCog className="h-5 w-5" /> },
   ];
 
   return (
