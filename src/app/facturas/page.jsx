@@ -4,7 +4,7 @@ export default function User() {
   return (
     <>
     <Navbar/>
-      <h1>Control de usuarios</h1>
+      <h1>Facturas</h1>
     </>
   );
 }

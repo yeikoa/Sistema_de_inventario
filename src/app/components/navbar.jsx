@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaHome, FaUserFriends, FaWarehouse, FaRegListAlt, FaUserCog,FaChevronDown, FaBars } from 'react-icons/fa';
+import { FaHome, FaUserFriends, FaWrench, FaRegListAlt, FaPaste,FaChevronDown, FaBars, FaExchangeAlt } from 'react-icons/fa';
 
 const Navbar = () => {
   const [activeDropdown, setActiveDropdown] = useState("");
@@ -17,14 +17,15 @@ const Navbar = () => {
   };
 
   const routes = [
-    { href: '/repuestos', name: 'Repuestos', subroutes: ['Registro', 'Lista'], icon: <FaWarehouse className="h-5 w-5" /> },
+    { href: '/repuestos', name: 'Repuestos', subroutes: ['Registro', 'Lista'], icon: <FaWrench className="h-5 w-5" /> },
   ];
 
   const singleRoutes = [
     
     { href: '/proveedores', name: 'Proveedores', icon: <FaUserFriends className="h-5 w-5" /> },
     { href: '/registro', name: 'Registro', icon: <FaRegListAlt className="h-5 w-5" /> },
-    { href: '/usuarios', name: 'Usuarios', icon: <FaUserCog className="h-5 w-5" /> },
+    { href: '/facturas', name: 'Facturas', icon: <FaPaste className="h-5 w-5" /> },
+    { href: '/movimientos', name: 'Movimientos', icon: <FaExchangeAlt className="h-5 w-5" /> }
   ];
 
   return (
@@ -33,7 +34,7 @@ const Navbar = () => {
         <Image src="/logoEligam.png" alt="Logo de la empresa" width={50} height={50} className='rounded-full' />
         <Link href="/">
           <span className="text-lg font-bold flex items-center space-x-2">
-            <FaHome className="h-5 w-5" /><span>Inicio</span>
+            <FaHome className="h-5 w-5" /><span>Eligam</span>
           </span>
         </Link>
       </div>
