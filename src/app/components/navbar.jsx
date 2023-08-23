@@ -17,7 +17,7 @@ const Navbar = () => {
   };
 
   const routes = [
-    { href: '/almacen', name: 'Almacen', subroutes: ['Registro', 'Lista'], icon: <FaWarehouse className="h-5 w-5" /> },
+    { href: '/repuestos', name: 'Repuestos', subroutes: ['Registro', 'Lista'], icon: <FaWarehouse className="h-5 w-5" /> },
   ];
 
   const singleRoutes = [
@@ -30,7 +30,7 @@ const Navbar = () => {
   return (
     <nav className="flex items-center justify-between p-6 bg-gray-800 text-white">
       <div className="flex items-center space-x-2">
-        <Image src="" alt="Logo de la empresa" width={50} height={50} className='rounded-full' />
+        <Image src="/logoEligam.png" alt="Logo de la empresa" width={50} height={50} className='rounded-full' />
         <Link href="/">
           <span className="text-lg font-bold flex items-center space-x-2">
             <FaHome className="h-5 w-5" /><span>Inicio</span>

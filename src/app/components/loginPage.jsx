@@ -46,7 +46,7 @@ export function LoginPage() {
       <div className="w-full max-w-md p-6 bg-gray-300 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105">
         <div className="flex items-center justify-center mb-6">
           <img
-            src="/logoEligam.jpg"
+            src="/logoEligam.png"
             alt="Logo de la empresa"
             className="w-12 h-12 mr-2"
           />
