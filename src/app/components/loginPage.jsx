@@ -20,7 +20,7 @@ export function LoginPage() {
       setLoading(false);
 
       // Si la autenticación es exitosa
-      if (username === "usuario" && password === "contraseña") {
+      if (username === "." && password === ".") {
         setShowNavBar(true);
       } else {
         // Mostramos una notificación de error

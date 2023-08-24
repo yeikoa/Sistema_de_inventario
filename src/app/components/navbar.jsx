@@ -29,7 +29,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="flex items-center justify-between p-6 bg-gray-800 text-white">
+    <nav className="flex items-center justify-between p-6 bg-teal-900 text-white">
       <div className="flex items-center space-x-2">
         <Image src="/logoEligam.png" alt="Logo de la empresa" width={50} height={50} className='rounded-full' />
         <Link href="/">
