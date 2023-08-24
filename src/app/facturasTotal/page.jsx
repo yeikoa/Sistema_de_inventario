@@ -1,6 +1,6 @@
 import Navbar from "../components/navbar";
 
-export default function User() {
+export default function Bills() {
   return (
     <>
     <Navbar/>
