@@ -17,14 +17,15 @@ const Navbar = () => {
   };
 
   const routes = [
-    { href: '/repuestos', name: 'Repuestos', subroutes: ['Registro', 'Lista'], icon: <FaWrench className="h-5 w-5" /> },
+   // { href: '/repuestosAlmacen', name: 'Repuestos', subroutes: ['Registro', 'Lista'], icon: <FaWrench className="h-5 w-5" /> },
+    {href: '/registro', name: 'Registro', subroutes: ['Repuestos', 'Proveedores', 'Facturas',] ,icon: <FaRegListAlt className="h-5 w-5" />}
   ];
 
   const singleRoutes = [
-    
-    { href: '/proveedores', name: 'Proveedores', icon: <FaUserFriends className="h-5 w-5" /> },
-    { href: '/registro', name: 'Registro', icon: <FaRegListAlt className="h-5 w-5" /> },
-    { href: '/facturas', name: 'Facturas', icon: <FaPaste className="h-5 w-5" /> },
+    { href: '/repuestosAlmacen', name: 'Repuestos',icon: <FaWrench className="h-5 w-5" /> },
+    { href: '/proveedoresTotal', name: 'Proveedores', icon: <FaUserFriends className="h-5 w-5" /> },
+    //{ href: '/registro', name: 'Registro', icon: <FaRegListAlt className="h-5 w-5" /> },
+    { href: '/facturasTotal', name: 'Facturas', icon: <FaPaste className="h-5 w-5" /> },
     { href: '/movimientos', name: 'Movimientos', icon: <FaExchangeAlt className="h-5 w-5" /> }
   ];
 
