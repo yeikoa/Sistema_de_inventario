@@ -145,7 +145,7 @@ export function LoginPage() {
           <FaTruckMonster size={40} color="black" />
         </div>
       </div>
-      {/* ToastContainer para mostrar notificaciones */}
+      
       <ToastContainer />
     </div>
   );

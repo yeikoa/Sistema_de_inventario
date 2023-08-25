@@ -1,10 +1,12 @@
-import Navbar from "@/app/components/navbar";
+import Navbar from "../../components/navbar";
+
 
 export default function ProviderRegister(){
     return (
-        <>
-        <Navbar/>
+        <div>
+        
+       <Navbar/>
         <h1>Registro de proveedores</h1>
-        </>
+        </div>
     )
 }

@@ -19,7 +19,7 @@ export default function RegisterProduct() {
   };
 
   return (
-    <div className="bg-gray-900 min-h-screen">
+    <div className="bg-gray-900 min-h-full">
       <Navbar />
 
       <div className="mx-auto max-w-md p-6 bg-white rounded-lg shadow-md mt-8">
