@@ -1,7 +1,7 @@
 'use client'
 import { useState } from "react";
 import { FaSave, FaBarcode, FaDollarSign, FaPercent, FaCubes, FaTruck, FaTags } from "react-icons/fa";
-import Navbar from "@/app/components/navbar";
+import Navbar from "@/app/dashboard/components/navbar";
 
 export default function RegisterProduct() {
   const [productCode, setProductCode] = useState("");

@@ -1,9 +1,9 @@
-import Navbar from "@/app/components/navbar";
+import Navbar from "@/app/dashboard/components/navbar";
 
 export default function BillsRegister(){
     return(
         <>
-        <Navbar/>
+       
         <h1>Registro de facturas</h1>
         </>
     )
