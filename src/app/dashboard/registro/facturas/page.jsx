@@ -1,4 +1,3 @@
-import Navbar from "@/app/dashboard/components/navbar";
 
 export default function BillsRegister(){
     return(

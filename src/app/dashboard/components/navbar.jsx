@@ -57,7 +57,8 @@ const Navbar = () => {
             {activeDropdown === route.name && route.subroutes && (
               <div className="absolute z-10 mt-2 py-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-500 ease-in-out transform scale-0 group-hover:scale-100">
                 {route.subroutes.map((subroute) => (
-                  <Link key={subroute} href={`/${route.href.split('/')[1]}/${subroute.toLowerCase().replace(' ', '-')}`}>
+                 
+                  <Link key={subroute} href={`/dashboard/registro/${subroute.toLowerCase().replace(/\s+/g, "-")}`}>
                     <span className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
                       {subroute}
                     </span>

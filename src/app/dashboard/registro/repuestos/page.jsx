@@ -1,7 +1,6 @@
 'use client'
 import { useState } from "react";
 import { FaSave, FaBarcode, FaDollarSign, FaPercent, FaCubes, FaTruck, FaTags } from "react-icons/fa";
-import Navbar from "@/app/dashboard/components/navbar";
 
 export default function RegisterProduct() {
   const [productCode, setProductCode] = useState("");
@@ -19,10 +18,9 @@ export default function RegisterProduct() {
   };
 
   return (
-    <div className="bg-gray-900 min-h-full">
-      <Navbar />
-
-      <div className="mx-auto max-w-md p-6 bg-white rounded-lg shadow-md mt-8">
+    <div className="bg-neutral-950 min-h-screen">
+     
+      <div className="mx-auto max-w-md p-6 bg-slate-300 rounded-lg shadow-md mt-8">
         <h1 className="text-2xl font-semibold mb-4">Registrar Nuevo Producto</h1>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
