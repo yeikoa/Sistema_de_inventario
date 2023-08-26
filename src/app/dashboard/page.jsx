@@ -1,14 +1,15 @@
 import React from 'react'
 import Navbar from './components/navbar'
 
-function Home() {
+
+function HomeDash() {
   return (
     <>
-  
+    
     <div>Home</div>
     </>
     
   )
 }
 
-export default Home
+export default HomeDash

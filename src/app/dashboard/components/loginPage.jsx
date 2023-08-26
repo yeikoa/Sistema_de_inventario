@@ -1,12 +1,16 @@
 'use client'
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RecoverPass } from "./recoverPass";
-import Navbar from "./navbar";
+
 import { FaUserLock, FaLock, FaTruckMonster } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+//Usar navigation en vez de router
+import { useRouter } from 'next/navigation';
+
 export function LoginPage() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showRecoverPass, setShowRecoverPass] = useState(false);
@@ -29,10 +33,13 @@ export function LoginPage() {
       }
     }, 2000); // Simulamos un tiempo de carga de 2 segundos
   };
-
-  if (showNavBar) {
-    return <Navbar />;
-  }
+  //Para cargar el navBar con su page principal
+  useEffect(() => {
+    if (showNavBar) {
+      router.push('/dashboard');
+    }
+  }, [showNavBar, router]);
+  
 
   const handleShowRecoverPass = () => {
     setShowRecoverPass(true);
