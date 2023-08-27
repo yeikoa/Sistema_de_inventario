@@ -1,8 +1,109 @@
+'use client'
+import React, { useState } from 'react';
+import { AiOutlineSearch } from 'react-icons/ai';
 
-export default function ProviderMovements() {
+export default function ProvidersMovements() {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const providerMovements = [
+    // ... tus datos de movimientos de productos ...
+    {
+      fecha: '2023-08-27',
+      hora: '09:30 AM',
+      nombreProveedor: 'Favarsia S.A',
+      telefono: '88888888',
+      correo: 'GrupoFavarsia.com',
+      direccion:'Sanvito',
+      tipoMovimiento: 'Inactivo',
+    },
+    {
+      fecha: '2023-08-27',
+      hora: '09:30 AM',
+      nombreProveedor: 'Favarsia S.A',
+      telefono: '89083884',
+      correo: 'GrupoFavarsia.com',
+      direccion:'Sanvito',
+      tipoMovimiento: 'Activo',
+    },
+    // Agregar más movimientos de productos aquí
+  ];
+
   return (
-    <>
-      <h1>Movimientos de proveedores</h1>
-    </>
+    <div className="container mx-auto p-4">
+      <div className="mb-4 mt-8 flex border border-gray-300 rounded-md px-4 py-2">
+        <AiOutlineSearch className="h-5 w-5 text-gray-500 mr-2" />
+        <input
+          type="text"
+          placeholder="Buscar movimientos de proveedores..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border-0 outline-none flex-1"
+        />
+      </div>
+      
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-300">
+          <thead className="bg-gray-100">
+          <tr>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Fecha</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Hora</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Nombre</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Telefono</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Correo</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Dirección</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Entrada/Salida</th>
+            </tr>
+          </thead>
+          <tbody>
+            {providerMovements
+              .filter((movement) => {
+                const searchTermLower = searchTerm.toLowerCase();
+                return (
+                  movement.fecha.toLowerCase().includes(searchTermLower) ||
+                  movement.hora.toLowerCase().includes(searchTermLower) ||
+                  movement.nombreProveedor.toLowerCase().includes(searchTermLower) ||
+                  movement.telefono.toLowerCase().includes(searchTermLower) ||
+                  movement.correo.toString().includes(searchTermLower) ||
+                  movement.direccion.toString().includes(searchTermLower) ||
+                  movement.tipoMovimiento.toLowerCase().includes(searchTermLower)
+                );
+              })
+              .map((movement, index) => (
+                <tr key={index}>
+                  <td className="py-2 px-4 border-b border-gray-300 text-sm">
+                    {movement.fecha}
+                  </td>
+                  <td className="py-2 px-4 border-b border-gray-300 text-sm">
+                    {movement.hora}
+                  </td>
+                  <td className="py-2 px-4 border-b border-gray-300 text-sm ">
+                    {movement.nombreProveedor}
+                  </td>
+                  <td className="py-2 px-4 border-b border-gray-300 text-sm">
+                    {movement.telefono}
+                  </td>
+                  <td className="py-2 px-4 border-b border-gray-300 text-sm">
+                    {movement.correo}
+                  </td>
+                  <td className="py-2 px-4 border-b border-gray-300 text-sm">
+                    {movement.direccion}
+                  </td>
+                  <td className="py-2 px-4 border-b border-gray-300 text-sm">
+                    {movement.tipoMovimiento === 'Activo' ? (
+                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                        {movement.tipoMovimiento}
+                      </span>
+                    ) : (
+                      <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full">
+                        {movement.tipoMovimiento}
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }
