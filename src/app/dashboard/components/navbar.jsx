@@ -24,7 +24,7 @@ const Navbar = () => {
   const singleRoutes = [
     { href: '/dashboard/repuestosAlmacen', name: 'Repuestos', icon: <FaWrench className="h-5 w-5" /> },
     { href: '/dashboard/proveedoresTotal', name: 'Proveedores', icon: <FaUserFriends className="h-5 w-5" /> },
-    { href: '/dashboard/facturasTotal', name: 'Facturas', icon: <FaPaste className="h-5 w-5" /> },
+    
   ];
 
   return (
