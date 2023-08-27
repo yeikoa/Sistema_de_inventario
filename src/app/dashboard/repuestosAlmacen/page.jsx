@@ -1,9 +1,132 @@
-export default function SpareParts (){
-    return(
-        <div>
-        Hola
-        
-       
-        </div>
-    )
+'use client'
+import React, { useState } from 'react';
+import { FaEdit, FaTrash, FaSave } from 'react-icons/fa';
+import { confirmAlert } from 'react-confirm-alert'; 
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
+function ProductTable() {
+  const [data, setData] = useState([
+    {
+      codigo: '123',
+      nombre: 'Producto 1',
+      descripcion: 'Descripción 1',
+      cantidad: 10,
+      precioVenta: 100,
+      proveedor: 'Proveedor 1',
+      categoria: 'Categoría 1',
+    },
+    {
+      codigo: '456',
+      nombre: 'Producto 2',
+      descripcion: 'Descripción 2',
+      cantidad: 20,
+      precioVenta: 200,
+      proveedor: 'Proveedor 2',
+      categoria: 'Categoría 2',
+    },
+  ]);
+
+  const [editingRow, setEditingRow] = useState(null);
+
+  const handleDelete = (index) => {
+    confirmAlert({
+      title: 'Confirmar eliminación',
+      message: '¿Estás seguro de que deseas eliminar este producto?',
+      buttons: [
+        {
+          label: 'Sí',
+          onClick: () => {
+            const newData = data.slice();
+            newData.splice(index, 1);
+            setData(newData);
+          }
+        },
+        {
+          label: 'No',
+        }
+      ]
+    });
+  };
+
+  const handleEdit = (index) => {
+    setEditingRow({ index, data: data[index] });
+  };
+
+  const handleSave = (index) => {
+    confirmAlert({
+      title: 'Confirmar cambios',
+      message: '¿Deseas aplicar los cambios?',
+      buttons: [
+        {
+          label: 'Sí',
+          onClick: () => {
+            const newData = data.slice();
+            newData[index] = editingRow.data;
+            setData(newData);
+            setEditingRow(null);
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => {
+            setEditingRow(null);
+          }
+        }
+      ]
+    });
+  };
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Inventario</h1>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-300">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Código</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Nombre</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Descripción</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Cantidad</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Precio Venta</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Proveedor</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Categoría</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((row, index) => {
+              const isEditing = editingRow && editingRow.index === index;
+              return (
+                <tr key={index} className={isEditing ? 'bg-yellow-100' : ''}>
+                  {Object.keys(row).map((key) => (
+                    <td key={key} className="py-2 px-4 border-b border-gray-300 text-sm">
+                      <input
+                        type="text"
+                        value={isEditing ? editingRow.data[key] : row[key]}
+                        onChange={e => isEditing && setEditingRow({ ...editingRow, data: { ...editingRow.data, [key]: e.target.value } })}
+                        className={`w-full py-2 px-3 border rounded ${isEditing ? '' : 'bg-gray-100'} ${isEditing ? 'text-black' : 'text-gray-500'}`}
+                        readOnly={!isEditing || key === 'acciones'}
+                      />
+                    </td>
+                  ))}
+                  <td className="py-2 px-4 border-b border-gray-300 text-sm">
+                    <div className="flex space-x-2">
+                      {isEditing ? (
+                        <button className="text-green-500 p-2 rounded-full hover:bg-green-100" onClick={() => handleSave(index)}><FaSave /></button>
+                      ) : (
+                        <button className="text-blue-500 p-2 rounded-full hover:bg-blue-100" onClick={() => handleEdit(index)}><FaEdit /></button>
+                      )}
+                      <button className="text-red-500 p-2 rounded-full hover:bg-red-100" onClick={() => handleDelete(index)}><FaTrash /></button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 }
+
+export default ProductTable;
