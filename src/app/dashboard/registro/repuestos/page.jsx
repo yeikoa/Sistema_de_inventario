@@ -38,7 +38,7 @@ export default function RegisterProduct() {
 
     setSuccess("Producto registrado con éxito");
   };
-
+//calculo del precio venta
   useEffect(() => {
     if (productPrice) {
       const price = parseFloat(productPrice);
@@ -87,21 +87,7 @@ export default function RegisterProduct() {
             />
           </div>
 
-          <div>
-            <label htmlFor="productQuantity" className="text-sm font-medium mb-2 flex items-center">
-              <FaCubes className="text-teal-600 mr-2" />
-              Cantidad
-            </label>
-            <input
-              type="number"
-              id="productQuantity"
-              className="w-full md:w-2/3 border rounded p-2"
-              placeholder="Ingrese la cantidad del producto"
-              value={productQuantity}
-              onChange={(e) => setProductQuantity(e.target.value)}
-            />
-          </div>
-
+          
           <div>
             <div className="flex flex-col">
               <label htmlFor="productDescription" className="text-sm font-medium mb-2">
@@ -114,6 +100,23 @@ export default function RegisterProduct() {
                 value={productDescription}
                 onChange={(e) => setProductDescription(e.target.value)}
               ></textarea>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+            <label htmlFor="productQuantity" className="text-sm font-medium mb-2 flex items-center">
+              <FaCubes className="text-teal-600 mr-2" />
+              Cantidad
+            </label>
+            <input
+              type="number"
+              id="productQuantity"
+              className="w-full md:w-2/3 border rounded p-2"
+              placeholder="Ingrese la cantidad del producto"
+              value={productQuantity}
+              onChange={(e) => setProductQuantity(e.target.value)}
+            />
             </div>
           </div>
 
