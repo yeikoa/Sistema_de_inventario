@@ -1,9 +1,13 @@
+'use client'
+import React, { useState } from 'react';
 
-export default function BillsRegister(){
-    return(
-        <>
-       
-        <h1>Registro de facturas</h1>
-        </>
-    )
+function InvoiceRegister(){
+  return(
+    <div>
+      Ah
+    </div>
+  )
 }
+  
+
+export default InvoiceRegister;
