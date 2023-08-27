@@ -2,8 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaHome, FaUserFriends, FaWrench, FaRegListAlt, FaPaste,FaChevronDown, FaBars, FaExchangeAlt } from 'react-icons/fa';
-
+import { FaHome, FaUserFriends, FaWrench, FaRegListAlt, FaPaste, FaChevronDown, FaBars, FaExchangeAlt } from 'react-icons/fa';
 
 const Navbar = () => {
   const [activeDropdown, setActiveDropdown] = useState("");
@@ -18,20 +17,17 @@ const Navbar = () => {
   };
 
   const routes = [
-   // { href: '/repuestosAlmacen', name: 'Repuestos', subroutes: ['Registro', 'Lista'], icon: <FaWrench className="h-5 w-5" /> },
-    {href: '/dashboard/registro', name: 'Registro', subroutes: ['Repuestos', 'Proveedores', 'Facturas',] ,icon: <FaRegListAlt className="h-5 w-5" />}
+    { href: '/dashboard/registro', name: 'Registro', subroutes: ['Repuestos', 'Proveedores', 'Facturas'], icon: <FaRegListAlt className="h-5 w-5" /> },
+    { href: '/dashboard/movimientos', name: 'Movimientos', subroutes: ['Facturas', 'Proveedores', 'Repuestos'], icon: <FaExchangeAlt className="h-5 w-5" /> }
   ];
 
   const singleRoutes = [
-    { href: '/dashboard/repuestosAlmacen', name: 'Repuestos',icon: <FaWrench className="h-5 w-5" /> },
+    { href: '/dashboard/repuestosAlmacen', name: 'Repuestos', icon: <FaWrench className="h-5 w-5" /> },
     { href: '/dashboard/proveedoresTotal', name: 'Proveedores', icon: <FaUserFriends className="h-5 w-5" /> },
-    //{ href: '/registro', name: 'Registro', icon: <FaRegListAlt className="h-5 w-5" /> },
     { href: '/dashboard/facturasTotal', name: 'Facturas', icon: <FaPaste className="h-5 w-5" /> },
-    { href: 'dashboard/movimientos', name: 'Movimientos', icon: <FaExchangeAlt className="h-5 w-5" /> }
   ];
 
   return (
-  
     <nav className="flex items-center justify-between p-6 bg-cyan-950 text-white">
       <div className="flex items-center space-x-2">
         <Image src="/logoEligam.png" alt="Logo de la empresa" width={50} height={50} className='rounded-full' />
@@ -51,14 +47,13 @@ const Navbar = () => {
           <div key={route.href} className="relative group">
             <div className="flex items-center space-x-2 cursor-pointer hover:shadow-md p-2 rounded-md" onClick={() => toggleDropdown(route.name)}>
               {route.icon}
-              <span>{route.name}</span> 
+              <span>{route.name}</span>
               {route.subroutes ? <FaChevronDown size={12} className={`transition-all duration-200 transform ${activeDropdown === route.name ? 'rotate-180' : ''} ${isOpen ? 'rotate-180' : ''}`} /> : null}
             </div>
             {activeDropdown === route.name && route.subroutes && (
               <div className="absolute z-10 mt-2 py-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-500 ease-in-out transform scale-0 group-hover:scale-100">
                 {route.subroutes.map((subroute) => (
-                 
-                  <Link key={subroute} href={`/dashboard/registro/${subroute.toLowerCase().replace(/\s+/g, "-")}`}>
+                  <Link key={subroute} href={`/dashboard/${route.name.toLowerCase()}/${subroute.toLowerCase().replace(/\s+/g, "-")}`}>
                     <span className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
                       {subroute}
                     </span>
@@ -78,8 +73,6 @@ const Navbar = () => {
         ))}
       </div>
     </nav>
-    
-    
   );
 };
 
