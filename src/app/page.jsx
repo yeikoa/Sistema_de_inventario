@@ -1,6 +1,6 @@
 'use client'
-import { LoginPage } from "./dashboard/components/loginPage";
 import {Navsidebar} from "./dashboard/components/navsidebar";
+import { LoginPage } from "./components/loginPage";
 export default function Home() {
   
   return (
