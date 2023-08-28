@@ -1,11 +1,12 @@
 "use client"
 import React, { useState } from "react";
 import { LoginPage } from "./loginPage";
-import {  FaLock, FaTruckMonster } from "react-icons/fa";
+import { FaLock, FaMotorcycle } from "react-icons/fa";
+import '../style.css';
 
 export function ChangePass() {
   const [showLoginPage, setShowLoginPage] = useState(false);
-  const [loading, setLoading] = useState(false);//Estado del boton
+  const [loading, setLoading] = useState(false);
 
   const handlePassChange = () => {
     setLoading(true);
@@ -15,7 +16,7 @@ export function ChangePass() {
 
       setShowLoginPage(true);
 
-    }, 2000); // Simulamos un tiempo de carga de 2 segundos
+    }, 2000);
   };
 
   if (showLoginPage) {
@@ -48,6 +49,7 @@ export function ChangePass() {
                 type="text"
                 placeholder="Código"
                 className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-green-700 focus:border-green-700 transition-colors duration-300"
+                disabled={loading}
               />
             </div>
           </div>
@@ -61,6 +63,7 @@ export function ChangePass() {
                 type="password"
                 placeholder="Ingresa tu nueva contraseña"
                 className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-green-700 focus:border-green-700 transition-colors duration-300"
+                disabled={loading}
               />
             </div>  
           </div>
@@ -76,30 +79,7 @@ export function ChangePass() {
           >
           {loading ? (
               <div className="flex items-center justify-center">
-                <div className="mr-2 animate-spin">
-                  <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></div>
-                  <svg
-                    className="h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291a7.962 7.962 0 01-2.315-1.942M21 12c0-4.418-3.582-8-8-8V0a10 10 0 0110 10h-2zm-9.685 6.749A7.962 7.962 0 015.315 18.06M12 21a8 8 0 00-8-8h2a6 6 0 0112 0h2a8 8 0 00-8 8z"
-                    ></path>
-                  </svg>
-                </div>
-                Cargando...
+                <FaMotorcycle className="animate-move" />
               </div>
             ) : (
               "Cambiar contraseña"
