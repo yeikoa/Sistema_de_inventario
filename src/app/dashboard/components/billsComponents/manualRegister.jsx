@@ -5,7 +5,6 @@ import { FaSave, FaBarcode, FaDollarSign, FaPercent, FaCubes, FaTruck, FaTags } 
 export default function ManualRegister() {
   const [productCode, setProductCode] = useState("");
   const [productName, setProductName] = useState("");
-  const [productDescription, setProductDescription] = useState("");
   const [productQuantity, setProductQuantity] = useState("");
   const [productPrice, setProductPrice] = useState("");
   const [productProfit, setProductProfit] = useState(30);
@@ -75,7 +74,7 @@ export default function ManualRegister() {
           <div>
             <label htmlFor="productCode" className="text-sm font-medium mb-2 flex items-center">
               <FaBarcode className="text-gray-600 mr-2" />
-              Código del Producto
+              Código de la factura
             </label>
             <input
               type="text"
@@ -87,37 +86,59 @@ export default function ManualRegister() {
             />
           </div>
 
-          <div>
-            <label htmlFor="productName" className="text-sm font-medium mb-2 flex items-center">
-              <FaTags className="text-gray-600 mr-2" />
-              Nombre del Producto
-            </label>
-            <input
-              type="text"
-              id="productName"
-              className="w-full md:w-2/3 border rounded p-2"
-              placeholder="Ingrese el nombre del producto"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <div className="flex flex-col">
-              <label htmlFor="productDescription" className="text-sm font-medium mb-2">
-                Descripción del Producto (OPCIONAL)
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="selectedProvider" className="text-sm font-medium mb-2 flex items-center">
+                <FaTruck className="text-teal-600 mr-2" />
+                Seleccionar Proveedor
               </label>
-              <textarea
-                id="productDescription"
-                className="w-full md:w-2/3 border rounded p-2 h-32 resize-none"
-                placeholder="Ingrese la descripción del producto"
-                value={productDescription}
-                onChange={(e) => setProductDescription(e.target.value)}
-              ></textarea>
+              <select
+                id="selectedProvider"
+                className="w-full md:w-2/3 border rounded p-2"
+                value={selectedProvider}
+                onChange={(e) => setSelectedProvider(e.target.value)}
+              >
+                <option value="">Seleccionar proveedor</option>
+                {providers.map((provider, index) => (
+                  <option key={index} value={provider}>{provider}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="selectedCategory" className="text-sm font-medium mb-2 flex items-center">
+                <FaTags className="text-blue-600 mr-2" />
+                Seleccionar Categoría
+              </label>
+              <select
+                id="selectedCategory"
+                className="w-full md:w-2/3 border rounded p-2"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                <option value="">Seleccionar categoría</option>
+                {categories.map((category, index) => (
+                  <option key={index} value={category}>{category}</option>
+                ))}
+              </select>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="productName" className="text-sm font-medium mb-2 flex items-center">
+                <FaTags className="text-gray-600 mr-2" />
+                Nombre del Producto
+              </label>
+              <input
+                type="text"
+                id="productName"
+                className="w-full md:w-2/3 border rounded p-2"
+                placeholder="Ingrese el nombre del producto"
+                value={productName}
+                onChange={(e) => setProductName(e.target.value)}
+              />
+            </div>
             <div>
               <label htmlFor="productQuantity" className="text-sm font-medium mb-2 flex items-center">
                 <FaCubes className="text-teal-600 mr-2" />
@@ -193,42 +214,6 @@ export default function ManualRegister() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="selectedProvider" className="text-sm font-medium mb-2 flex items-center">
-                <FaTruck className="text-teal-600 mr-2" />
-                Seleccionar Proveedor
-              </label>
-              <select
-                id="selectedProvider"
-                className="w-full md:w-2/3 border rounded p-2"
-                value={selectedProvider}
-                onChange={(e) => setSelectedProvider(e.target.value)}
-              >
-                <option value="">Seleccionar proveedor</option>
-                {providers.map((provider, index) => (
-                  <option key={index} value={provider}>{provider}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="selectedCategory" className="text-sm font-medium mb-2 flex items-center">
-                <FaTags className="text-blue-600 mr-2" />
-                Seleccionar Categoría
-              </label>
-              <select
-                id="selectedCategory"
-                className="w-full md:w-2/3 border rounded p-2"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-              >
-                <option value="">Seleccionar categoría</option>
-                {categories.map((category, index) => (
-                  <option key={index} value={category}>{category}</option>
-                ))}
-              </select>
-            </div>
-          </div>
 
           <button
             type="submit"
