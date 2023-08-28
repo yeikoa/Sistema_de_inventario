@@ -24,8 +24,11 @@ function ProductTable() {
       proveedor: 'Proveedor 2',
       categoria: 'Categoría 2',
     },
+    // ... otros datos
   ]);
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterBy, setFilterBy] = useState('nombre');
   const [editingRow, setEditingRow] = useState(null);
 
   const handleDelete = (index) => {
@@ -76,9 +79,35 @@ function ProductTable() {
     });
   };
 
+  const filteredData = data.filter(row => {
+    return row[filterBy].toString().toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-semibold mb-4">Inventario</h1>
+      <div className="mb-4 flex space-x-4">
+        <input
+          type="text"
+          placeholder="Buscar..."
+          className="py-2 px-4 border rounded"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+        />
+        <select
+          className="py-2 px-4 border rounded"
+          value={filterBy}
+          onChange={e => setFilterBy(e.target.value)}
+        >
+          <option value="codigo">Código</option>
+          <option value="nombre">Nombre</option>
+          <option value="descripcion">Descripción</option>
+          <option value="cantidad">Cantidad</option>
+          <option value="precioVenta">Precio Venta</option>
+          <option value="proveedor">Proveedor</option>
+          <option value="categoria">Categoría</option>
+        </select>
+      </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-300">
           <thead className="bg-gray-100">
@@ -94,7 +123,7 @@ function ProductTable() {
             </tr>
           </thead>
           <tbody>
-            {data.map((row, index) => {
+            {filteredData.map((row, index) => {
               const isEditing = editingRow && editingRow.index === index;
               return (
                 <tr key={index} className={isEditing ? 'bg-yellow-100' : ''}>
