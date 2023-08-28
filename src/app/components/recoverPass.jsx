@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { ChangePass } from "./changePass"; // Importa el componente ChangePass
 import { FaUserLock, FaTruckMonster } from "react-icons/fa";
@@ -6,7 +6,7 @@ import { FaUserLock, FaTruckMonster } from "react-icons/fa";
 export function RecoverPass() {
   const [Gmail, setGmail] = useState("");
   const [showChangePass, setShowChangePass] = useState(false); // Nuevo estado para el componente ChangePass
-  const [loading, setLoading] = useState(false);//Estado del boton
+  const [loading, setLoading] = useState(false); //Estado del boton
 
   const handleShowChangePass = () => {
     setLoading(true);
@@ -14,9 +14,8 @@ export function RecoverPass() {
     // Simulamos la autenticación
     setTimeout(() => {
       setLoading(false);
-      
+
       setShowChangePass(true); // Establece showChangePass en true cuando se hace clic en el botón
-      
     }, 2000); // Simulamos un tiempo de carga de 2 segundos
   };
 
@@ -28,18 +27,22 @@ export function RecoverPass() {
     <div className="flex items-center justify-center h-screen bg-gradient-to-r from-gray-700 to-gray-300">
       <div className="w-full max-w-md p-12 bg-gray-300 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105">
         <div className="flex items-center justify-center mb-6">
-            <div className="absolute top-0 left-0 p-4">
-              <img
-                src="/logoEligam.png"
-                alt="Logo de la empresa"
-                className="w-12 h-12"
-              />
-            </div>
-          <h1 className="text-3xl font-semibold text-green-700">Recuperar cuenta</h1>
+          <div className="absolute top-0 left-0 p-4">
+            <img
+              src="/logoEligam.png"
+              alt="Logo de la empresa"
+              className="w-12 h-12"
+            />
+          </div>
+          <h1 className="text-3xl font-semibold text-green-700">
+            Recuperar cuenta
+          </h1>
         </div>
         <form className="space-y-4">
           <div className="mb-4 transition-transform duration-300 transform hover:-translate-y-1">
-            <label className="block text-teal-600 ml-8">Correo Electrónico</label>
+            <label className="block text-teal-600 ml-8">
+              Correo Electrónico
+            </label>
             <div className="flex items-center">
               <span className="mr-4 text-black-400">
                 <FaUserLock />
@@ -63,7 +66,7 @@ export function RecoverPass() {
             onClick={handleShowChangePass}
             disabled={loading}
           >
-          {loading ? (
+            {loading ? (
               <div className="flex items-center justify-center">
                 <div className="mr-2 animate-spin">
                   <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></div>
@@ -95,9 +98,6 @@ export function RecoverPass() {
             )}
           </button>
         </form>
-        <div className="absolute bottom-0 right-0 p-4">
-          <FaTruckMonster size={40} color="black" />
-      </div>
       </div>
     </div>
   );

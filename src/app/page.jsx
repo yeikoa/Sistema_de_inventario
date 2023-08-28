@@ -1,5 +1,5 @@
 'use client'
-import { LoginPage } from "./dashboard/components/loginPage";
+import { LoginPage } from "./components/loginPage";
 export default function Home() {
   
   return (
