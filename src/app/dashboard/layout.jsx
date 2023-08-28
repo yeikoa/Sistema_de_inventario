@@ -1,13 +1,19 @@
 import Navbar from "./components/navbar";
+import Navsidebar from "./components/navsidebar";
 import '.././globals.css'
-export default function DashboardLayout({children}){
-  
-    return (
-      <>
-        {/* Layout de dashboard */}
-        <Navbar/>
-   
-        {children}
-      </>
-    )
-  }
+
+export default function DashboardLayout({ children }) {
+  const isSidebarOpen = true;
+
+  return (
+    <div className="flex flex-col h-screen"> {/* Contenedor principal de columna */}
+      <Navbar />
+      <div className="flex"> {/* Fila para Navbar y Contenido */}
+        <Navsidebar isOpen={isSidebarOpen} />
+        <div className="flex-1 p-4 overflow-y-auto">{children}</div> {/* Contenido principal */}
+      </div>
+    </div>
+  );
+}
+
+
