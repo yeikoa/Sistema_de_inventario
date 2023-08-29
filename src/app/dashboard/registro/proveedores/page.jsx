@@ -15,8 +15,8 @@ export default function RegisterProvider() {
   };
 
   return (
-    <div className="bg-neutral-950 min-h-screen p-8">
-      <div className="mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="bg-white min-h-screen p-8">
+      <div className="mx-auto p-6 bg-gray-200 rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold mb-4">Registrar Nuevo Proveedor</h1>
 
         <form className="space-y-6" onSubmit={handleSubmit}>

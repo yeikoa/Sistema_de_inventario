@@ -49,8 +49,8 @@ export default function ManualRegister() {
   }, [productPrice, productProfit, productIVA]);
 
   return (
-    <div className="p-8">
-      <div className="bg-white rounded-lg shadow-md">
+    <div className="p-8 " >
+      <div className="rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold mb-4">Registrar Factura</h1>
 
         {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{error}</div>}

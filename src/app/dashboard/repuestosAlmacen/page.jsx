@@ -24,6 +24,51 @@ function ProductTable() {
       proveedor: 'Proveedor 2',
       categoria: 'Categoría 2',
     },
+    {
+      codigo: '456',
+      nombre: 'Producto 2',
+      descripcion: 'Descripción 2',
+      cantidad: 20,
+      precioVenta: 200,
+      proveedor: 'Proveedor 2',
+      categoria: 'Categoría 2',
+    },
+    {
+      codigo: '456',
+      nombre: 'Producto 2',
+      descripcion: 'Descripción 2',
+      cantidad: 20,
+      precioVenta: 200,
+      proveedor: 'Proveedor 2',
+      categoria: 'Categoría 2',
+    },
+    {
+      codigo: '456',
+      nombre: 'Producto 2',
+      descripcion: 'Descripción 2',
+      cantidad: 20,
+      precioVenta: 200,
+      proveedor: 'Proveedor 2',
+      categoria: 'Categoría 2',
+    },
+    {
+      codigo: '456',
+      nombre: 'Producto 2',
+      descripcion: 'Descripción 2',
+      cantidad: 20,
+      precioVenta: 200,
+      proveedor: 'Proveedor 2',
+      categoria: 'Categoría 2',
+    },
+    {
+      codigo: '456',
+      nombre: 'Producto 2',
+      descripcion: 'Descripción 2',
+      cantidad: 20,
+      precioVenta: 200,
+      proveedor: 'Proveedor 2',
+      categoria: 'Categoría 2',
+    },
     // ... otros datos
   ]);
 
@@ -84,7 +129,7 @@ function ProductTable() {
   });
 
   return (
-    <div className='min-h-screen bg-slate-500'>
+    <div className='min-h-screen bg-white'>
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-semibold mb-4 text-cyan-900">Inventario</h1>
       <div className="mb-4 flex space-x-4">

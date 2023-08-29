@@ -54,7 +54,7 @@ const Dashboard = () => {
                     <div className="flex items-center space-x-2">
                         <FaChartBar className="text-blue-600 text-3xl"/>
                         <div>
-                            <h3 className="text-xl font-bold">Productos con Mayor Cantidad</h3>
+                            <h3 className="text-xl font-bold">Reportes de Proveedores</h3>
                             <p className="text-gray-600">Ver Lista</p>
                         </div>
                     </div>
@@ -63,7 +63,7 @@ const Dashboard = () => {
                     <div className="flex items-center space-x-2">
                         <FaChartBar className="text-blue-600 text-3xl"/>
                         <div>
-                            <h3 className="text-xl font-bold">Productos con Mayor Cantidad</h3>
+                            <h3 className="text-xl font-bold">Historial Facturas</h3>
                             <p className="text-gray-600">Ver Lista</p>
                         </div>
                     </div>
@@ -72,7 +72,7 @@ const Dashboard = () => {
                     <div className="flex items-center space-x-2">
                         <FaChartBar className="text-blue-600 text-3xl"/>
                         <div>
-                            <h3 className="text-xl font-bold">Productos con Mayor Cantidad</h3>
+                            <h3 className="text-xl font-bold">Usuarios Registrados</h3>
                             <p className="text-gray-600">Ver Lista</p>
                         </div>
                     </div>
