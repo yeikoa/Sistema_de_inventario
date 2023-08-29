@@ -30,10 +30,9 @@ const Navbar = () => {
   return (
     <nav className="flex items-center justify-between p-6 bg-cyan-950 text-white">
       <div className="flex items-center space-x-2">
-        <Image src="/logoEligam.png" alt="Logo de la empresa" width={50} height={50} className='rounded-full' />
         <Link href="/dashboard">
           <span className="text-lg font-bold flex items-center space-x-2">
-            <FaHome className="h-5 w-5" /><span>Eligam</span>
+            <FaHome className="h-5 w-5" /><span>ELIGAM</span>
           </span>
         </Link>
       </div>
