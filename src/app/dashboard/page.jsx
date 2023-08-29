@@ -50,6 +50,33 @@ const Dashboard = () => {
                         </div>
                     </div>
                 </div>
+                <div className="bg-white p-6 rounded-lg shadow-lg">
+                    <div className="flex items-center space-x-2">
+                        <FaChartBar className="text-blue-600 text-3xl"/>
+                        <div>
+                            <h3 className="text-xl font-bold">Productos con Mayor Cantidad</h3>
+                            <p className="text-gray-600">Ver Lista</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow-lg">
+                    <div className="flex items-center space-x-2">
+                        <FaChartBar className="text-blue-600 text-3xl"/>
+                        <div>
+                            <h3 className="text-xl font-bold">Productos con Mayor Cantidad</h3>
+                            <p className="text-gray-600">Ver Lista</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow-lg">
+                    <div className="flex items-center space-x-2">
+                        <FaChartBar className="text-blue-600 text-3xl"/>
+                        <div>
+                            <h3 className="text-xl font-bold">Productos con Mayor Cantidad</h3>
+                            <p className="text-gray-600">Ver Lista</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
