@@ -84,8 +84,9 @@ function ProductTable() {
   });
 
   return (
+    <div className='min-h-screen bg-slate-500'>
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-semibold mb-4">Inventario</h1>
+      <h1 className="text-2xl font-semibold mb-4 text-cyan-900">Inventario</h1>
       <div className="mb-4 flex space-x-4">
         <input
           type="text"
@@ -110,23 +111,23 @@ function ProductTable() {
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-300">
-          <thead className="bg-gray-100">
+          <thead className="bg-cyan-900 text-white">
             <tr>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Código</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Nombre</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Descripción</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Cantidad</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Precio Venta</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Proveedor</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Categoría</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Acciones</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Código</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Nombre</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Descripción</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Cantidad</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Precio Venta</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Proveedor</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Categoría</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {filteredData.map((row, index) => {
               const isEditing = editingRow && editingRow.index === index;
               return (
-                <tr key={index} className={isEditing ? 'bg-yellow-100' : ''}>
+                <tr key={index} className={isEditing ? 'bg-cyan-100' : 'bg-white'}>
                   {Object.keys(row).map((key) => (
                     <td key={key} className="py-2 px-4 border-b border-gray-300 text-sm">
                       <input
@@ -154,6 +155,7 @@ function ProductTable() {
           </tbody>
         </table>
       </div>
+    </div>
     </div>
   );
 }

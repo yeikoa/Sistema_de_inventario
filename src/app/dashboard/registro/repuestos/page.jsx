@@ -49,23 +49,23 @@ export default function RegisterProduct() {
   }, [productPrice, productProfit, productIVA]);
 
   return (
-    <div className="bg-neutral-950 min-h-screen p-8">
-      <div className="mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="bg-slate-300 min-h-screen p-8">
+      <div className="mx-auto p-6 bg-cyan-950 text-white rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold mb-4">Registrar Nuevo Producto</h1>
 
         {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{error}</div>}
         {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">{success}</div>}
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6 " onSubmit={handleSubmit}>
           <div>
             <label htmlFor="productCode" className="text-sm font-medium mb-2 flex items-center">
-              <FaBarcode className="text-gray-600 mr-2" />
+              <FaBarcode className=" mr-2" />
               Código del Producto
             </label>
-            <input
+            <input 
               type="text"
               id="productCode"
-              className="w-full md:w-2/3 border rounded p-2"
+              className="w-full md:w-2/3 border rounded p-2 text-black"
               placeholder="Ingrese el código del producto"
               value={productCode}
               onChange={(e) => setProductCode(e.target.value)}
@@ -74,7 +74,7 @@ export default function RegisterProduct() {
 
           <div>
             <label htmlFor="productName" className="text-sm font-medium mb-2 flex items-center">
-              <FaTags className="text-gray-600 mr-2" />
+              <FaTags className="text-white mr-2" />
               Nombre del Producto
             </label>
             <input
@@ -143,7 +143,7 @@ export default function RegisterProduct() {
               <input
                 type="number"
                 id="productProfit"
-                className="w-full md:w-2/3 border rounded p-2"
+                className="w-full md:w-2/3 border rounded p-2 text-black"
                 value={productProfit}
                 readOnly
               />
@@ -159,7 +159,7 @@ export default function RegisterProduct() {
               <input
                 type="number"
                 id="productIVA"
-                className="w-full md:w-2/3 border rounded p-2"
+                className="w-full md:w-2/3 border rounded p-2 text-black"
                 value={productIVA}
                 readOnly
               />
@@ -172,7 +172,7 @@ export default function RegisterProduct() {
               <input
                 type="number"
                 id="productSalePrice"
-                className="w-full md:w-2/3 border rounded p-2"
+                className="w-full md:w-2/3 border rounded p-2 text-black"
                 value={productSalePrice}
                 readOnly
               />
@@ -187,7 +187,7 @@ export default function RegisterProduct() {
               </label>
               <select
                 id="selectedProvider"
-                className="w-full md:w-2/3 border rounded p-2"
+                className="w-full md:w-2/3 border rounded p-2 text-black"
                 value={selectedProvider}
                 onChange={(e) => setSelectedProvider(e.target.value)}
               >
@@ -204,7 +204,7 @@ export default function RegisterProduct() {
               </label>
               <select
                 id="selectedCategory"
-                className="w-full md:w-2/3 border rounded p-2"
+                className="w-full md:w-2/3 border rounded p-2 text-black"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
               >
