@@ -49,7 +49,7 @@ export default function RegisterProduct() {
   }, [productPrice, productProfit, productIVA]);
 
   return (
-    <div className="bg-slate-300 min-h-screen p-8">
+    <div className="bg-white min-h-screen p-8">
       <div className="mx-auto p-6 bg-cyan-950 text-white rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold mb-4">Registrar Nuevo Producto</h1>
 
