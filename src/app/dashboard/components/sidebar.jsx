@@ -1,36 +1,40 @@
 'use client'
 import React, { useState } from 'react';
-import { FaHome, FaCog, FaUser, FaBars } from 'react-icons/fa';
+import Link from 'next/link';
+import { FaHome, FaUserFriends, IoMdExit } from 'react-icons/fa';
 
-export default function Sidebar () {
-  const [isOpen, setIsOpen] = useState(false);
+const Navsidebar = ({ isOpen }) => {
+  const [activeDropdown, setActiveDropdown] = useState("");
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+  const toggleDropdown = (dropdownName) => {
+    if (activeDropdown === dropdownName) {
+      setActiveDropdown("");
+    } else {
+      setActiveDropdown(dropdownName);
+    }
   };
 
+  const routes = [
+    { href: '/dashboard/devoluciones',icon: <FaHome className="h-5 w-5" /> },
+    { href: '/dashboard/usuarios',icon: <FaUserFriends className="h-5 w-5" /> },
+    { href: '/',icon: <IoMdExit className="h-5 w-5" /> },
+  ];
+
   return (
-    <div className={`w-64 bg-gray-800 h-screen py-6 px-2 fixed top-0 left-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`} onClick={() => setIsOpen(false)}>
-      <div className="text-white text-2xl font-bold mb-8 pl-4">Sidebar</div>
-      <button className="text-white absolute top-2 right-2 md:hidden" onClick={toggleSidebar}>
-        <FaBars className="w-6 h-6" />
-      </button>
-      <ul className="space-y-2">
-        <li className="flex items-center space-x-4 px-4 py-2 rounded-md hover:bg-gray-700">
-          <FaHome className="w-6 h-6" />
-          <span>Home</span>
-        </li>
-        <li className="flex items-center space-x-4 px-4 py-2 rounded-md hover:bg-gray-700">
-          <FaUser className="w-6 h-6" />
-          <span>Profile</span>
-        </li>
-        <li className="flex items-center space-x-4 px-4 py-2 rounded-md hover:bg-gray-700">
-          <FaCog className="w-6 h-6" />
-          <span>Settings</span>
-        </li>
-      </ul>
+    <div className={`px-2 py-60 bg-cyan-950 text-white flex flex-col items-center transition-all duration-500 ease-in-out ${isOpen ? "w-8" : "w-8"}`}>
+      <div className={`flex-1 flex flex-col items-center justify-center ${isOpen ? "w-full" : "w-16"}`}>
+        {routes.map((route) => (
+          <div key={route.href} className="relative group">
+            <Link href={route.href}>
+              <button className={`flex flex-col items-center justify-center focus:outline-none p-2 hover:bg-gray-700 ${isOpen ? "w-8" : "w-8"}`} style={{ marginBottom: isOpen ? "12px" : "6px" }}>
+                {route.icon}
+              </button>
+            </Link>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-
+export default Navsidebar;
