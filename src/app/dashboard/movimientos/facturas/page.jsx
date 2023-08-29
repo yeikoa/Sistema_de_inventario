@@ -21,6 +21,41 @@ export default function BillsMovements() {
       fecha: '2023-09-29',
       hora: '09:30 AM',
     },
+    {
+      nfactura: '8878355920',
+      proveedor: 'Farvasia',
+      precio: '150000',
+      fecha: '2023-09-29',
+      hora: '09:30 AM',
+    },
+    {
+      nfactura: '8878355920',
+      proveedor: 'Farvasia',
+      precio: '150000',
+      fecha: '2023-09-29',
+      hora: '09:30 AM',
+    },
+    {
+      nfactura: '8878355920',
+      proveedor: 'Farvasia',
+      precio: '150000',
+      fecha: '2023-09-29',
+      hora: '09:30 AM',
+    },
+    {
+      nfactura: '8878355920',
+      proveedor: 'Farvasia',
+      precio: '150000',
+      fecha: '2023-09-29',
+      hora: '09:30 AM',
+    },
+    {
+      nfactura: '8878355920',
+      proveedor: 'Farvasia',
+      precio: '150000',
+      fecha: '2023-09-29',
+      hora: '09:30 AM',
+    },
   ];
 
   return (
