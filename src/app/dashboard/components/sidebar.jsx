@@ -1,7 +1,8 @@
 'use client'
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { FaHome, FaUserFriends, IoMdExit } from 'react-icons/fa';
+import { FaHome, FaUserFriends } from 'react-icons/fa';
+import { IoMdExit } from 'react-icons/io';
 
 const Navsidebar = ({ isOpen }) => {
   const [activeDropdown, setActiveDropdown] = useState("");
