@@ -31,10 +31,12 @@ export async function POST(request) {
       codigo,
       nombre,
       precioVenta,
-      iva,
-      utilidad,
+      //iva,
+      //utilidad,
       stock,
-      stock_bajo,
+      //stock_bajo,
+      proveedorP_id,
+      categoriaP_id,
     } = await request.json();
 
     // Intentando ejecutar una consulta SQL para insertar un nuevo registro en la tabla 'Productos'
@@ -43,6 +45,8 @@ export async function POST(request) {
       nombre,
       precioVenta,
       stock,
+      proveedorP_id,
+      categoriaP_id,
     });
     // Si la inserción es exitosa, respondemos con un JSON que contiene los datos insertados y el ID del nuevo registro
     return NextResponse.json({
