@@ -16,20 +16,24 @@ export function ProductForm() {
     codigo: "",
     nombre: "",
     precioVenta: "",
-    utilidad: 30,
+    //utilidad: 30,
     stock: "",
-    productPrice: "",
+    //productPrice: "",
     
-    productIVA: 2,
+    //productIVA: 2,
     selectedProvider: "",
     selectedCategory: "",
   });
+  const[productPrice, setProductPrice] = useState(0);
+  const[utilidad, setUtilidad] = useState(30);  
+  const[productIVA, setProductIVA] = useState(13);  
   const [providers, setProviders] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [iva, setIva] = useState([]);
 //REVISSSAAARRRR
   useEffect(() => {
     // Cargar las opciones de proveedores desde tu API
-    axios.get("/api/providerss").then((response) => {
+      axios.get("/api/providerss").then((response) => {
      setProviders(response.data);
     });
 
@@ -37,13 +41,13 @@ export function ProductForm() {
     axios.get("/api/categories").then((response) => {
       setCategories(response.data);
     });
+    axios.get("/api/impuestos").then((response) => {
+      setIva(response.data);
+    });
   }, []);
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  //const providers = ["Proveedor 1", "Proveedor 2", "Proveedor 3"];
-  //const categories = ["Categoría 1", "Categoría 2", "Categoría 3"];
 
   const handleChanges = (e) => {
     setProducts({
@@ -107,14 +111,14 @@ export function ProductForm() {
       setError("Error al registrar el ");
     }
   };
-
+//cambiar estooo
   useEffect(() => {
     if (products.productPrice) {
       const price = parseFloat(products.productPrice);
       const profit = price * (products.utilidad / 100);
       const iva = price * (products.productIVA / 100);
       setProducts({
-        ...products,
+        
         precioVenta: (price + profit + iva).toFixed(2),
       });
     }
@@ -239,20 +243,26 @@ export function ProductForm() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
             <div>
               <label
-                htmlFor="productIVA"
+                htmlFor="iva"
                 className="text-sm font-medium mb-2 flex items-center "
               >
                 <FaPercent className="text-green-600 mr-2" />
                 IVA
               </label>
-              <input
-                type="number"
-                id="productIVA"
-                name="productIVA"
+              <select
+                id='iva'
+                name='iva'
                 className="w-full md:w-2/3 border rounded p-2 text-black"
-                value={products.productIVA}
-                readOnly
-              />
+                value={products.selectedProvider}
+                onChange={handleChanges}
+              >
+                <option value="">Seleccionar proveedor</option>
+                {providers.map((provider) => (
+                  <option key={provider.proveedor_id} value={provider.proveedor_id}>
+                    {provider.nombre}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label
