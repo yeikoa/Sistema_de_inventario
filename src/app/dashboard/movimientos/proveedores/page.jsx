@@ -1,86 +1,28 @@
-'use client'
-import React, { useState } from 'react';
+"use client"
+import React, { useState, useEffect } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 
 export default function ProvidersMovements() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [providerMovements, setProviderMovements] = useState([]);
 
-  const providerMovements = [
-    // ... tus datos de movimientos de productos ...
-    {
-      fecha: '2023-08-27',
-      hora: '09:30 AM',
-      nombreProveedor: 'Favarsia S.A',
-      telefono: '88888888',
-      correo: 'GrupoFavarsia.com',
-      direccion:'Sanvito',
-      tipoMovimiento: 'Inactivo',
-    },
-    {
-      fecha: '2023-08-27',
-      hora: '09:30 AM',
-      nombreProveedor: 'Favarsia S.A',
-      telefono: '89083884',
-      correo: 'GrupoFavarsia.com',
-      direccion:'Sanvito',
-      tipoMovimiento: 'Inactivo',
-    },
-    {
-      fecha: '2023-08-27',
-      hora: '09:30 AM',
-      nombreProveedor: 'Favarsia S.A',
-      telefono: '89083884',
-      correo: 'GrupoFavarsia.com',
-      direccion:'Sanvito',
-      tipoMovimiento: 'Activo',
-    },
-    {
-      fecha: '2023-08-27',
-      hora: '09:30 AM',
-      nombreProveedor: 'Favarsia S.A',
-      telefono: '89083884',
-      correo: 'GrupoFavarsia.com',
-      direccion:'Sanvito',
-      tipoMovimiento: 'Activo',
-    },
-    {
-      fecha: '2023-08-27',
-      hora: '09:30 AM',
-      nombreProveedor: 'Favarsia S.A',
-      telefono: '89083884',
-      correo: 'GrupoFavarsia.com',
-      direccion:'Sanvito',
-      tipoMovimiento: 'Inactivo',
-    },
-    {
-      fecha: '2023-08-27',
-      hora: '09:30 AM',
-      nombreProveedor: 'Favarsia S.A',
-      telefono: '89083884',
-      correo: 'GrupoFavarsia.com',
-      direccion:'Sanvito',
-      tipoMovimiento: 'Activo',
-    },
-    {
-      fecha: '2023-08-27',
-      hora: '09:30 AM',
-      nombreProveedor: 'Favarsia S.A',
-      telefono: '89083884',
-      correo: 'GrupoFavarsia.com',
-      direccion:'Sanvito',
-      tipoMovimiento: 'Activo',
-    },
-    {
-      fecha: '2023-08-27',
-      hora: '09:30 AM',
-      nombreProveedor: 'Favarsia S.A',
-      telefono: '89083884',
-      correo: 'GrupoFavarsia.com',
-      direccion:'Sanvito',
-      tipoMovimiento: 'Activo',
-    },
-    // Agregar más movimientos de productos aquí
-  ];
+  useEffect(() => {
+    async function fetchProviderMovements() {
+      try {
+        const response = await fetch('/api/movements/proveedores'); // Ajusta la ruta de la API según sea necesario
+        if (response.ok) {
+          const data = await response.json();
+          setProviderMovements(data);
+        } else {
+          console.error('Error al obtener los movimientos de proveedores');
+        }
+      } catch (error) {
+        console.error('Error al obtener los movimientos de proveedores:', error);
+      }
+    }
+
+    fetchProviderMovements();
+  }, []);
 
   return (
     <div className="container mx-auto p-4">
@@ -98,14 +40,12 @@ export default function ProvidersMovements() {
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-300">
           <thead className="bg-gray-100">
-          <tr>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Fecha</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Hora</th>
+            <tr>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Nombre</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Telefono</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Vendedor</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Teléfono</th>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Correo</th>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Dirección</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Entrada/Salida</th>
             </tr>
           </thead>
           <tbody>

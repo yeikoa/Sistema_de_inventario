@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { FaUserFriends } from 'react-icons/fa';
+import { FaUserFriends, FaGg } from 'react-icons/fa';
 import { IoMdExit, IoMdArrowRoundBack } from 'react-icons/io';
 
 const Navsidebar = ({ isOpen }) => {
@@ -19,6 +19,7 @@ const Navsidebar = ({ isOpen }) => {
     { href: '/dashboard/devoluciones',icon: <IoMdArrowRoundBack className="h-5 w-5" /> },
     { href: '/dashboard/usuarios',icon: <FaUserFriends className="h-5 w-5" /> },
     { href: '/',icon: <IoMdExit className="h-5 w-5" /> },
+    { href: '/dashboard/impuestos',icon: <FaGg className="h-5 w-5" /> },
   ];
 
   return (
