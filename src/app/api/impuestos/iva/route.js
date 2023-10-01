@@ -4,8 +4,9 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const results = await conn.query(
-      "SELECT proveedor_id, nombre FROM Proveedores"
+      "SELECT iva_id, tasa FROM Iva"
     );
+
     return NextResponse.json(results);
   } catch (error) {
     console.log(error);
@@ -19,3 +20,4 @@ export async function GET() {
     );
   }
 }
+
