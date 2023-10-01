@@ -6,6 +6,6 @@ export const conn = mysql({
         user: 'admin',
         password: 'Duke2003',
         port: '3306',
-        database:'EligamFinal'
+        database:'Eligam'
     }
 })
