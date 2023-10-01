@@ -51,7 +51,7 @@ export async function POST(request) {
     });
     // Si la inserción es exitosa, respondemos con un JSON que contiene los datos insertados y el ID del nuevo registro
     return NextResponse.json({
-      success: true, // Agrega esta propiedad para indicar éxi
+      success: true, // Se guardo todo bien
       codigo,
       nombre,
       precioVenta,
