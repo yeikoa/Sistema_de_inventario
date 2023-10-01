@@ -1,80 +1,26 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from "axios";
 import { FaEdit, FaTrash, FaSave } from 'react-icons/fa';
 import { confirmAlert } from 'react-confirm-alert'; 
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 function ProductTable() {
-  const [data, setData] = useState([
-    {
-      codigo: '123',
-      nombre: 'Producto 1',
-      descripcion: 'Descripción 1',
-      cantidad: 10,
-      precioVenta: 100,
-      proveedor: 'Proveedor 1',
-      categoria: 'Categoría 1',
-    },
-    {
-      codigo: '456',
-      nombre: 'Producto 2',
-      descripcion: 'Descripción 2',
-      cantidad: 20,
-      precioVenta: 200,
-      proveedor: 'Proveedor 2',
-      categoria: 'Categoría 2',
-    },
-    {
-      codigo: '456',
-      nombre: 'Producto 2',
-      descripcion: 'Descripción 2',
-      cantidad: 20,
-      precioVenta: 200,
-      proveedor: 'Proveedor 2',
-      categoria: 'Categoría 2',
-    },
-    {
-      codigo: '456',
-      nombre: 'Producto 2',
-      descripcion: 'Descripción 2',
-      cantidad: 20,
-      precioVenta: 200,
-      proveedor: 'Proveedor 2',
-      categoria: 'Categoría 2',
-    },
-    {
-      codigo: '456',
-      nombre: 'Producto 2',
-      descripcion: 'Descripción 2',
-      cantidad: 20,
-      precioVenta: 200,
-      proveedor: 'Proveedor 2',
-      categoria: 'Categoría 2',
-    },
-    {
-      codigo: '456',
-      nombre: 'Producto 2',
-      descripcion: 'Descripción 2',
-      cantidad: 20,
-      precioVenta: 200,
-      proveedor: 'Proveedor 2',
-      categoria: 'Categoría 2',
-    },
-    {
-      codigo: '456',
-      nombre: 'Producto 2',
-      descripcion: 'Descripción 2',
-      cantidad: 20,
-      precioVenta: 200,
-      proveedor: 'Proveedor 2',
-      categoria: 'Categoría 2',
-    },
-    // ... otros datos
-  ]);
+  const [data, setData] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterBy, setFilterBy] = useState('nombre');
   const [editingRow, setEditingRow] = useState(null);
+
+  useEffect(() => {
+    axios.get('/api/products/table')
+      .then(response => {
+        setData(response.data);
+      })
+      .catch(error => {
+        console.error('Error al obtener datos de productos', error);
+      });
+  }, []);
 
   const handleDelete = (index) => {
     confirmAlert({
@@ -147,9 +93,8 @@ function ProductTable() {
         >
           <option value="codigo">Código</option>
           <option value="nombre">Nombre</option>
-          <option value="descripcion">Descripción</option>
-          <option value="cantidad">Cantidad</option>
           <option value="precioVenta">Precio Venta</option>
+          <option value="cantidad">Cantidad</option>
           <option value="proveedor">Proveedor</option>
           <option value="categoria">Categoría</option>
         </select>
@@ -160,9 +105,8 @@ function ProductTable() {
             <tr>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Código</th>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Nombre</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Descripción</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Cantidad</th>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Precio Venta</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Cantidad</th>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Proveedor</th>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Categoría</th>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">Acciones</th>
