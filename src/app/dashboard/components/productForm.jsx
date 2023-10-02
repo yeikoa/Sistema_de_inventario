@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import axios from "axios";
 import { useState, useEffect } from "react";
 import {
@@ -22,12 +22,12 @@ export function ProductForm() {
     ivaP_id: "",
     utilidadP_id: "",
   });
-  //const [precioVentaC, setPrecioVenta] = useState("")
+
   const [providers, setProviders] = useState([]);
   const [categories, setCategories] = useState([]);
   const [iva, setIva] = useState([]);
   const [utility, setUtility] = useState([]);
-  
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -42,7 +42,7 @@ export function ProductForm() {
     e.preventDefault();
     setError("");
     setSuccess("");
-  
+
     // Verificar que los campos requeridos estén completos
     if (
       !products.codigo ||
@@ -55,7 +55,7 @@ export function ProductForm() {
       setError("Todos los campos son obligatorios");
       return;
     }
-  
+
     // Verificar que los campos calculados sean válidos
     if (
       parseFloat(products.precioVenta) <= 0 ||
@@ -68,24 +68,52 @@ export function ProductForm() {
       );
       return;
     }
-  
+
     try {
-      const res = await axios.post("/api/products", products);
-      console.log(res);
-      if (res.data.success) {
-        setProducts({
-          codigo: "",
-          nombre: "",
-          precioVenta: "",
-          stock: "",
-          proveedorP_id: "",
-          categoriaP_id: "",
-          ivaP_id: "",
-          utilidadP_id: "",
-        });
-        setSuccess("Producto registrado con éxito");
+      // Realizar la inserción en la tabla de productos
+      const productResponse = await axios.post("/api/products", products);
+
+      if (productResponse.data.success) {
+        // Obtener el ID del producto insertado
+        const productId = productResponse.data.id;
+
+        // Crear un objeto para registrar la entrada en la tabla RegistroInventario
+        const registroInventarioData = {
+          productoR_id: productId,
+          fecha: new Date().toISOString(),
+          tipo_operacion: "entrada", // Tipo de operación como entrada
+          cantidad: parseInt(products.stock), // Cantidad ingresada
+          nombre: products.nombre, // Nombre del producto
+        };
+
+        // Realizar la inserción en la tabla RegistroInventario
+        const registroResponse = await axios.post(
+          "/api/movimientos/productos",
+          registroInventarioData
+        );
+
+        if (registroResponse.data.success) {
+          setProducts({
+            codigo: "",
+            nombre: "",
+            precioVenta: "",
+            stock: "",
+            proveedorP_id: "",
+            categoriaP_id: "",
+            ivaP_id: "",
+            utilidadP_id: "",
+          });
+          setSuccess("Producto registrado con éxito");
+        } else {
+          setError(
+            registroResponse.data.message ||
+              "Error al registrar el producto en el inventario"
+          );
+        }
       } else {
-        setError(res.data.message || "Error al registrar el producto falta");
+        setError(
+          productResponse.data.message || "Error al registrar el producto"
+        );
       }
     } catch (error) {
       console.error(error);
@@ -110,15 +138,7 @@ export function ProductForm() {
       setUtility(response.data);
     });
   }, []);
-  // useEffect(() => {
-  //   if (products.productPrice && products.utilidadP_id && products.ivaP_id) {
-  //     const price = parseFloat(products.productPrice);
-  //     const profit = price * (products.utilidadP_id / 100);
-  //     const ivaAmount = price * (products.ivaP_id / 100);
-  //     const calculatedPrecioVenta = (price + profit + ivaAmount).toFixed(2);
-  //     setPrecioVenta(calculatedPrecioVenta); // Actualiza el estado de precioVenta
-  //   }
-  // }, [products.productPrice, products.utilidadP_id, products.ivaP_id]);
+
   useEffect(() => {
     if (products.productPrice && products.utilidadP_id && products.ivaP_id) {
       const price = parseFloat(products.productPrice);
@@ -131,6 +151,7 @@ export function ProductForm() {
       });
     }
   }, [products.productPrice, products.utilidadP_id, products.ivaP_id]);
+
   return (
     <div className="bg-white min-h-screen p-8">
       <div className="mx-auto p-6 bg-cyan-950 text-white rounded-lg shadow-md">
@@ -314,7 +335,10 @@ export function ProductForm() {
               >
                 <option value="">Seleccionar proveedor</option>
                 {providers.map((provider) => (
-                  <option key={provider.proveedor_id} value={provider.proveedor_id}>
+                  <option
+                    key={provider.proveedor_id}
+                    value={provider.proveedor_id}
+                  >
                     {provider.nombre}
                   </option>
                 ))}
@@ -337,7 +361,10 @@ export function ProductForm() {
               >
                 <option value="">Seleccionar categoría</option>
                 {categories.map((category) => (
-                  <option key={category.categoria_id} value={category.categoria_id}>
+                  <option
+                    key={category.categoria_id}
+                    value={category.categoria_id}
+                  >
                     {category.nombre_categoria}
                   </option>
                 ))}
