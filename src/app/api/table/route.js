@@ -6,6 +6,7 @@ export async function GET() {
     // Obtencion de algunos datos de la tabla Productos, mas los nombres de las tablas Proveedores y Categorias
     const results = await conn.query(`
       SELECT
+      p.producto_id,
       p.codigo,
       p.nombre,
       p.precioVenta,
@@ -15,6 +16,7 @@ export async function GET() {
     FROM Productos AS p
     LEFT JOIN Proveedores AS pr ON p.proveedorP_id = pr.proveedor_id
     LEFT JOIN Categorias AS c ON p.categoriaP_id = c.categoria_id
+    
   `);
     // Si la consulta es exitosa, respondemos con un JSON que contiene los resultados
     return NextResponse.json(results);

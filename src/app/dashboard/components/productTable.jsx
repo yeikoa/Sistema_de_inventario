@@ -13,34 +13,54 @@ function ProductTable() {
   const [editingRow, setEditingRow] = useState(null);
 
   useEffect(() => {
-    axios.get('/api/products/table')
+    axios.get('/api/table')
       .then(response => {
         setData(response.data);
+        
       })
       .catch(error => {
         console.error('Error al obtener datos de productos', error);
       });
   }, []);
 
-  const handleDelete = (index) => {
+  async function DELETE(producto_id) {
+    try {
+      // Envía una solicitud DELETE al servidor para eliminar el producto por su ID
+      await axios.delete(`/api/table/${producto_id}`);
+      
+    } catch (error) {
+      console.error('Error al eliminar el producto', error);
+      
+    }
+  }
+
+  const handleDelete = async (producto_id) => {
     confirmAlert({
       title: 'Confirmar eliminación',
       message: '¿Estás seguro de que deseas eliminar este producto?',
       buttons: [
         {
           label: 'Sí',
-          onClick: () => {
-            const newData = data.slice();
-            newData.splice(index, 1);
-            setData(newData);
-          }
+          onClick: async () => {
+            try {
+              // Llama a la función DELETE de tu API para eliminar el producto por su ID
+              await DELETE(producto_id);
+              
+              // Después de eliminar el producto, obtén nuevamente los datos actualizados desde el servidor
+              const response = await axios.get('/api/table');
+              setData(response.data);
+            } catch (error) {
+              console.error('Error al eliminar el producto', error);
+            }
+          },
         },
         {
           label: 'No',
-        }
-      ]
+        },
+      ],
     });
   };
+  
 
   const handleEdit = (index) => {
     setEditingRow({ index, data: data[index] });
@@ -91,6 +111,7 @@ function ProductTable() {
           value={filterBy}
           onChange={e => setFilterBy(e.target.value)}
         >
+        
           <option value="codigo">Código</option>
           <option value="nombre">Nombre</option>
           <option value="precioVenta">Precio Venta</option>
@@ -115,9 +136,10 @@ function ProductTable() {
           <tbody>
             {filteredData.map((row, index) => {
               const isEditing = editingRow && editingRow.index === index;
+              const { producto_id, ...rowWithoutProductId } = row;
               return (
                 <tr key={index} className={isEditing ? 'bg-cyan-100' : 'bg-white'}>
-                  {Object.keys(row).map((key) => (
+                  {Object.keys(rowWithoutProductId).map((key) => (
                     <td key={key} className="py-2 px-4 border-b border-gray-300 text-sm">
                       <input
                         type="text"
@@ -135,7 +157,7 @@ function ProductTable() {
                       ) : (
                         <button className="text-blue-500 p-2 rounded-full hover:bg-blue-100" onClick={() => handleEdit(index)}><FaEdit /></button>
                       )}
-                      <button className="text-red-500 p-2 rounded-full hover:bg-red-100" onClick={() => handleDelete(index)}><FaTrash /></button>
+                      <button className="text-red-500 p-2 rounded-full hover:bg-red-100" onClick={() => handleDelete(row.producto_id)}><FaTrash /></button>
                     </div>
                   </td>
                 </tr>
