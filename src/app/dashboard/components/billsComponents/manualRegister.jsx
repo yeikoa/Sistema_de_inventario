@@ -1,227 +1,314 @@
 'use client'
-import { useState, useEffect } from "react";
-import { FaSave, FaBarcode, FaDollarSign, FaPercent, FaCubes, FaTruck, FaTags } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaSave, FaCalendarAlt, FaMoneyBillWave, FaTruck } from "react-icons/fa";
+import axios from "axios";
 
 export default function ManualRegister() {
-  const [productCode, setProductCode] = useState("");
-  const [productName, setProductName] = useState("");
-  const [productQuantity, setProductQuantity] = useState("");
-  const [productPrice, setProductPrice] = useState("");
-  const [productProfit, setProductProfit] = useState(30);
-  const [productIVA, setProductIVA] = useState(13);
-  const [productSalePrice, setProductSalePrice] = useState("");
-  const [selectedProvider, setSelectedProvider] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [emissionDate, setEmissionDate] = useState("");
+  const [invoiceDate, setInvoiceDate] = useState("");
+  const [totalAmount, setTotalAmount] = useState("");
+  const [selectedSupplier, setSelectedSupplier] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [invoiceDetails, setInvoiceDetails] = useState([
+    {
+      productCode: "",
+      productName: "",
+      productPrice: "",
+      productQuantity: "",
+      productCategory: "",
+      productSalePrice: "",
+      productIVA: "",
+      productUtilidad: "",
+    },
+  ]);
+  const [providers, setProviders] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedIVA, setSelectedIVA] = useState("");
+  const [selectedUtilidad, setSelectedUtilidad] = useState("");
+  const [blackBorders, setBlackBorders] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [ivaList, setIvaList] = useState([]);
+  const [utilidadList, setUtilidadList] = useState([]);
 
-  const providers = ["Proveedor 1", "Proveedor 2", "Proveedor 3"];
-  const categories = ["Categoría 1", "Categoría 2", "Categoría 3"];
+  useEffect(() => {
+    axios.get("/api/providerss")
+    .then((response) => {
+      setProviders(response.data);
+    })
+    .catch((error) => {
+      console.error("Error al obtener la lista de proveedores:", error);
+    });
 
-  const handleSubmit = (e) => {
+    axios.get("/api/categories")
+      .then((response) => {
+        setCategories(response.data);
+      })
+      .catch((error) => {
+        console.error("Error al obtener la lista de categorías:", error);
+      });
+
+    axios.get("/api/impuestos/iva")
+      .then((response) => {
+        setIvaList(response.data);
+      })
+      .catch((error) => {
+        console.error("Error al obtener la lista de IVA:", error);
+      });
+
+    axios.get("/api/impuestos/utilidad")
+      .then((response) => {
+        setUtilidadList(response.data);
+      })
+      .catch((error) => {
+        console.error("Error al obtener la lista de utilidad:", error);
+      });
+  }, []);
+
+  const calculateSalePrice = (price, ivaRate, utilidadRate) => {
+    const priceFloat = parseFloat(price);
+    const ivaFloat = parseFloat(ivaRate);
+    const utilidadFloat = parseFloat(utilidadRate);
+
+    if (!isNaN(priceFloat) && !isNaN(ivaFloat) && !isNaN(utilidadFloat)) {
+      const ivaAmount = (priceFloat * (ivaFloat / 100)).toFixed(2);
+      const utilidadAmount = (priceFloat * (utilidadFloat / 100)).toFixed(2);
+      const salePrice = (priceFloat + parseFloat(ivaAmount) + parseFloat(utilidadAmount)).toFixed(2);
+      return salePrice;
+    }
+    return "";
+  };
+
+  const handleAddNewRow = () => {
+    const newRow = {
+      productCode: "",
+      productName: "",
+      productPrice: "",
+      productQuantity: "",
+      productCategory: selectedCategory,
+      productSalePrice: "",
+      productIVA: selectedIVA,
+      productUtilidad: selectedUtilidad,
+    };
+    setInvoiceDetails([...invoiceDetails, newRow]);
+    setBlackBorders([...blackBorders, invoiceDetails.length]);
+  };
+
+  const handleSubmitInvoice = (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
-    if (!productCode || !productName || !productPrice || !productProfit || !productQuantity || !selectedProvider || !selectedCategory || !emissionDate) {
-      setError("Todos los campos son obligatorios");
+    if (!invoiceDate || !totalAmount || !selectedSupplier || invoiceDetails.length === 0) {
+      setError("Todos los campos de la factura de compra son obligatorios");
       return;
     }
 
-    if (productPrice <= 0 || productProfit <= 0 || productQuantity < 0) {
-      setError("El precio, la utilidad y la cantidad deben ser números positivos");
-      return;
-    }
+    const newInvoice = {
+      invoiceDate,
+      totalAmount,
+      selectedSupplier,
+      details: invoiceDetails,
+    };
 
-    // Agregar lógica para guardar el producto en el sistema de inventario
+    // Implementa la lógica de envío al backend para registrar la factura y sus productos
 
-    setSuccess("Producto registrado con éxito");
+    setSuccess("Factura de compra registrada con éxito");
+    clearInvoiceFields();
   };
 
-  useEffect(() => {
-    if (productPrice) {
-      const price = parseFloat(productPrice);
-      const profit = price * (productProfit / 100);
-      const iva = price * (productIVA / 100);
-      setProductSalePrice((price + profit + iva).toFixed(2));
+  const clearInvoiceFields = () => {
+    setInvoiceDate("");
+    setTotalAmount("");
+    setSelectedSupplier("");
+    setInvoiceDetails([]);
+  };
+
+  const handleProductFieldChange = (index, field, value) => {
+    const updatedDetails = [...invoiceDetails];
+    updatedDetails[index][field] = value;
+
+    if (field === "productPrice" || field === "productIVA" || field === "productUtilidad") {
+      const { productPrice, productIVA, productUtilidad } = updatedDetails[index];
+      updatedDetails[index].productSalePrice = calculateSalePrice(productPrice, productIVA, productUtilidad);
     }
-  }, [productPrice, productProfit, productIVA]);
+
+    setInvoiceDetails(updatedDetails);
+    setBlackBorders([...blackBorders.slice(0, index), index, ...blackBorders.slice(index + 1)]);
+  };
 
   return (
-    <div className="p-8 " >
+    <div className="p-8">
       <div className="rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold mb-4">Registrar Factura</h1>
 
         {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{error}</div>}
         {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">{success}</div>}
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmitInvoice}>
           <div>
-            <label htmlFor="emissionDate" className="text-sm font-medium mb-2 flex items-center">
-              <FaBarcode className="text-gray-600 mr-2" />
-              Fecha de Emisión
+            <label htmlFor="invoiceDate" className="text-sm font-medium mb-2 flex items-center">
+              <FaCalendarAlt className="text-gray-600 mr-2" />
+              Fecha de Factura
             </label>
             <input
               type="date"
-              id="emissionDate"
-              className="w-full md:w-2/3 border rounded p-2"
-              value={emissionDate}
-              onChange={(e) => setEmissionDate(e.target.value)}
+              id="invoiceDate"
+              className="w-full md:w-2/3 border border-black rounded p-2"
+              value={invoiceDate}
+              onChange={(e) => setInvoiceDate(e.target.value)}
             />
           </div>
 
           <div>
-            <label htmlFor="productCode" className="text-sm font-medium mb-2 flex items-center">
-              <FaBarcode className="text-gray-600 mr-2" />
-              Código de la factura
+            <label htmlFor="totalAmount" className="text-sm font-medium mb-2 flex items-center">
+              <FaMoneyBillWave className="text-gray-600 mr-2" />
+              Total
             </label>
             <input
-              type="text"
-              id="productCode"
-              className="w-full md:w-2/3 border rounded p-2"
-              placeholder="Ingrese el código del producto"
-              value={productCode}
-              onChange={(e) => setProductCode(e.target.value)}
+              type="number"
+              id="totalAmount"
+              className="w-full md:w-2/3 border border-black rounded p-2"
+              value={totalAmount}
+              onChange={(e) => setTotalAmount(e.target.value)}
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="selectedProvider" className="text-sm font-medium mb-2 flex items-center">
-                <FaTruck className="text-teal-600 mr-2" />
-                Seleccionar Proveedor
-              </label>
-              <select
-                id="selectedProvider"
-                className="w-full md:w-2/3 border rounded p-2"
-                value={selectedProvider}
-                onChange={(e) => setSelectedProvider(e.target.value)}
-              >
-                <option value="">Seleccionar proveedor</option>
-                {providers.map((provider, index) => (
-                  <option key={index} value={provider}>{provider}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="selectedCategory" className="text-sm font-medium mb-2 flex items-center">
-                <FaTags className="text-blue-600 mr-2" />
-                Seleccionar Categoría
-              </label>
-              <select
-                id="selectedCategory"
-                className="w-full md:w-2/3 border rounded p-2"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-              >
-                <option value="">Seleccionar categoría</option>
-                {categories.map((category, index) => (
-                  <option key={index} value={category}>{category}</option>
-                ))}
-              </select>
-            </div>
+          <div>
+            <label htmlFor="selectedSupplier" className="text-sm font-medium mb-2 flex items-center">
+              <FaTruck className="text-gray-600 mr-2" />
+              Seleccionar Proveedor
+            </label>
+            <select
+              id="selectedSupplier"
+              className="w-full md:w-2/3 border border-black rounded p-2"
+              value={selectedSupplier}
+              onChange={(e) => setSelectedSupplier(e.target.value)}
+            >
+              <option value="">Seleccionar proveedor</option>
+              {providers.map((provider) => (
+                <option key={provider.proveedor_id} value={provider.proveedor_id}>
+                  {provider.nombre}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="productName" className="text-sm font-medium mb-2 flex items-center">
-                <FaTags className="text-gray-600 mr-2" />
-                Nombre del Producto
-              </label>
-              <input
-                type="text"
-                id="productName"
-                className="w-full md:w-2/3 border rounded p-2"
-                placeholder="Ingrese el nombre del producto"
-                value={productName}
-                onChange={(e) => setProductName(e.target.value)}
-              />
+          <div>
+            <label className="text-sm font-medium mb-2">Detalle de Productos</label>
+            <div className="overflow-x-auto">
+              <table className="w-full table-auto">
+                <thead>
+                  <tr>
+                    <th className="border border-black p-2">Código de Producto</th>
+                    <th className="border border-black p-2">Nombre de Producto</th>
+                    <th className="border border-black p-2">Precio de Compra</th>
+                    <th className="border border-black p-2">Cantidad</th>
+                    <th className="border border-black p-2">Categoría</th>
+                    <th className="border border-black p-2">Precio de Venta</th>
+                    <th className="border border-black p-2">IVA</th>
+                    <th className="border border-black p-2">Utilidad</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invoiceDetails.map((product, index) => (
+                    <tr key={index}>
+                      <td className={`border ${blackBorders.includes(index) ? 'border-black' : 'border-white'}`}>
+                        <input
+                          type="text"
+                          value={product.productCode}
+                          onChange={(e) => handleProductFieldChange(index, "productCode", e.target.value)}
+                        />
+                      </td>
+                      <td className={`border ${blackBorders.includes(index) ? 'border-black' : 'border-white'}`}>
+                        <input
+                          type="text"
+                          value={product.productName}
+                          onChange={(e) => handleProductFieldChange(index, "productName", e.target.value)}
+                        />
+                      </td>
+                      <td className={`border ${blackBorders.includes(index) ? 'border-black' : 'border-white'}`}>
+                        <input
+                          type="text"
+                          value={product.productPrice}
+                          onChange={(e) => handleProductFieldChange(index, "productPrice", e.target.value)}
+                        />
+                      </td>
+                      <td className={`border ${blackBorders.includes(index) ? 'border-black' : 'border-white'}`}>
+                        <input
+                          type="text"
+                          value={product.productQuantity}
+                          onChange={(e) => handleProductFieldChange(index, "productQuantity", e.target.value)}
+                        />
+                      </td>
+                      <td className={`border ${blackBorders.includes(index) ? 'border-black' : 'border-white'}`}>
+                        <select
+                          value={product.productCategory}
+                          onChange={(e) => handleProductFieldChange(index, "productCategory", e.target.value)}
+                        >
+                          <option value="">Seleccionar categoría</option>
+                          {categories.map((category) => (
+                            <option key={category.categoria_id} value={category.categoria_id}>
+                              {category.nombre_categoria}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className={`border ${blackBorders.includes(index) ? 'border-black' : 'border-white'}`}>
+                        <input
+                          type="text"
+                          value={product.productSalePrice}
+                          readOnly
+                        />
+                      </td>
+                      <td className={`border ${blackBorders.includes(index) ? 'border-black' : 'border-white'}`}>
+                        <select
+                          value={product.productIVA}
+                          onChange={(e) => handleProductFieldChange(index, "productIVA", e.target.value)}
+                        >
+                          <option value="">Seleccionar IVA</option>
+                          {ivaList.map((iva) => (
+                            <option key={iva.iva_id} value={iva.iva_id}>
+                              {iva.tasa}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className={`border ${blackBorders.includes(index) ? 'border-black' : 'border-white'}`}>
+                        <select
+                          value={product.productUtilidad}
+                          onChange={(e) => handleProductFieldChange(index, "productUtilidad", e.target.value)}
+                        >
+                          <option value="">Seleccionar Utilidad</option>
+                          {utilidadList.map((utilidad) => (
+                            <option key={utilidad.utilidad_id} value={utilidad.utilidad_id}>
+                              {utilidad.tasa}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div>
-              <label htmlFor="productQuantity" className="text-sm font-medium mb-2 flex items-center">
-                <FaCubes className="text-teal-600 mr-2" />
-                Cantidad
-              </label>
-              <input
-                type="number"
-                id="productQuantity"
-                className="w-full md:w-2/3 border rounded p-2"
-                placeholder="Ingrese la cantidad del producto"
-                value={productQuantity}
-                onChange={(e) => setProductQuantity(e.target.value)}
-              />
-            </div>
+            <button
+              type="button"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-semibold p-2 mt-4"
+              onClick={handleAddNewRow}
+            >
+              Agregar Producto
+            </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="productPrice" className="text-sm font-medium mb-2 flex items-center">
-                <FaDollarSign className="text-green-600 mr-2" />
-                Precio de Compra
-              </label>
-              <input
-                type="number"
-                id="productPrice"
-                className="w-full md:w-2/3 border rounded p-2"
-                placeholder="Ingrese el precio de compra del producto"
-                value={productPrice}
-                onChange={(e) => setProductPrice(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="productProfit" className="text-sm font-medium mb-2 flex items-center">
-                <FaPercent className="text-green-600 mr-2" />
-                Utilidad del Producto
-              </label>
-              <input
-                type="number"
-                id="productProfit"
-                className="w-full md:w-2/3 border rounded p-2"
-                value={productProfit}
-                readOnly
-              />
-            </div>
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4"
+            >
+              <FaSave className="mr-2" />
+              Guardar Factura
+            </button>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="productIVA" className="text-sm font-medium mb-2 flex items-center">
-                <FaPercent className="text-green-600 mr-2" />
-                IVA
-              </label>
-              <input
-                type="number"
-                id="productIVA"
-                className="w-full md:w-2/3 border rounded p-2"
-                value={productIVA}
-                readOnly
-              />
-            </div>
-            <div>
-              <label htmlFor="productSalePrice" className="text-sm font-medium mb-2 flex items-center">
-                <FaDollarSign className="text-green-600 mr-2" />
-                Precio de Venta
-              </label>
-              <input
-                type="number"
-                id="productSalePrice"
-                className="w-full md:w-2/3 border rounded p-2"
-                value={productSalePrice}
-                readOnly
-              />
-            </div>
-          </div>
-
-
-          <button
-            type="submit"
-            className="w-full bg-gray-800 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center justify-center"
-          >
-            <FaSave className="mr-2" />
-            Registrar Producto
-          </button>
         </form>
       </div>
     </div>
