@@ -1,11 +1,13 @@
 'use client'
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from "axios";
 import { FaEdit, FaTrash, FaSave } from 'react-icons/fa';
 import { confirmAlert } from 'react-confirm-alert'; 
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 function ProductTable() {
+  const router = useRouter();
   const [data, setData] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -48,6 +50,10 @@ function ProductTable() {
               
               // Después de eliminar el producto, obtén nuevamente los datos actualizados desde el servidor
               const response = await axios.get('/api/table');
+              if(response.status === 204){
+                router.push('/dashboard/repuestosAlmacen');
+                router.refresh();
+              }
               setData(response.data);
             } catch (error) {
               console.error('Error al eliminar el producto', error);
