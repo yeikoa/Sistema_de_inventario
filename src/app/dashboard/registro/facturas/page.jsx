@@ -1,4 +1,3 @@
-'use client'
 
 import ManualRegister from "../../components/billsComponents/manualRegister"
 

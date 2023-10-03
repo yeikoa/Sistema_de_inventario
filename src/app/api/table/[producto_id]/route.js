@@ -3,11 +3,15 @@ import { NextResponse } from "next/server";
 
 export async function DELETE(request, { params }) {
   try {
+    // Deshabilita temporalmente la restricción de clave foránea en RegistroInventario
+    await conn.query("SET FOREIGN_KEY_CHECKS=0");
+
     const result = await conn.query(
       "DELETE FROM Productos WHERE producto_id = ?",
       [params.producto_id]
     );
-
+    // Vuelve a habilitar la restricción de clave foránea en RegistroInventario
+    await conn.query("SET FOREIGN_KEY_CHECKS=1"); 
     if (result.affectedRows == 0) {
       return NextResponse.json(
         {
