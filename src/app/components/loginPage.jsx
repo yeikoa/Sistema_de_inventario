@@ -1,42 +1,80 @@
-'use client'
-import '../style.css';
+"use client";
+import "../style.css";
 import React, { useState, useEffect } from "react";
 import { RecoverPass } from "./recoverPass";
 
 import { FaUserLock, FaLock, FaMotorcycle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
-import { useRouter } from 'next/navigation';
-
-
+import { signIn, signOut, useSession } from "next-auth/react";
 export function LoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showRecoverPass, setShowRecoverPass] = useState(false);
   const [showNavBar, setShowNavBar] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const handleLogin = () => {
+  const [errors, setErrors] = useState([]);
+  const handleLogin = async (event) => {
     setLoading(true);
+    event.preventDefault();
+    setErrors([]);
+    try {
+      const responseNextAuth = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
 
-    setTimeout(() => {
-      setLoading(false);
-
-      if (username === "." && password === ".") {
-        setShowNavBar(true);
-      } else {
-        toast.error("Usuario o contraseña incorrectos. Por favor, intenta de nuevo.");
+      if (responseNextAuth?.error) {
+        setLoading(false);
+        setErrors(responseNextAuth.error.split(","));
+        return;
       }
-    }, 2000);
-  };
 
-  useEffect(() => {
-    if (showNavBar) {
-      router.push('/dashboard');
+      // Verificar si la respuesta de tu API de usuarios contiene un error
+      if (responseNextAuth?.user?.error) {
+        setErrors([responseNextAuth.user.error]);
+        return;
+      }
+
+      router.push("/dashboard");
+    } catch (error) {
+      console.error(error);
+      // Manejar otros errores aquí
     }
-  }, [showNavBar, router]);
+
+    // try {
+    //   // Realiza una solicitud al servidor para autenticar al usuario
+    //   const response = await axios.post("/api/usuarios", {
+    //     nombre_usuario,
+    //     contra,
+    //   });
+    //   setTimeout(() => {
+    //     if (response.data.success) {
+    //       toast.done(
+    //         "Iniciando sesión. Por favor, espere un momento..."
+    //       );
+    //       router.push("/dashboard");
+    //     } else {
+    //       // Las credenciales son incorrectas, muestra un mensaje de error
+    //       toast.error(
+    //         "Usuario o contraseña incorrectos. Por favor, intenta de nuevo."
+    //       );
+    //     }
+    //   }, 2000);
+    // } catch (error) {
+    //   console.error(error);
+    //   toast.error(
+    //     "Hubo un error al iniciar sesión. Por favor, intenta de nuevo."
+    //   );
+    // }
+
+    
+  };
 
   const handleShowRecoverPass = () => {
     setShowRecoverPass(true);
@@ -70,11 +108,11 @@ export function LoginPage() {
                   <FaUserLock />
                 </span>
                 <input
-                  type="text"
-                  placeholder="Ingresa tu usuario"
+                  type="email"
+                  placeholder="test@test.com"
                   className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-green-700 focus:border-green-700 transition-colors duration-300"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   disabled={loading}
                 />
               </div>
@@ -95,6 +133,13 @@ export function LoginPage() {
                 />
               </div>
             </div>
+            {errors.length > 0 && (
+              <div className="text-red-600">
+                {errors.map((error, index) => (
+                  <p key={index}>{error}</p>
+                ))}
+              </div>
+            )}
             <button
               type="button"
               className={`block w-full px-4 py-2 text-white rounded-md ${

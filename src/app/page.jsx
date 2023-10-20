@@ -1,12 +1,12 @@
 
+import ButtonAuth from "@/components/button";
 import { LoginPage } from "./components/loginPage";
 export default function Home() {
   
   return (
     <main >
      
-      <LoginPage />
-      
+   <LoginPage/>
     </main>
   )
 }
