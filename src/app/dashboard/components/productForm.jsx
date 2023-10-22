@@ -71,7 +71,7 @@ export function ProductForm() {
 
     try {
       // Realizar la inserción en la tabla de productos
-      const productResponse = await axios.post("/api/products", products);
+      const productResponse = await axios.post("/api/table", products);
 
       if (productResponse.data.success) {
         // Obtener el ID del producto insertado
