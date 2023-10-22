@@ -12,7 +12,7 @@ export default function DashboardLayout({ children }) {
       <Navbar />
       <div className="flex"> {/* Fila para Navbar y Conteido */}
         <Navsidebar isOpen={isSidebarOpen} />
-        <div className="flex-1 p-4 overflow-y-auto"><SessionAuthProvider>{children}</SessionAuthProvider></div> {/* Contenido principal */}
+        <div className="flex-1 p-4 overflow-y-auto">{children}</div> {/* Contenido principal */}
       </div>
     </div>
   );
