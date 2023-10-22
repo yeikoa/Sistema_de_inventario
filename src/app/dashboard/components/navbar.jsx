@@ -28,7 +28,8 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="flex items-center justify-between p-6 bg-cyan-950 text-white">
+    <div className='pt-16'>
+    <nav className="fixed top-0 w-full flex items-center justify-between p-6 bg-cyan-950 text-white">
       <div className="flex items-center space-x-2">
         <Link href="/dashboard">
           <span className="text-lg font-bold flex items-center space-x-2">
@@ -72,6 +73,7 @@ const Navbar = () => {
         ))}
       </div>
     </nav>
+    </div>
   );
 };
 
