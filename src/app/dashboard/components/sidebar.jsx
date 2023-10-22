@@ -26,7 +26,7 @@ const Navsidebar = ({ isOpen }) => {
 
   return (
     <div
-      className={`px-2 py-80 bg-cyan-950 text-white flex flex-col items-center transition-all duration-500 ease-in-out ${
+      className={`fixed top-16 pl-1 px-2 py-80 bg-cyan-950 text-white flex flex-col items-center transition-all duration-500 ease-in-out ${
         isOpen ? "w-8" : "w-8"
       }`}
     >
