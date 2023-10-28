@@ -1,16 +1,20 @@
-'use client'
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import xml2js from 'xml2js';
+"use client";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import xml2js from "xml2js";
 
 export default function Home() {
   const [productos, setProductos] = useState([]);
-  const [facturaXML, setFacturaXML] = useState('');
+  const [facturaXML, setFacturaXML] = useState("");
+
   const [categories, setCategories] = useState([]);
   const [iva, setIva] = useState([]);
+  const [selectedIva, setSelectedIva] = useState("");
   const [utility, setUtility] = useState([]);
+  const [selectedUtility, setSelectedUtility] = useState("");
   const [providers, setProviders] = useState([]);
-  const [fileName, setFileName] = useState('');
+
+  const [fileName, setFileName] = useState("");
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -38,7 +42,6 @@ export default function Home() {
     axios.get("/api/providerss").then((response) => {
       setProviders(response.data);
     });
-
   }, []);
 
   const parseXML = () => {
@@ -47,22 +50,23 @@ export default function Home() {
     const parser = new xml2js.Parser();
     parser.parseString(facturaXML, (err, result) => {
       if (err) {
-        console.error('No se pudo analizar el archivo XML');
+        console.error("No se pudo analizar el archivo XML");
       } else {
-        const lineasDetalle = result.FacturaElectronica.DetalleServicio[0].LineaDetalle;
+        const lineasDetalle =
+          result.FacturaElectronica.DetalleServicio[0].LineaDetalle;
         const productos = lineasDetalle.map((linea) => {
           const codigoComercial = linea.CodigoComercial[0].Codigo[0];
           return {
-          proveedorP_id: '',  
-          codigo: codigoComercial,
-          descripcion: linea.Detalle[0],
-          cantidad: linea.Cantidad[0],
-          precioUnitario: linea.PrecioUnitario[0],
-          montoTotal: linea.MontoTotal[0],
-          categoriaP_id: '',
-          iva: '',
-          utilidad: '',
-          }
+            proveedorP_id: "",
+            codigo: codigoComercial,
+            descripcion: linea.Detalle[0],
+            cantidad: linea.Cantidad[0],
+            precioUnitario: linea.PrecioUnitario[0],
+            montoTotal: linea.MontoTotal[0],
+            categoriaP_id: "",
+            ivaP_id: "",
+            utilidadP_id: "",
+          };
         });
 
         setProductos(productos);
@@ -74,6 +78,12 @@ export default function Home() {
     const newProductos = [...productos];
     newProductos[index][e.target.name] = e.target.value;
     setProductos(newProductos);
+
+     // Aplicar el valor de IVA y Utilidad seleccionado a todos los productos
+    newProductos.forEach((producto) => {
+      producto.ivaP_id = selectedIva;
+      producto.utilidadP_id = selectedUtility;
+    });
   };
 
   const handleProviderChange = (e) => {
@@ -107,7 +117,9 @@ export default function Home() {
                 />
               </svg>
             </div>
-            <p className="mt-2 text-sm text-gray-600">Arrastra un archivo aquí o haz clic para cargarlo</p>
+            <p className="mt-2 text-sm text-gray-600">
+              Arrastra un archivo aquí o haz clic para cargarlo
+            </p>
           </label>
           <input
             type="file"
@@ -118,7 +130,10 @@ export default function Home() {
           {fileName && <p className="mt-2">Archivo cargado: {fileName}</p>}
         </div>
         <div className="ml-4">
-          <button onClick={parseXML} className="bg-blue-500 text-white py-2 px-4 rounded">
+          <button
+            onClick={parseXML}
+            className="bg-blue-500 text-white py-2 px-4 rounded"
+          >
             Procesar XML
           </button>
         </div>
@@ -177,24 +192,32 @@ export default function Home() {
                 </td>
                 <td className="px-4 py-2">
                   <select
-                    name="iva"
-                    value={producto.iva}
-                    onChange={(e) => handleChanges(e, index)}
-                    className="w-full p-1 border rounded"
-                  >
-                    <option value="">IVA</option>
-                    {/* Agrega opciones de tasa de IVA aquí */}
+                   name="ivaP_id"
+                   value={selectedIva}
+                   onChange={(e) => setSelectedIva(e.target.value)}
+                   className="w-full p-1 border rounded"
+                 >
+                   <option value="">IVA</option>
+                   {iva.map((i) => (
+                     <option key={i.id} value={i.id}>
+                       {i.tasa}
+                     </option>
+                   ))}
                   </select>
                 </td>
                 <td className="px-4 py-2">
                   <select
-                    name="utilidad"
-                    value={producto.utilidad}
-                    onChange={(e) => handleChanges(e, index)}
+                    name="utilidadP_id"
+                    value={selectedUtility}
+                    onChange={(e) => setSelectedUtility(e.target.value)}
                     className="w-full p-1 border rounded"
                   >
                     <option value="">Utilidad</option>
-                    {/* Agrega opciones de tasa de utilidad aquí */}
+                    {utility.map((u) => (
+                      <option key={u.id} value={u.id}>
+                        {u.tasa}
+                      </option>
+                    ))}
                   </select>
                 </td>
               </tr>
@@ -203,7 +226,10 @@ export default function Home() {
         </table>
       </div>
       <div className="mt-4 text-right">
-        <button onClick={handleEnviar} className="bg-blue-500 text-white py-2 px-4 rounded">
+        <button
+          onClick={handleEnviar}
+          className="bg-blue-500 text-white py-2 px-4 rounded"
+        >
           Enviar
         </button>
       </div>
