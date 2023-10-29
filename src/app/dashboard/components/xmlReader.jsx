@@ -12,21 +12,11 @@ export default function Home() {
   const [selectedIva, setSelectedIva] = useState("");
   const [utility, setUtility] = useState([]);
   const [selectedUtility, setSelectedUtility] = useState("");
+  const [selectedProvider, setSelectedProvider] = useState("");
   const [providers, setProviders] = useState([]);
+  const [precioVenta, setPrecioVenta] = useState("");
 
   const [fileName, setFileName] = useState("");
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFileName(file.name);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setFacturaXML(e.target.result);
-      };
-      reader.readAsText(file);
-    }
-  };
 
   useEffect(() => {
     axios.get("/api/categories").then((response) => {
@@ -43,6 +33,36 @@ export default function Home() {
       setProviders(response.data);
     });
   }, []);
+  //cambiar o quitar
+  const getIvaTasa = (ivaId) => {
+    //console.log(`ivaId recibido:`, iva_id);
+    //console.log(`Array iva:`, iva);
+    const ivaSeleccionado = iva.find((i) => i.iva_id === parseInt(ivaId, 10));
+    //console.log(`IVA encontrado:`, ivaSeleccionado);
+    return ivaSeleccionado ? parseFloat(ivaSeleccionado.tasa) : 0;
+  };
+
+  const getUtilityTasa = (utilityId) => {
+    const utilitySeleccionado = utility.find(
+      (u) => u.utilidad_id === parseInt(utilityId, 10)
+    );
+    return utilitySeleccionado ? parseFloat(utilitySeleccionado.tasa) : 0;
+  };
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFileName(file.name);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setFacturaXML(e.target.result);
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  const redondearPrecio = (precio) => {
+    return Math.round(precio / 10) * 10;
+  };
 
   const parseXML = () => {
     if (!facturaXML) return;
@@ -54,18 +74,31 @@ export default function Home() {
       } else {
         const lineasDetalle =
           result.FacturaElectronica.DetalleServicio[0].LineaDetalle;
+
         const productos = lineasDetalle.map((linea) => {
           const codigoComercial = linea.CodigoComercial[0].Codigo[0];
+          const precioUnitario = parseFloat(linea.PrecioUnitario[0]);
+
+          // Calcula la tasa de IVA y utilidad
+          const ivaRate = getIvaTasa(selectedIva);
+          const utilityRate = getUtilityTasa(selectedUtility);
+
+          // Calcula el precio de venta
+          const precioVenta =
+            precioUnitario * (1 + utilityRate) * (1 + ivaRate);
+          let precioVentaRedondeado = redondearPrecio(precioVenta);
           return {
-            proveedorP_id: "",
             codigo: codigoComercial,
-            descripcion: linea.Detalle[0],
-            cantidad: linea.Cantidad[0],
-            precioUnitario: linea.PrecioUnitario[0],
+            nombre: linea.Detalle[0],
+            stock: linea.Cantidad[0],
+            precioUnitario: precioUnitario,
             montoTotal: linea.MontoTotal[0],
             categoriaP_id: "",
-            ivaP_id: "",
-            utilidadP_id: "",
+            categoriaP_id: "",
+            ivaP_id: selectedIva,
+            utilidadP_id: selectedUtility,
+            proveedorP_id: selectedProvider,
+            precioVenta: precioVentaRedondeado,
           };
         });
 
@@ -78,21 +111,84 @@ export default function Home() {
     const newProductos = [...productos];
     newProductos[index][e.target.name] = e.target.value;
     setProductos(newProductos);
+    console.log(newProductos);
+  };
 
-     // Aplicar el valor de IVA y Utilidad seleccionado a todos los productos
-    newProductos.forEach((producto) => {
-      producto.ivaP_id = selectedIva;
-      producto.utilidadP_id = selectedUtility;
-    });
+  const handleIvaChange = (e) => {
+    const newValue = e.target.value;
+    setSelectedIva(newValue);
+
+    // Actualiza todos los productos con el mismo valor de IVA
+    const newProductos = productos.map((producto) => ({
+      ...producto,
+      ivaP_id: newValue,
+    }));
+    setProductos(newProductos);
+  };
+
+  const handleUtilityChange = (e) => {
+    const newValue = e.target.value;
+    setSelectedUtility(newValue);
+
+    // Actualiza todos los productos con el mismo valor de utilidad
+    const newProductos = productos.map((producto) => ({
+      ...producto,
+      utilidadP_id: newValue,
+    }));
+    setProductos(newProductos);
   };
 
   const handleProviderChange = (e) => {
-    setProviders(e.target.value);
+    const newValue = e.target.value;
+    setSelectedProvider(newValue);
+    // Actualiza todos los productos con el mismo valor de proveedor
+    const newProductos = productos.map((producto) => ({
+      ...producto,
+      proveedorP_id: newValue,
+    }));
+    setProductos(newProductos);
   };
 
-  const handleEnviar = () => {
-    // Aquí puedes enviar los datos al servidor
-    // Usar 'productos' y 'selectedProvider' para enviar la información
+  const prepararDatosParaEnvio = () => {
+    const datosFiltrados = productos.map((producto) => {
+      return {
+        codigo: producto.codigo,
+        nombre: producto.nombre,
+        precioVenta: producto.precioVenta,
+        stock: producto.stock,
+        proveedorP_id: producto.proveedorP_id,
+        categoriaP_id: producto.categoriaP_id,
+        ivaP_id: producto.ivaP_id,
+        utilidadP_id: producto.utilidadP_id,
+      };
+    });
+    console.log("Datos Filtrados para Envío:", datosFiltrados);
+    return datosFiltrados;
+  };
+  useEffect(() => {
+    const datosParaEnvio = prepararDatosParaEnvio();
+    console.log("Prueba de Datos para Envío:", datosParaEnvio);
+  }, [productos]); // Dependiendo de productos para recalcular cuando cambien
+
+  const handleEnviar = async () => {
+    try {
+      const datosParaEnvio = prepararDatosParaEnvio();
+      if (datosParaEnvio.some(producto => !producto.codigo)) {
+        console.error("Algunos productos no tienen código válido", datosParaEnvio);
+        return;
+      }
+      const productResponse = await axios.post("/api/facturas", datosParaEnvio);
+
+      if(productResponse.status === 200){
+        alert("Datos enviados correctamente")
+      }else{
+        alert("Error al enviar los datos")
+      }
+    } catch (error) {
+      
+    }
+
+
   };
 
   return (
@@ -138,20 +234,62 @@ export default function Home() {
           </button>
         </div>
       </div>
-      <div className="mb-4">
-        <select
-          name="proveedorP_id"
-          value={productos.proveedorP_id}
-          onChange={(e) => handleChanges(e, index)}
-          className="w-full p-1 border rounded"
-        >
-          <option value="">Seleccionar Proveedor</option>
-          {providers.map((provider) => (
-            <option key={provider.id} value={provider.id}>
-              {provider.nombre}
-            </option>
-          ))}
-        </select>
+      <div className="mb-4 flex justify-between">
+        <div className="w-1/4">
+          <label htmlFor="providerSelect" className="block font-medium">
+            Seleccionar Proveedor:
+          </label>
+          <select
+            id="providerSelect"
+            name="proveedorP_id"
+            value={selectedProvider}
+            onChange={handleProviderChange}
+            className="w-full p-1 border rounded"
+          >
+            <option value="">Seleccionar Proveedor</option>
+            {providers.map((provider) => (
+              <option key={provider.proveedor_id} value={provider.proveedor_id}>
+                {provider.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="w-1/4">
+          <label htmlFor="ivaSelect" className="block font-medium">
+            Seleccionar IVA:
+          </label>
+          <select
+            id="ivaSelect"
+            value={selectedIva}
+            onChange={handleIvaChange}
+            className="w-full p-1 border rounded"
+          >
+            <option value="">IVA</option>
+            {iva.map((i) => (
+              <option key={i.iva_id} value={i.iva_id}>
+                {i.tasa}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="w-1/4">
+          <label htmlFor="utilitySelect" className="block font-medium">
+            Seleccionar Utilidad:
+          </label>
+          <select
+            id="utilitySelect"
+            value={selectedUtility}
+            onChange={handleUtilityChange}
+            className="w-full p-1 border rounded"
+          >
+            <option value="">Utilidad</option>
+            {utility.map((u) => (
+              <option key={u.utilidad_id} value={u.utilidad_id}>
+                {u.tasa}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
@@ -163,16 +301,15 @@ export default function Home() {
               <th className="px-4 py-2">Precio Unitario</th>
               <th className="px-4 py-2">Total</th>
               <th className="px-4 py-2">Categoría</th>
-              <th className="px-4 py-2">IVA</th>
-              <th className="px-4 py-2">Utilidad</th>
+              <th className="px-4 py-2">Precio venta</th>
             </tr>
           </thead>
           <tbody>
             {productos.map((producto, index) => (
               <tr key={index}>
                 <td className="px-4 py-2">{producto.codigo}</td>
-                <td className="px-4 py-2">{producto.descripcion}</td>
-                <td className="px-4 py-2">{producto.cantidad}</td>
+                <td className="px-4 py-2">{producto.nombre}</td>
+                <td className="px-4 py-2">{producto.stock}</td>
                 <td className="px-4 py-2">{producto.precioUnitario}</td>
                 <td className="px-4 py-2">{producto.montoTotal}</td>
                 <td className="px-4 py-2">
@@ -184,42 +321,16 @@ export default function Home() {
                   >
                     <option value="">Categoría</option>
                     {categories.map((category) => (
-                      <option key={category.id} value={category.id}>
+                      <option
+                        key={category.categoria_id}
+                        value={category.categoria_id}
+                      >
                         {category.nombre_categoria}
                       </option>
                     ))}
                   </select>
                 </td>
-                <td className="px-4 py-2">
-                  <select
-                   name="ivaP_id"
-                   value={selectedIva}
-                   onChange={(e) => setSelectedIva(e.target.value)}
-                   className="w-full p-1 border rounded"
-                 >
-                   <option value="">IVA</option>
-                   {iva.map((i) => (
-                     <option key={i.id} value={i.id}>
-                       {i.tasa}
-                     </option>
-                   ))}
-                  </select>
-                </td>
-                <td className="px-4 py-2">
-                  <select
-                    name="utilidadP_id"
-                    value={selectedUtility}
-                    onChange={(e) => setSelectedUtility(e.target.value)}
-                    className="w-full p-1 border rounded"
-                  >
-                    <option value="">Utilidad</option>
-                    {utility.map((u) => (
-                      <option key={u.id} value={u.id}>
-                        {u.tasa}
-                      </option>
-                    ))}
-                  </select>
-                </td>
+                <td className="px-4 py-2">{producto.precioVenta}</td>
               </tr>
             ))}
           </tbody>

@@ -35,7 +35,9 @@ export function ProductForm() {
     setProducts({
       ...products,
       [e.target.name]: e.target.value,
+      
     });
+    console.log(products);
   };
 
   const handleSubmit = async (e) => {
