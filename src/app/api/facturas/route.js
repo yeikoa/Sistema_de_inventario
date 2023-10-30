@@ -32,33 +32,39 @@ export async function GET() {
       );
     }
   }
-  
 
 export async function POST(request) {
     try {
-      const productos = await request.json();
-  
-      for (const producto of productos) {
-        const { codigo, nombre, precioVenta, stock, proveedorP_id, categoriaP_id, ivaP_id, utilidadP_id } = producto;
-  
-        // Verificar si el producto ya existe
-        const [existe] = await conn.query("SELECT * FROM Productos WHERE codigo = ?", [codigo]);
-  
-        if (existe.length > 0) {
-          // Producto existe, actualizar el stock
-          await conn.query("UPDATE Productos SET stock = stock + ? WHERE codigo = ?", [stock, codigo]);
-        } else {
-          // Producto no existe, insertar nuevo
-          await conn.query("INSERT INTO Productos SET ?", {
-            codigo, nombre, precioVenta, stock, proveedorP_id, categoriaP_id, ivaP_id, utilidadP_id,
-          });
+        const productos = await request.json();
+
+        const codigos = productos.map(p => p.codigo);
+        const resultado= await conn.query("SELECT * FROM Productos WHERE codigo IN (?)", [codigos]);
+        
+        console.log("Resultado de la consulta:", resultado);
+
+        const productosExistentes = resultado
+        //const productosExistentes = resultado[0] || [];
+
+        // Crear un mapa para un acceso rápido a los productos existentes por código
+        const mapaProductosExistentes = new Map(productosExistentes.map(p => [p.codigo, p]));
+
+        for (const producto of productos) {
+            const { codigo, nombre, precioVenta, stock, proveedorP_id, categoriaP_id, ivaP_id, utilidadP_id } = producto;
+
+            if (mapaProductosExistentes.has(codigo)) {
+               
+                await conn.query("UPDATE Productos SET stock = stock + ? WHERE codigo = ?", [stock, codigo]);
+            } else {
+              
+                await conn.query("INSERT INTO Productos (codigo, nombre, precioVenta, stock, proveedorP_id, categoriaP_id, ivaP_id, utilidadP_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
+                [codigo, nombre, precioVenta, stock, proveedorP_id, categoriaP_id, ivaP_id, utilidadP_id]);
+            }
         }
-      }
-  
-      return NextResponse.json({ success: true, message: "Operación completada correctamente" });
+
+        return NextResponse.json({ success: true, message: "Operación completada correctamente" });
     } catch (error) {
-      console.log(error);
-      return NextResponse.json({ message: error.message }, { status: 500 });
+        
+        console.log(error);
+        return NextResponse.json({ message: error.message }, { status: 500 });
     }
-  }
-  
+}
