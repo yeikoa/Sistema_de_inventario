@@ -1,97 +1,175 @@
 'use client'
+import axios from "axios";
 import { useState } from "react";
-import { FaSave, FaUser, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import {FaSave, FaUser, FaBuilding, FaPhone, FaEnvelope, FaMapMarkedAlt} from "react-icons/fa";
 
-export default function RegisterProvider() {
-  const [providerName, setProviderName] = useState("");
-  const [contactName, setContactName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
+export default function FormularioProveedor() {
+  const [proveedor, setProveedor] = useState({
+    nombre: "",
+    vendedor: "",
+    telefono: "",
+    email: "",
+    direccion: "",
+  });
 
-  const handleSubmit = (e) => {
+  const [error, setError] = useState("");
+  const [exito, setExito] = useState("");
+
+  const handleCambios = (e) => {
+    setProveedor({
+      ...proveedor,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Agregar lógica para guardar el proveedor en el sistema
+    setError("");
+    setExito("");
+
+    // Validación de los campos requeridos
+    if (!proveedor.nombre || !proveedor.vendedor || !proveedor.telefono || !proveedor.email || !proveedor.direccion) {
+      setError("Todos los campos son obligatorios. Por favor, complete todos los campos.");
+      return;
+    }
+
+    // Validación del formato del correo electrónico
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(proveedor.email)) {
+      setError("El formato del correo electrónico es inválido. Por favor, ingrese un correo electrónico válido.");
+      return;
+    }
+
+    // Aquí se pueden añadir más validaciones personalizadas si es necesario
+
+    try {
+      // Enviar datos al servidor para registrar el proveedor
+      const respuesta = await axios.post("/api/proveedores", proveedor);
+
+      if (respuesta.data.exito) {
+        //Se guardan los datos correctamente, pero no se ejecuta
+        //el if por eso la logica se implementa en el else
+        //dado que se esta haciendo el registro de manera correcta
+        setExito("Proveedor registrado con éxito");
+      } else {
+        const providerId = respuesta.data.id;
+        const registroProveedorData = {
+          proveedor_id: providerId,
+          nombre: proveedor.nombre,
+          vendedor: proveedor.vendedor,
+          telefono: proveedor.telefono,
+          email: proveedor.email,
+          direccion: proveedor.direccion,
+          estado: "Agregado",
+          fecha_cambio: new Date().toISOString(),
+        };
+        const registroResponse = await axios.post("/api/movimientos/proveedores", registroProveedorData);
+        if (registroResponse.data.exito) {
+          setProveedor({
+            nombre: "",
+            vendedor: "",
+            telefono: "",
+            email: "",
+            direccion: "",
+          });
+        }
+        setExito("El Proveedor se a registrado con éxito");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("Error al registrar el proveedor. Por favor, inténtelo de nuevo más tarde.");
+    }
   };
 
   return (
     <div className="bg-white min-h-screen p-8">
-      <div className="mx-auto p-6 bg-gray-200 rounded-lg shadow-md">
+      <div className="mx-auto p-6 bg-cyan-950 text-white rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold mb-4">Registrar Nuevo Proveedor</h1>
+
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
+        {exito && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            {exito}
+          </div>
+        )}
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="providerName" className="text-sm font-medium mb-2 flex items-center">
-              <FaUser className="text-gray-600 mr-2" />
-              Nombre del Proveedor
+            <label htmlFor="nombre" className="text-sm font-medium mb-2 flex items-center">
+              <FaBuilding className="mr-2" />Nombre del proveedor
             </label>
             <input
               type="text"
-              id="providerName"
-              className="w-full md:w-2/3 border rounded p-2"
-              placeholder="Ingrese el nombre del proveedor"
-              value={providerName}
-              onChange={(e) => setProviderName(e.target.value)}
+              id="nombre"
+              name="nombre"
+              className="w-full md:w-2/3 border rounded p-2 text-black"
+              placeholder="Ingrese el nombre de la empresa"
+              value={proveedor.nombre}
+              onChange={handleCambios}
             />
           </div>
 
           <div>
-            <label htmlFor="contactName" className="text-sm font-medium mb-2 flex items-center">
-              <FaUser className="text-gray-600 mr-2" />
-              Nombre del Contacto
+            <label htmlFor="vendedor" className="text-sm font-medium mb-2 flex items-center">
+              <FaUser className="mr-2" />Nombre del vendedor
             </label>
             <input
               type="text"
-              id="contactName"
-              className="w-full md:w-2/3 border rounded p-2"
-              placeholder="Ingrese el nombre del contacto"
-              value={contactName}
-              onChange={(e) => setContactName(e.target.value)}
+              id="vendedor"
+              name="vendedor"
+              className="w-full md:w-2/3 border rounded p-2 text-black"
+              placeholder="Ingrese el nombre del vendedor"
+              value={proveedor.vendedor}
+              onChange={handleCambios}
             />
           </div>
 
           <div>
-            <label htmlFor="phoneNumber" className="text-sm font-medium mb-2 flex items-center">
-              <FaPhone className="text-gray-600 mr-2" />
-              Número de Teléfono
+            <label htmlFor="telefono" className="text-sm font-medium mb-2 flex items-center">
+              <FaPhone className="mr-2" />Teléfono
             </label>
             <input
               type="text"
-              id="phoneNumber"
-              className="w-full md:w-2/3 border rounded p-2"
-              placeholder="Ingrese el número de teléfono"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              id="telefono"
+              name="telefono"
+              className="w-full md:w-2/3 border rounded p-2 text-black"
+              placeholder="Ingrese el teléfono de contacto"
+              value={proveedor.telefono}
+              onChange={handleCambios}
             />
           </div>
 
           <div>
             <label htmlFor="email" className="text-sm font-medium mb-2 flex items-center">
-              <FaEnvelope className="text-gray-600 mr-2" />
-              Email
+              <FaEnvelope className="mr-2" />Correo Electrónico
             </label>
             <input
               type="email"
               id="email"
-              className="w-full md:w-2/3 border rounded p-2"
-              placeholder="Ingrese el email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              className="w-full md:w-2/3 border rounded p-2 text-black"
+              placeholder="Ingrese el correo electrónico"
+              value={proveedor.email}
+              onChange={handleCambios}
             />
           </div>
 
           <div>
-            <label htmlFor="address" className="text-sm font-medium mb-2 flex items-center">
-              <FaMapMarkerAlt className="text-gray-600 mr-2" />
-              Dirección
+            <label htmlFor="direccion" className="text-sm font-medium mb-2 flex items-center">
+              <FaMapMarkedAlt className="mr-2" />Dirección
             </label>
             <input
               type="text"
-              id="address"
-              className="w-full md:w-2/3 border rounded p-2"
-              placeholder="Ingrese la dirección"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              id="direccion"
+              name="direccion"
+              className="w-full md:w-2/3 border rounded p-2 text-black"
+              placeholder="Ingrese la dirección de la empresa"
+              value={proveedor.direccion}
+              onChange={handleCambios}
             />
           </div>
 

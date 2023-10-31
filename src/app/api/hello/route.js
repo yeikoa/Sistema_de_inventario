@@ -6,3 +6,4 @@ export async function GET(){
     console.log(result);
     return NextResponse.json({message: result[0]['NOW()']})
 }
+delete (request);
