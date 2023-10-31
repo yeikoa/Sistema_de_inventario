@@ -1,28 +1,50 @@
-"use client"
+'use client'
 import React, { useState, useEffect } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
+import axios from 'axios';
 
-export default function ProvidersMovements() {
+export default function ProviderMovements() {
   const [searchTerm, setSearchTerm] = useState("");
   const [providerMovements, setProviderMovements] = useState([]);
 
   useEffect(() => {
-    async function fetchProviderMovements() {
-      try {
-        const response = await fetch('/api/movements/proveedores'); // Ajusta la ruta de la API según sea necesario
-        if (response.ok) {
-          const data = await response.json();
-          setProviderMovements(data);
-        } else {
-          console.error('Error al obtener los movimientos de proveedores');
-        }
-      } catch (error) {
-        console.error('Error al obtener los movimientos de proveedores:', error);
-      }
-    }
-
-    fetchProviderMovements();
+    // Realiza una solicitud GET a tu API para obtener los movimientos de proveedores
+    axios.get("/api/movimientos/proveedores")
+      .then((response) => {
+        setProviderMovements(response.data); 
+      })
+      .catch((error) => {
+        console.error("Error al cargar los movimientos de productos:", error);
+      });
   }, []);
+
+  // Función para formatear la fecha y hora en un formato más legible
+  const formatDateTime = (dateTimeStr) => {
+    const dateTime = new Date(dateTimeStr);
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true, // Habilita el formato 12 horas (AM/PM)
+    };
+    return dateTime.toLocaleString(undefined, options);
+  };
+
+  // Función para asignar una clase CSS de fondo en función del tipo de operación
+  const getOperationBackgroundClass = (tipoOperacion) => {
+    switch (tipoOperacion) {
+      case 'Agregado':
+        return 'bg-green-300 border border-4 border-green-300 rounded';
+      case 'Editado':
+        return 'bg-blue-300 border-4 border-blue-300 rounded';
+      case 'Inactivo':
+        return 'bg-red-300 border-4 border-red-300 rounded';
+      default:
+        return '';
+    }
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -30,7 +52,7 @@ export default function ProvidersMovements() {
         <AiOutlineSearch className="h-5 w-5 text-gray-500 mr-2" />
         <input
           type="text"
-          placeholder="Buscar movimientos de proveedores..."
+          placeholder="Buscar movimientos de productos..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border-0 outline-none flex-1"
@@ -41,11 +63,13 @@ export default function ProvidersMovements() {
         <table className="min-w-full bg-white border border-gray-300">
           <thead className="bg-gray-100">
             <tr>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Nombre</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Fecha y Hora</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Proveedor</th>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Vendedor</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Teléfono</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Telefono</th>
               <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Correo</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Dirección</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Direccion</th>
+              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Tipo de Operación</th>
             </tr>
           </thead>
           <tbody>
@@ -53,45 +77,39 @@ export default function ProvidersMovements() {
               .filter((movement) => {
                 const searchTermLower = searchTerm.toLowerCase();
                 return (
-                  movement.fecha.toLowerCase().includes(searchTermLower) ||
-                  movement.hora.toLowerCase().includes(searchTermLower) ||
-                  movement.nombreProveedor.toLowerCase().includes(searchTermLower) ||
+                  movement.nombre.toLowerCase().includes(searchTermLower) ||
+                  movement.vendedor.toLowerCase().includes(searchTermLower) ||
                   movement.telefono.toLowerCase().includes(searchTermLower) ||
-                  movement.correo.toString().includes(searchTermLower) ||
-                  movement.direccion.toString().includes(searchTermLower) ||
-                  movement.tipoMovimiento.toLowerCase().includes(searchTermLower)
+                  movement.email.toString().includes(searchTermLower) ||
+                  movement.direccion.toLowerCase().includes(searchTermLower) ||
+                  movement.estado.toLowerCase().includes(searchTermLower) ||
+                  movement.fecha_cambio.toLowerCase().includes(searchTermLower)
                 );
               })
               .map((movement, index) => (
                 <tr key={index}>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm">
-                    {movement.fecha}
+                    {formatDateTime(movement.fecha_cambio)}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm">
-                    {movement.hora}
+                    {movement.nombre}
                   </td>
-                  <td className="py-2 px-4 border-b border-gray-300 text-sm ">
-                    {movement.nombreProveedor}
+                  <td className="py-2 px-4 border-b border-gray-300 text-sm">
+                    {movement.vendedor}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm">
                     {movement.telefono}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm">
-                    {movement.correo}
+                    {movement.email}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-300 text-sm">
                     {movement.direccion}
                   </td>
-                  <td className="py-2 px-4 border-b border-gray-300 text-sm">
-                    {movement.tipoMovimiento === 'Activo' ? (
-                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                        {movement.tipoMovimiento}
-                      </span>
-                    ) : (
-                      <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full">
-                        {movement.tipoMovimiento}
-                      </span>
-                    )}
+                  <td className={`py-2 px-4 border-b border-gray-300 text-sm`}>
+                    <span className={getOperationBackgroundClass(movement.estado)}>
+                      {movement.estado}
+                    </span>
                   </td>
                 </tr>
               ))}
