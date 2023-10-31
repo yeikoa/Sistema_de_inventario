@@ -32,7 +32,7 @@ export default function Home() {
     axios.get("/api/impuestos/utilidad").then((response) => {
       setUtility(response.data);
     });
-    axios.get("/api/providerss").then((response) => {
+    axios.get("/api/proveedores").then((response) => {
       setProviders(response.data);
     });
   }, []);

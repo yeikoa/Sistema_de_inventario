@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaHome, FaUserFriends, FaWrench, FaRegListAlt, FaPaste, FaChevronDown, FaBars, FaExchangeAlt } from 'react-icons/fa';
+import { FaHome, FaUserFriends, FaWrench, FaRegListAlt, FaPaste, FaChevronDown, FaBars, FaExchangeAlt,FaStore } from 'react-icons/fa';
 
 const Navbar = () => {
   const [activeDropdown, setActiveDropdown] = useState("");
@@ -24,6 +24,7 @@ const Navbar = () => {
   const singleRoutes = [
     { href: '/dashboard/repuestosAlmacen', name: 'Repuestos', icon: <FaWrench className="h-5 w-5" /> },
     { href: '/dashboard/proveedoresTotal', name: 'Proveedores', icon: <FaUserFriends className="h-5 w-5" /> },
+    { href: '/dashboard/salidas', name: 'Salidas', icon: <FaStore className="h-5 w-5" /> },
     
   ];
 

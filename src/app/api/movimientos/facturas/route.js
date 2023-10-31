@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    // Obtencion de algunos datos de la tabla Productos, mas los nombres de las tablas Proveedores y Categorias
+    // Obtencion de algunos datos de la tabla Productos, mas los nombres de las tablas Proveedores
     const results = await conn.query(`
       SELECT
       f.factura_id,
