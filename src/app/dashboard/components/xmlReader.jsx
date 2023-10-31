@@ -15,6 +15,9 @@ export default function Home() {
   const [selectedProvider, setSelectedProvider] = useState("");
   const [providers, setProviders] = useState([]);
   const [precioVenta, setPrecioVenta] = useState("");
+  const[fecha, setFecha] = useState("");
+  const[codigoFactura, setCodigoFactura] = useState("");
+  const[totalComprobante, setTotalComprobante] = useState(0);
 
   const [fileName, setFileName] = useState("");
 
@@ -29,7 +32,7 @@ export default function Home() {
     axios.get("/api/impuestos/utilidad").then((response) => {
       setUtility(response.data);
     });
-    axios.get("/api/providerss").then((response) => {
+    axios.get("/api/proveedores").then((response) => {
       setProviders(response.data);
     });
   }, []);
@@ -74,11 +77,15 @@ export default function Home() {
       } else {
         const lineasDetalle =
           result.FacturaElectronica.DetalleServicio[0].LineaDetalle;
-
+          const codigoFactura =result.FacturaElectronica.NumeroConsecutivo[0];
+          setCodigoFactura(codigoFactura);
+          const totalComprobante = result.FacturaElectronica.ResumenFactura[0].TotalComprobante;
+          setTotalComprobante(totalComprobante);
+          
         const productos = lineasDetalle.map((linea) => {
           const codigoComercial = linea.CodigoComercial[0].Codigo[0];
           const precioUnitario = parseFloat(linea.PrecioUnitario[0]);
-
+         
           // Calcula la tasa de IVA y utilidad
           const ivaRate = getIvaTasa(selectedIva);
           const utilityRate = getUtilityTasa(selectedUtility);
@@ -99,6 +106,7 @@ export default function Home() {
             utilidadP_id: selectedUtility,
             proveedorP_id: selectedProvider,
             precioVenta: precioVentaRedondeado,
+            
           };
         });
 
@@ -148,7 +156,27 @@ export default function Home() {
     }));
     setProductos(newProductos);
   };
+  const facturaEnviar = () => {
 
+    const datosFactura = {
+      fecha: fecha,
+      total: totalComprobante,
+      proveedor_id: selectedProvider,
+      codigoFactura: codigoFactura,
+    };
+    
+    return datosFactura;
+  };
+  const detalleFactura = () => {
+    const datosDetalle = productos.map((producto) => {
+      return {
+        nombreProducto: producto.nombre,
+        cantidad: producto.stock,
+        precio_compra: producto.precioUnitario,
+      };
+    });
+    return datosDetalle;
+  };
   const prepararDatosParaEnvio = () => {
     const datosFiltrados = productos.map((producto) => {
       return {
@@ -165,9 +193,11 @@ export default function Home() {
     console.log("Datos Filtrados para Envío:", datosFiltrados);
     return datosFiltrados;
   };
+  //para probar
   useEffect(() => {
+    const datosFactura = detalleFactura();
     const datosParaEnvio = prepararDatosParaEnvio();
-    console.log("Prueba de Datos para Envío:", datosParaEnvio);
+    console.log("Prueba de Datos para Envío:", datosFactura);
   }, [productos]); // Dependiendo de productos para recalcular cuando cambien
 
   const handleEnviar = async () => {
@@ -188,6 +218,22 @@ export default function Home() {
       
     }
 
+    try {
+      const factura = facturaEnviar();
+      const detallesFactura = detalleFactura();
+      const datosEnvio = {
+        factura,
+        detalles: detallesFactura
+      };
+      const facturaResponse = await axios.post("/api/movimientos/facturas", datosEnvio);
+      if(facturaResponse.status === 200){
+        console.log("Datos enviados correctamente")
+      }else{
+        console.log("Error al enviar los datos")
+      }
+    } catch (error) {
+      
+    }
 
   };
 
@@ -290,6 +336,31 @@ export default function Home() {
             ))}
           </select>
         </div>
+        <div className="w-1/4">
+    <label htmlFor="fecha" className="block font-medium">
+      Fecha:
+    </label>
+    <input
+      type="date"
+      id="fecha"
+      value={fecha}
+      onChange={(e) => setFecha(e.target.value)}
+      className="w-full p-1 border rounded"
+    />
+  </div>
+  <div className="w-1/4">
+    <label htmlFor="total" className="block font-medium">
+      Total:
+    </label>
+    <input
+      readOnly
+      type="number"
+      id="total"
+      value={totalComprobante}
+      
+      className="w-full p-1 border rounded"
+    />
+  </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">

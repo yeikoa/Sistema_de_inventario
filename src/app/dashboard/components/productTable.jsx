@@ -204,7 +204,7 @@ function ProductTable() {
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody> 
               {filteredData.map((row, index) => {
                 const isEditing =
                   editingRow && editingRow.index === row.producto_id;
