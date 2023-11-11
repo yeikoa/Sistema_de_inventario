@@ -44,7 +44,7 @@ export async function POST(request) {
       // Insertar cada detalle de la factura
       for (const detalle of detalles) {
         await conn.query("INSERT INTO DetalleFacturasCompra SET ?", {
-          facturaD_id: facturaId,
+          factura_id: facturaId,
           ...detalle // Asegúrate de que los campos coincidan con tu tabla DetalleFacturasCompra
         });
       }

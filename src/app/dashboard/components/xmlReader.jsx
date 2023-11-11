@@ -1,4 +1,5 @@
 "use client";
+import { toast } from 'react-toastify';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import xml2js from "xml2js";
@@ -68,7 +69,19 @@ export default function Home() {
   };
 
   const parseXML = () => {
-    if (!facturaXML) return;
+    if (!facturaXML || !selectedProvider || !selectedIva || !selectedUtility || !fecha){
+      toast.error("Escoger todos los datos para procesar la factura.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+      
 
     const parser = new xml2js.Parser();
     parser.parseString(facturaXML, (err, result) => {
@@ -203,20 +216,57 @@ export default function Home() {
   const handleEnviar = async () => {
     try {
       const datosParaEnvio = prepararDatosParaEnvio();
-      if (datosParaEnvio.some(producto => !producto.codigo)) {
-        console.error("Algunos productos no tienen código válido", datosParaEnvio);
-        return;
+      if (!categories) {
+        toast.error("Asignar categoria a cada producto para guardar.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        return; 
       }
       const productResponse = await axios.post("/api/facturas", datosParaEnvio);
-
+  
       if(productResponse.status === 200){
-        alert("Datos enviados correctamente")
-      }else{
-        alert("Error al enviar los datos")
+        // Usar toast para mostrar un mensaje de éxito
+        toast.success("Datos enviados correctamente", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else {
+        // Usar toast para mostrar un mensaje de error
+        toast.error("Error al enviar los datos", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } catch (error) {
-      
+      // Usar toast para mostrar un mensaje de error
+      toast.error("Faltan datos por asignar: " , {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      //console.error("Error en la solicitud", error);
     }
+  
 
     try {
       const factura = facturaEnviar();

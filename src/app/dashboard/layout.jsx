@@ -1,8 +1,8 @@
 import Navbar from "./components/navbar";
 import Navsidebar from "./components/sidebar";
 import '.././globals.css'
-import SessionAuthProvider from "@/context/sessionAuthProvider";
 
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function DashboardLayout({ children }) {
   const isSidebarOpen = true;

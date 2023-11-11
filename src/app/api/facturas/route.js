@@ -45,7 +45,7 @@ export async function POST(request) {
         const productosExistentes = resultado
         //const productosExistentes = resultado[0] || [];
 
-        // Crear un mapa para un acceso rápido a los productos existentes por código
+        // mapa productos existentes por código
         const mapaProductosExistentes = new Map(productosExistentes.map(p => [p.codigo, p]));
 
         for (const producto of productos) {
