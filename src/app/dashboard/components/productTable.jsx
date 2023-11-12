@@ -2,9 +2,12 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { FaEdit, FaTrash, FaSave } from "react-icons/fa";
+import { FaEdit, FaTrash, FaSave, FaFilePdf } from "react-icons/fa";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { exportAllDataToPDF, exportCurrentPageToPDF } from "./TableToPDF";
 
 function ProductTable() {
   const router = useRouter();
@@ -15,13 +18,22 @@ function ProductTable() {
   const [providers, setProviders] = useState([]);
   const [categories, setCategories] = useState([]);
   const [editingRow, setEditingRow] = useState(null);
-
   const selectColumns = ["proveedor", "categoria"];
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+
 
   useEffect(() => {
     axios.get("/api/providerss").then((response) => {
-      console.log("Proveedores:", response.data);
-      setProviders(response.data);
+    
+      //setProviders(response.data);
+      const providersWithRenamedField = response.data.map(provider => ({
+        ...provider,
+        nombre_proveedor: provider.nombre // Cambiar 'nombre' a 'nombre_proveedor'
+      }));
+      console.log("Proveedores con campo renombrado:", providersWithRenamedField);
+      setProviders(providersWithRenamedField);
     });
 
     axios.get("/api/categories").then((response) => {
@@ -96,8 +108,10 @@ function ProductTable() {
       index: producto_id,
       data: {
         ...productToEdit,
-        proveedor_id: productToEdit.proveedor_id && productToEdit.proveedor_id.toString(),
-        categoria_id: productToEdit.categoria_id && productToEdit.categoria_id.toString(),
+        proveedor_id:
+          productToEdit.proveedor_id && productToEdit.proveedor_id.toString(),
+        categoria_id:
+          productToEdit.categoria_id && productToEdit.categoria_id.toString(),
         proveedor: providerName,
         categoria: categoryName,
       },
@@ -142,13 +156,41 @@ function ProductTable() {
       ],
     });
   };
-
   const filteredData = data.filter((row) => {
     return row[filterBy]
       .toString()
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
   });
+    // Calculando los índices de los elementos de la página actual
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+    // Función para cambiar de página
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  
+
+  const resolveNames = (item) => {
+    const provider = providers.find(
+      (p) => p.proveedor_id === item.proveedorP_id
+    );
+    const category = categories.find(
+      (c) => c.categoria_id === item.categoriaP_id
+    );
+
+    return {
+      ...item,//copia objeto
+      proveedor: provider ? provider.nombre_proveedor : item.proveedor,
+      categoria: category ? category.nombre_categoria : item.categoria,
+    };
+  };
+  const preparedCurrentItems = currentItems.map(resolveNames);
+  const preparedData = data.map(resolveNames);
+  console.log("Datos preparados:", preparedData);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filterBy]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -176,6 +218,22 @@ function ProductTable() {
             <option value="proveedor">Proveedor</option>
             <option value="categoria">Categoría</option>
           </select>
+          <button
+            onClick={() =>
+              exportCurrentPageToPDF(currentItems.map(resolveNames))
+            }
+            className="p-2 rounded bg-blue-500 text-white hover:bg-blue-700 flex items-center"
+          >
+            <FaFilePdf className="mr-2" />
+            Exportar Página Actual
+          </button>
+          <button
+            onClick={() => exportAllDataToPDF(data.map(resolveNames))}
+            className="p-2 rounded bg-green-500 text-white hover:bg-green-700 flex items-center"
+          >
+            <FaFilePdf className="mr-2" />
+            Exportar Todos los Datos
+          </button>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-300">
@@ -197,86 +255,91 @@ function ProductTable() {
                   Proveedor
                 </th>
                 <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">
-                  Categoria
+                  Categoría
                 </th>
                 <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">
                   Acciones
                 </th>
               </tr>
             </thead>
-            <tbody> 
-              {filteredData.map((row, index) => {
+            <tbody>
+              {currentItems.map((row, index) => {
                 const isEditing =
                   editingRow && editingRow.index === row.producto_id;
-                const { producto_id, ...rowWithoutProductId } = row;
                 return (
                   <tr
-                    key={producto_id}
+                    key={row.producto_id}
                     className={isEditing ? "bg-cyan-100" : "bg-white"}
                   >
-                    {Object.keys(rowWithoutProductId).map((key) => (
-                      <td
-                        key={key}
-                        className="py-2 px-4 border-b border-gray-300 text-sm"
-                      >
-                        {isEditing &&
-                        selectColumns.includes(key) ? (
-                          <select
-                            value={editingRow.data[key]}
-                            onChange={(e) =>
-                              setEditingRow((prevRow) => ({
-                                ...prevRow,
-                                data: {
-                                  ...prevRow.data,
-                                  [key]: e.target.value,
-                                },
-                              }))
-                            }
-                          >
-                            <option value="">
-                              Seleccionar{" "}
-                              {key === "proveedor" ? "proveedor" : "categoría"}
-                            </option>
-                            {key === "proveedor"
-                              ? providers.map((provider) => (
-                                  <option
-                                    key={provider.proveedor_id}
-                                    value={provider.proveedor_id}
-                                  >
-                                    {provider.nombre}
-                                  </option>
-                                ))
-                              : categories.map((category) => (
-                                  <option
-                                    key={category.categoria_id}
-                                    value={category.categoria_id}
-                                  >
-                                    {category.nombre_categoria}
-                                  </option>
-                                ))}
-                          </select>
-                        ) : (
-                          <input
-                            type="text"
-                            value={isEditing ? editingRow.data[key] : row[key]}
-                            onChange={(e) =>
-                              isEditing &&
-                              setEditingRow((prevRow) => ({
-                                ...prevRow,
-                                data: {
-                                  ...prevRow.data,
-                                  [key]: e.target.value,
-                                },
-                              }))
-                            }
-                            className={`w-full py-2 px-3 border rounded ${
-                              isEditing ? "" : "bg-gray-100"
-                            } ${isEditing ? "text-black" : "text-gray-500"}`}
-                            readOnly={!isEditing || key === "acciones"}
-                          />
-                        )}
-                      </td>
-                    ))}
+                    {Object.keys(row).map((key) => {
+                      if (key === "producto_id") return null;
+
+                      return (
+                        <td
+                          key={key}
+                          className="py-2 px-4 border-b border-gray-300 text-sm"
+                        >
+                          {isEditing ? (
+                            selectColumns.includes(key) ? (
+                              <select
+                                value={editingRow.data[key]}
+                                onChange={(e) =>
+                                  setEditingRow((prevRow) => ({
+                                    ...prevRow,
+                                    data: {
+                                      ...prevRow.data,
+                                      [key]: e.target.value,
+                                    },
+                                  }))
+                                }
+                                className="py-2 px-3 border rounded w-full"
+                              >
+                                <option value="">
+                                  Seleccionar{" "}
+                                  {key === "proveedor"
+                                    ? "proveedor"
+                                    : "categoría"}
+                                </option>
+                                {key === "proveedor"
+                                  ? providers.map((provider) => (
+                                      <option
+                                        key={provider.proveedor_id}
+                                        value={provider.proveedor_id}
+                                      >
+                                        {provider.nombre_proveedor}
+                                      </option>
+                                    ))
+                                  : categories.map((category) => (
+                                      <option
+                                        key={category.categoria_id}
+                                        value={category.categoria_id}
+                                      >
+                                        {category.nombre_categoria}
+                                      </option>
+                                    ))}
+                              </select>
+                            ) : (
+                              <input
+                                type="text"
+                                value={editingRow.data[key]}
+                                onChange={(e) =>
+                                  setEditingRow((prevRow) => ({
+                                    ...prevRow,
+                                    data: {
+                                      ...prevRow.data,
+                                      [key]: e.target.value,
+                                    },
+                                  }))
+                                }
+                                className="py-2 px-3 border rounded w-full"
+                              />
+                            )
+                          ) : (
+                            row[key]
+                          )}
+                        </td>
+                      );
+                    })}
                     <td className="py-2 px-4 border-b border-gray-300 text-sm">
                       <div className="flex space-x-2">
                         {isEditing ? (
@@ -307,10 +370,33 @@ function ProductTable() {
               })}
             </tbody>
           </table>
+          <div className="mt-4 flex justify-center">
+            <nav>
+              <ul className="inline-flex items-center -space-x-px">
+                {Array.from(
+                  { length: Math.ceil(data.length / itemsPerPage) },
+                  (_, i) => i + 1
+                ).map((number) => (
+                  <li key={number} className="mx-1">
+                    <a
+                      onClick={() => paginate(number)}
+                      href="#!"
+                      className={`py-2 px-4 leading-tight border ${
+                        currentPage === number
+                          ? "bg-cyan-700 text-white"
+                          : "bg-white text-cyan-700"
+                      } hover:bg-cyan-500 hover:text-white rounded`}
+                    >
+                      {number}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
 export default ProductTable;
