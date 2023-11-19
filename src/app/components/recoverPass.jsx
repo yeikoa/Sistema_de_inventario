@@ -3,20 +3,49 @@ import React, { useState } from "react";
 import { ChangePass } from "./changePass";
 import { FaUserLock, FaMotorcycle } from "react-icons/fa";
 import '../style.css';
+import { toast, ToastContainer } from 'react-toastify';
 
 export function RecoverPass() {
   const [Gmail, setGmail] = useState("");
   const [showChangePass, setShowChangePass] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const handleShowChangePass = () => {
+  const[message, setMessage] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const validateEmail = (email) => {
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return regex.test(email);
+  };
+  const sendVerificationCode = async () => {
+    if (!validateEmail(Gmail)) {
+      toast.error("Por favor, introduce una dirección de correo electrónico válida.");
+      return;
+    }
     setLoading(true);
-
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/send', {
+        method: 'POST',
+        body: JSON.stringify({ email: Gmail }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      if (data.success) {
+        localStorage.setItem('verificationCode', data.verificationCode);
+        localStorage.setItem('userEmail', Gmail);
+        toast.success("Correo enviado con éxito. Serás redirigido en breve.");
+        setButtonDisabled(true);
+        setTimeout(() => {
+          setShowChangePass(true); // Si quieres mostrar otra pantalla después de enviar el correo
+        }, 3000);
+      } else {
+        toast.error("Error al enviar el correo: " + data.message);
+      }
+    } catch (error) {
+      toast.error("Error al enviar el código: " + error.message);
+    } finally {
       setLoading(false);
-
-      setShowChangePass(true);
-    }, 2000);
+    }
   };
 
   if (showChangePass) {
@@ -25,6 +54,7 @@ export function RecoverPass() {
 
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-r from-gray-700 to-gray-300">
+      <ToastContainer/>
       <div className="w-full max-w-md p-12 bg-gray-300 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105">
         <div className="flex items-center justify-center mb-6">
           <div className="absolute top-0 left-0 p-4">
@@ -48,7 +78,7 @@ export function RecoverPass() {
                 <FaUserLock />
               </span>
               <input
-                type="text"
+                type="email"
                 placeholder="Correo"
                 className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-green-700 focus:border-green-700 transition-colors duration-300"
                 value={Gmail}
@@ -64,8 +94,8 @@ export function RecoverPass() {
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-teal-700 hover:bg-gray-900 transition-colors duration-300"
             }`}
-            onClick={handleShowChangePass}
-            disabled={loading}
+            onClick={sendVerificationCode}
+            disabled={loading || buttonDisabled}
           >
             {loading ? (
               <div className="flex items-center justify-center">

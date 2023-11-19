@@ -7,7 +7,11 @@ import '../style.css';
 export function ChangePass() {
   const [showLoginPage, setShowLoginPage] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [Gmail, setEmail] = useState(localStorage.getItem('userEmail') || '');
+  const [verificationCode, setVerificationCode] = useState(localStorage.getItem('verificationCode') || '');
 
+  console.log("Email:", Gmail);
+  console.log("Verification Code:", verificationCode);
   const handlePassChange = () => {
     setLoading(true);
 
