@@ -40,40 +40,17 @@ export function LoginPage() {
         setErrors([responseNextAuth.user.error]);
         return;
       }
-
-      router.push("/dashboard");
+     
+      toast.success("Inicio de sesión exitoso. Redirigiendo...", {
+        onClose: () => router.push("/dashboard")
+      });
+     
     } catch (error) {
       console.error(error);
       // Manejar otros errores aquí
+    } finally {
+      setLoading(false);
     }
-
-    // try {
-    //   // Realiza una solicitud al servidor para autenticar al usuario
-    //   const response = await axios.post("/api/usuarios", {
-    //     nombre_usuario,
-    //     contra,
-    //   });
-    //   setTimeout(() => {
-    //     if (response.data.success) {
-    //       toast.done(
-    //         "Iniciando sesión. Por favor, espere un momento..."
-    //       );
-    //       router.push("/dashboard");
-    //     } else {
-    //       // Las credenciales son incorrectas, muestra un mensaje de error
-    //       toast.error(
-    //         "Usuario o contraseña incorrectos. Por favor, intenta de nuevo."
-    //       );
-    //     }
-    //   }, 2000);
-    // } catch (error) {
-    //   console.error(error);
-    //   toast.error(
-    //     "Hubo un error al iniciar sesión. Por favor, intenta de nuevo."
-    //   );
-    // }
-
-    
   };
 
   const handleShowRecoverPass = () => {

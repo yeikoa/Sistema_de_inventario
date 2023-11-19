@@ -6,7 +6,7 @@ import '../style.css';
 import { toast, ToastContainer } from 'react-toastify';
 
 export function RecoverPass() {
-  const [Gmail, setGmail] = useState("");
+  const [email, setGmail] = useState("");
   const [showChangePass, setShowChangePass] = useState(false);
   const [loading, setLoading] = useState(false);
   const[message, setMessage] = useState("");
@@ -16,7 +16,7 @@ export function RecoverPass() {
     return regex.test(email);
   };
   const sendVerificationCode = async () => {
-    if (!validateEmail(Gmail)) {
+    if (!validateEmail(email)) {
       toast.error("Por favor, introduce una dirección de correo electrónico válida.");
       return;
     }
@@ -24,7 +24,7 @@ export function RecoverPass() {
     try {
       const response = await fetch('/api/send', {
         method: 'POST',
-        body: JSON.stringify({ email: Gmail }),
+        body: JSON.stringify({ email: email }),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -32,7 +32,7 @@ export function RecoverPass() {
       const data = await response.json();
       if (data.success) {
         localStorage.setItem('verificationCode', data.verificationCode);
-        localStorage.setItem('userEmail', Gmail);
+        localStorage.setItem('userEmail', email);
         toast.success("Correo enviado con éxito. Serás redirigido en breve.");
         setButtonDisabled(true);
         setTimeout(() => {
@@ -81,7 +81,7 @@ export function RecoverPass() {
                 type="email"
                 placeholder="Correo"
                 className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-green-700 focus:border-green-700 transition-colors duration-300"
-                value={Gmail}
+                value={email}
                 onChange={(e) => setGmail(e.target.value)}
                 disabled={loading}
               />
