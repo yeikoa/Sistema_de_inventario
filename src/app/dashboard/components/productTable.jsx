@@ -23,16 +23,17 @@ function ProductTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
-
   useEffect(() => {
     axios.get("/api/providerss").then((response) => {
-    
       //setProviders(response.data);
-      const providersWithRenamedField = response.data.map(provider => ({
+      const providersWithRenamedField = response.data.map((provider) => ({
         ...provider,
-        nombre_proveedor: provider.nombre // Cambiar 'nombre' a 'nombre_proveedor'
+        nombre_proveedor: provider.nombre, // Cambiar 'nombre' a 'nombre_proveedor'
       }));
-      console.log("Proveedores con campo renombrado:", providersWithRenamedField);
+      console.log(
+        "Proveedores con campo renombrado:",
+        providersWithRenamedField
+      );
       setProviders(providersWithRenamedField);
     });
 
@@ -162,13 +163,12 @@ function ProductTable() {
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
   });
-    // Calculando los índices de los elementos de la página actual
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-    // Función para cambiar de página
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
-  
+  // Calculando los índices de los elementos de la página actual
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  // Función para cambiar de página
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const resolveNames = (item) => {
     const provider = providers.find(
@@ -179,7 +179,7 @@ function ProductTable() {
     );
 
     return {
-      ...item,//copia objeto
+      ...item, //copia objeto
       proveedor: provider ? provider.nombre_proveedor : item.proveedor,
       categoria: category ? category.nombre_categoria : item.categoria,
     };

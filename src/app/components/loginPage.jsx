@@ -40,11 +40,10 @@ export function LoginPage() {
         setErrors([responseNextAuth.user.error]);
         return;
       }
-     
+
       toast.success("Inicio de sesión exitoso. Redirigiendo...", {
-        onClose: () => router.push("/dashboard")
+        onClose: () => router.push("/dashboard"),
       });
-     
     } catch (error) {
       console.error(error);
       // Manejar otros errores aquí
@@ -73,13 +72,13 @@ export function LoginPage() {
         </div>
         <div className="w-full md:w-1/2 p-12 bg-gray-300 shadow-md">
           <div className="flex items-center justify-center mb-6">
-            <h1 className="text-3xl font-semibold text-green-700">
+            <h1 className="text-3xl font-semibold text-cyan-900">
               Iniciar Sesión
             </h1>
           </div>
           <form className="space-y-4">
             <div className="mb-4 transition-transform duration-300 transform hover:-translate-y-1">
-              <label className="block text-teal-600 ml-8">Usuario</label>
+              <label className="block text-cyan-900 ml-8">Usuario</label>
               <div className="flex items-center">
                 <span className="mr-4 text-black-400">
                   <FaUserLock />
@@ -87,7 +86,7 @@ export function LoginPage() {
                 <input
                   type="email"
                   placeholder="test@test.com"
-                  className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-green-700 focus:border-green-700 transition-colors duration-300"
+                  className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-cyan-900 focus:border-cyan-900 transition-colors duration-300"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={loading}
@@ -95,7 +94,7 @@ export function LoginPage() {
               </div>
             </div>
             <div className="mb-4 transition-transform duration-300 transform hover:-translate-y-1">
-              <label className="block text-teal-600 ml-8">Contraseña</label>
+              <label className="block text-cyan-900 ml-8">Contraseña</label>
               <div className="flex items-center">
                 <span className="mr-4 text-black-400">
                   <FaLock />
@@ -103,7 +102,7 @@ export function LoginPage() {
                 <input
                   type="password"
                   placeholder="Ingresa tu contraseña"
-                  className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-green-700 focus:border-green-700 transition-colors duration-300"
+                  className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-cyan-900 focus:border-cyan-900 transition-colors duration-300"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={loading}
@@ -122,7 +121,7 @@ export function LoginPage() {
               className={`block w-full px-4 py-2 text-white rounded-md ${
                 loading
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-teal-700 hover:bg-gray-900 transition-colors duration-300"
+                  : "bg-cyan-900 hover:bg-gray-900 transition-colors duration-300"
               }`}
               onClick={handleLogin}
               disabled={loading}
@@ -137,10 +136,10 @@ export function LoginPage() {
             </button>
           </form>
           <div className="mt-4 text-center">
-            <p className="text-teal-600">
+            <p className="text-cyan-900">
               <a
                 href="#"
-                className="text-green-700"
+                className="text-cyan-900"
                 onClick={handleShowRecoverPass}
               >
                 ¿Recuperar Cuenta?

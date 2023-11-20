@@ -4,12 +4,30 @@ import Link from "next/link";
 import { FaUserFriends, FaGg } from "react-icons/fa";
 import { IoMdExit, IoMdArrowRoundBack } from "react-icons/io";
 import { signOut, useSession } from "next-auth/react";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const Navsidebar = ({ isOpen }) => {
   const { data: session } = useSession();
 
   const handleSignOut = async () => {
-    await signOut();
+    confirmAlert({
+      title: "Cerrar sesión",
+      message: "¿Estás seguro que deseas cerrar sesión?",
+      buttons: [
+        {
+          label: "Sí",
+          onClick: async() => {
+            await signOut();
+          },
+        },
+        {
+          label: "No",
+          onClick: () => {},
+        },
+      ],
+    });
+    //await signOut();
   };
 
   const routes = [
