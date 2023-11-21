@@ -242,7 +242,7 @@ function ProductTable() {
           </button>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300">
+          <table className="min-w-full bg-white border border-cyan-900">
             <thead className="bg-cyan-900 text-white">
               <tr>
                 <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold">
@@ -275,7 +275,7 @@ function ProductTable() {
                 return (
                   <tr
                     key={row.producto_id}
-                    className={isEditing ? "bg-cyan-100" : "bg-white"}
+                    className={isEditing ? "bg-cyan-100" : "bg-slate-200"}
                   >
                     {Object.keys(row).map((key) => {
                       if (key === "producto_id") return null;
@@ -284,7 +284,7 @@ function ProductTable() {
                       return (
                         <td
                           key={key}
-                          className="py-2 px-4 border-b border-gray-300 text-sm"
+                          className="py-2 px-4 border-b border-cyan-900 text-sm"
                         >
                           {isEditing ? (
                              nonEditableColumns.includes(key) ? (
@@ -350,7 +350,7 @@ function ProductTable() {
 
                       
                     })}
-                    <td className="py-2 px-4 border-b border-gray-300 text-sm">
+                    <td className="py-2 px-4 border-b border-cyan-900 text-sm">
                       <div className="flex space-x-2">
                         {isEditing ? (
                           <button
