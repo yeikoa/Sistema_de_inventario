@@ -21,3 +21,33 @@ export async function GET() {
       );
     }
   }
+  export async function POST(request) {
+    try {
+      const { nombre_categoria } =
+        await request.json();
+  
+      // Insertar un nuevo usuario en la tabla 'Usuarios'
+      const result = await conn.query(
+        "INSERT INTO Categorias (nombre_categoria) VALUES (?)",
+        [nombre_categoria]
+      );
+  
+      // Responder con los datos del usuario insertado y su ID
+      return NextResponse.json({
+        nombre_categoria,
+        
+        id: result.insertId,
+      });
+    } catch (error) {
+      // Manejar errores
+      console.error(error);
+      return NextResponse.json(
+        {
+          message: error.message,
+        },
+        {
+          status: 500,
+        }
+      );
+    }
+  }

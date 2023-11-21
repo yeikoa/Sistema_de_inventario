@@ -62,13 +62,13 @@ export function ChangePass() {
                 className="w-12 h-12"
               />
             </div>
-          <h1 className="text-3xl font-semibold text-green-700">
+          <h1 className="text-3xl font-semibold text-cyan-900">
             Recuperar cuenta
           </h1>
         </div>
         <form className="space-y-4">
           <div className="mb-4 transition-transform duration-300 transform hover:-translate-y-1">
-            <label className="block text-teal-600 ml-8">Código de recuperación</label>
+            <label className="block text-cyan-900 ml-8">Código de recuperación</label>
             <div className="flex items-center">
               <span className="mr-4 text-black-400">
                 <FaLock />
@@ -76,7 +76,7 @@ export function ChangePass() {
               <input
                 type="text"
                 placeholder="Código"
-                className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-green-700 focus:border-green-700 transition-colors duration-300"
+                className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-green-700 focus:border-cyan-900 transition-colors duration-300"
                 value={enteredCode}
                 onChange={(e) => setEnteredCode(e.target.value)}
                 disabled={loading}
@@ -84,7 +84,7 @@ export function ChangePass() {
             </div>
           </div>
           <div className="mb-4 transition-transform duration-300 transform hover:-translate-y-1">
-            <label className="block text-teal-600 ml-8">Nueva Contraseña</label>
+            <label className="block text-cyan-900 ml-8">Nueva Contraseña</label>
             <div className="flex items-center">
               <span className="mr-4 text-black-400">
                 <FaLock />
@@ -92,7 +92,7 @@ export function ChangePass() {
               <input
                  type="password"
                  placeholder="Ingresa tu nueva contraseña"
-                 className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-green-700 focus:border-green-700 transition-colors duration-300"
+                 className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-cyan-900 focus:border-cyan-900 transition-colors duration-300"
                  value={newPassword}
                  onChange={(e) => setNewPassword(e.target.value)}
                  disabled={loading}
@@ -104,7 +104,7 @@ export function ChangePass() {
             className={`block w-full px-4 py-2 text-white rounded-md ${
               loading
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-teal-700 hover:bg-gray-900 transition-colors duration-300"
+                : "bg-cyan-700 hover:bg-cyan-900 transition-colors duration-300"
             }`}
             onClick={handlePassChange}
             disabled={loading}

@@ -64,13 +64,13 @@ export function RecoverPass() {
               className="w-12 h-12"
             />
           </div>
-          <h1 className="text-3xl font-semibold text-green-700">
+          <h1 className="text-3xl font-semibold text-cyan-900">
             Recuperar cuenta
           </h1>
         </div>
         <form className="space-y-4">
           <div className="mb-4 transition-transform duration-300 transform hover:-translate-y-1">
-            <label className="block text-teal-600 ml-8">
+            <label className="block text-cyan-900 ml-8">
               Correo Electrónico
             </label>
             <div className="flex items-center">
@@ -80,7 +80,7 @@ export function RecoverPass() {
               <input
                 type="email"
                 placeholder="Correo"
-                className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-green-700 focus:border-green-700 transition-colors duration-300"
+                className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-cyan-900 focus:border-cyan-900 transition-colors duration-300"
                 value={email}
                 onChange={(e) => setGmail(e.target.value)}
                 disabled={loading}
@@ -92,7 +92,7 @@ export function RecoverPass() {
             className={`block w-full px-4 py-2 text-white rounded-md ${
               loading
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-teal-700 hover:bg-gray-900 transition-colors duration-300"
+                : "bg-cyan-900 hover:bg-gray-900 transition-colors duration-300"
             }`}
             onClick={sendVerificationCode}
             disabled={loading || buttonDisabled}

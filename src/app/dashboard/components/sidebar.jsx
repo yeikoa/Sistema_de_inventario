@@ -6,7 +6,7 @@ import { IoMdExit, IoMdArrowRoundBack } from "react-icons/io";
 import { signOut, useSession } from "next-auth/react";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-
+import { MdCategory } from 'react-icons/md';
 const Navsidebar = ({ isOpen }) => {
   const { data: session } = useSession();
 
@@ -32,8 +32,8 @@ const Navsidebar = ({ isOpen }) => {
 
   const routes = [
     {
-      href: "/dashboard/devoluciones",
-      icon: <IoMdArrowRoundBack className="h-5 w-5" />,
+      href: "/dashboard/categorias",
+      icon: <MdCategory className="h-5 w-5" />,
     },
     {
       href: "/dashboard/usuarios",
