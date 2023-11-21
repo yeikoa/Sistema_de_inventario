@@ -136,7 +136,7 @@ export default function Sales() {
       <div className="flex-1">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Productos seleccionados</h2>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200 text-sm">
+          <table className="min-w-full divide-y divide-gray-200 text-sm  border border-cyan-900">
             <thead className="bg-cyan-900">
               <tr>
                 <th className="px-6 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">Producto</th>
@@ -146,15 +146,15 @@ export default function Sales() {
             <tbody className="bg-slate-200 divide-y divide-gray-200" >
               {ventas.map((venta, index) => (
                 <tr key={index}>
-                  <td className="px-6 py-2 whitespace-nowrap text-sm text-black">{venta.label}</td>
-                  <td className="px-6 py-2 whitespace-nowrap text-sm text-black">{venta.cantidad}</td>
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-black border-b border-cyan-900">{venta.label}</td>
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-black border-b border-cyan-900">{venta.cantidad}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
         <div className="mt-4">
-          <button onClick={validarVentas} className="bg-green-600 text-white px-3 py-1 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50 text-sm">
+          <button onClick={validarVentas} className="bg-cyan-700 text-white px-3 py-1 rounded-md hover:bg-cyan-900 focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 text-sm">
             Validar Ventas
           </button>
         </div>
