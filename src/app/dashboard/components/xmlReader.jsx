@@ -257,6 +257,22 @@ export default function Home() {
           draggable: true,
           progress: undefined,
         });
+        const productId = productResponse.data.id;
+        for (const producto of productos) {
+          const registroInventarioData = {
+            productoR_id: producto.productId, // Asegúrate de que esta es la propiedad correcta
+            fecha: new Date().toISOString(),
+            tipo_operacion: "entrada",
+            cantidad: parseInt(producto.stock), // Aquí accedes a la cantidad de cada producto
+            nombre: producto.nombre,
+          };
+
+        // Realizar la inserción en la tabla RegistroInventario
+        const registroResponse = await axios.post(
+          "/api/movimientos/productos",
+          registroInventarioData
+        );
+        }
         limpiarDatosYScrollArriba();
       } else {
         // Usar toast para mostrar un mensaje de error

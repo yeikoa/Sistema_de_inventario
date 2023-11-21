@@ -6,6 +6,7 @@ import {
   AiOutlineCheck,
   AiOutlineClose,
 } from "react-icons/ai";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import axios from "axios";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
@@ -67,7 +68,7 @@ export function UsersTable({ users, onDeleteUser }) {
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">
         Lista de Usuarios
       </h2>
-      <table className="w-full text-left bg-white">
+      <table className="w-full text-left bg-white border border-cyan-900">
         <thead className="bg-cyan-900 text-white">
           <tr className="text-white uppercase text-sm leading-normal">
             <th className="py-3 px-6">Nombre de Usuario</th>
@@ -83,7 +84,7 @@ export function UsersTable({ users, onDeleteUser }) {
               key={user.usuario_id}
               className={user.usuario_id % 2 === 0 ? "bg-gray-50" : "bg-white"}
             >
-              <td className="py-3 px-6">
+              <td className="py-3 px-6 border-b border-cyan-900 text-sm">
                 {editUserId === user.usuario_id ? (
                   <input
                     type="text"
@@ -95,7 +96,7 @@ export function UsersTable({ users, onDeleteUser }) {
                   user.nombre_usuario
                 )}
               </td>
-              <td className="py-3 px-6">
+              <td className="py-3 px-6 border-b border-cyan-900 text-sm">
                 {editUserId === user.usuario_id ? (
                   <input
                     type="text"
@@ -107,7 +108,7 @@ export function UsersTable({ users, onDeleteUser }) {
                   user.nombre_completo
                 )}
               </td>
-              <td className="py-3 px-6">
+              <td className="py-3 px-6 border-b border-cyan-900 text-sm">
                 {editUserId === user.usuario_id ? (
                   <input
                     type="email"
@@ -119,7 +120,7 @@ export function UsersTable({ users, onDeleteUser }) {
                   user.email
                 )}
               </td>
-              <td className="py-3 px-6">
+              <td className="py-3 px-6 border-b border-cyan-900 text-sm">
                 {editUserId === user.usuario_id ? (
                   <select
                     value={editedUser.estado}
@@ -133,18 +134,18 @@ export function UsersTable({ users, onDeleteUser }) {
                   user.estado
                 )}
               </td>
-              <td className="py-3 px-6 flex justify-around items-center">
+              <td className="py-3 px-6 border-b border-cyan-900 items-center  ">
                 {editUserId === user.usuario_id ? (
                   <>
                     <button
                       onClick={() => saveField(user.usuario_id)}
-                      className="text-green-600 hover:text-green-800 transition duration-300"
+                      className="text-green-600 hover:text-green-800 transition duration-300 mr-2"
                     >
                       <AiOutlineCheck size={20} />
                     </button>
                     <button
                       onClick={cancelEditing}
-                      className="text-red-600 hover:text-red-800 transition duration-300"
+                      className="text-red-600 hover:text-red-800 transition duration-300 "
                     >
                       <AiOutlineClose size={20} />
                     </button>
@@ -153,15 +154,15 @@ export function UsersTable({ users, onDeleteUser }) {
                   <>
                     <button
                       onClick={() => startEditing(user.usuario_id)}
-                      className="text-blue-600 hover:text-blue-800 transition duration-300"
+                      className="text-blue-600 hover:text-blue-800 transition duration-300 mr-2"
                     >
-                      <AiOutlineEdit size={20} />
+                      <FaEdit size={20} />
                     </button>
                     <button
                       onClick={() => handleEliminate(user.usuario_id)}
                       className="text-red-600 hover:text-red-800 transition duration-300"
                     >
-                      <AiOutlineDelete size={20} />
+                      <FaTrash size={20} />
                     </button>
                   </>
                 )}

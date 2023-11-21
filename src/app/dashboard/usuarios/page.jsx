@@ -42,8 +42,9 @@ export default function User() {
 
   return (
     <div className="container mx-auto p-4">
-      <UsersTable users={users} onDeleteUser={deleteUser} />
       <UserRegistrationForm onAddUser={addUser} />
+      <UsersTable users={users} onDeleteUser={deleteUser} />
+      
     </div>
   );
 }

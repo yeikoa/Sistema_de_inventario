@@ -4,6 +4,7 @@ import axios from 'axios';
 import Select from 'react-select';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaTrash } from "react-icons/fa";
 
 export default function Sales() {
   const [productos, setProductos] = useState([]);
@@ -81,6 +82,7 @@ export default function Sales() {
       const productResponse = await axios.post("/api/salidas", ventasParaEnviar);
       if (productResponse.status === 200) {
         toast.success("Datos enviados correctamente");
+        setVentas([]);
       } else {
         toast.error("Error al enviar los datos");
       }
@@ -92,6 +94,12 @@ export default function Sales() {
 
   const customStyles = {
     menu: (provided) => ({ ...provided, zIndex: 9999 }),
+  };
+
+  const quitarProducto = (index) => {
+    // Crea una nueva lista excluyendo el producto con el índice dado
+    const nuevasVentas = ventas.filter((_, ventaIndex) => ventaIndex !== index);
+    setVentas(nuevasVentas);
   };
 
   return (
@@ -141,6 +149,7 @@ export default function Sales() {
               <tr>
                 <th className="px-6 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">Producto</th>
                 <th className="px-6 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">Cantidad</th>
+                <th className="px-6 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">Acciones</th>
               </tr>
             </thead>
             <tbody className="bg-slate-200 divide-y divide-gray-200" >
@@ -148,6 +157,11 @@ export default function Sales() {
                 <tr key={index}>
                   <td className="px-6 py-2 whitespace-nowrap text-sm text-black border-b border-cyan-900">{venta.label}</td>
                   <td className="px-6 py-2 whitespace-nowrap text-sm text-black border-b border-cyan-900">{venta.cantidad}</td>
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-black border-b border-cyan-900">
+                    <button onClick={() => quitarProducto(index)} className="text-red-600 hover:text-red-800">
+                      <FaTrash />
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
