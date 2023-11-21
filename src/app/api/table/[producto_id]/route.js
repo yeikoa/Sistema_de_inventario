@@ -34,20 +34,19 @@ export async function DELETE(request, { params }) {
     );
   }
 }
-export async function PUT(request, { params, body }) {
+export async function PUT(request) {
+  //console.log("body", params, body);
   try {
-    // Deshabilita temporalmente la restricción de clave foránea en RegistroInventario
-    await conn.query("SET FOREIGN_KEY_CHECKS=0");
 
-    const {codigo, nombre, precioVenta, cantidad, proveedor, categoria } = body;
+
+    const {producto_id, codigo, nombre, stock, proveedor_id, categoria_id } = await request.json();;
 
     const result = await conn.query(
-      "UPDATE Productos SET codigo = ?, nombre = ?, precioVenta = ?, cantidad = ?, proveedor = ?, categoria = ? WHERE producto_id = ?",
-      [nombre, precioVenta, cantidad, proveedor, categoria, params.producto_id]
+      "UPDATE Productos SET codigo = ?, nombre = ?, stock = ?, proveedorP_id = ?, categoriaP_id = ? WHERE producto_id = ?",
+      [codigo ,nombre, stock, proveedor_id, categoria_id, producto_id]
     );
 
-    // Vuelve a habilitar la restricción de clave foránea en RegistroInventario
-    await conn.query("SET FOREIGN_KEY_CHECKS=1"); 
+    
 
     if (result.affectedRows === 0) {
       return NextResponse.json(
@@ -58,6 +57,16 @@ export async function PUT(request, { params, body }) {
           status: 404,
         }
       );
+    }else{
+      return NextResponse.json({
+        message: "Producto actualizado con éxito",
+        producto_id,
+        codigo,
+        nombre,
+        stock,
+        proveedor_id,
+        categoria_id,
+      });
     }
 
     console.log(result);

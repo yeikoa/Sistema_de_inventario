@@ -10,6 +10,8 @@ import "jspdf-autotable";
 import { exportAllDataToPDF, exportCurrentPageToPDF } from "./TableToPDF";
 
 function ProductTable() {
+  const nonEditableColumns = ["precioVenta", "stock"];
+
   const router = useRouter();
   const [data, setData] = useState([]);
 
@@ -18,7 +20,7 @@ function ProductTable() {
   const [providers, setProviders] = useState([]);
   const [categories, setCategories] = useState([]);
   const [editingRow, setEditingRow] = useState(null);
-  const selectColumns = ["proveedor", "categoria"];
+  const selectColumns = ["proveedor_nombre", "categoria_nombre"];
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -30,10 +32,10 @@ function ProductTable() {
         ...provider,
         nombre_proveedor: provider.nombre, // Cambiar 'nombre' a 'nombre_proveedor'
       }));
-      console.log(
-        "Proveedores con campo renombrado:",
-        providersWithRenamedField
-      );
+      //console.log(
+       // "Proveedores con campo renombrado:",
+       // providersWithRenamedField
+      //);
       setProviders(providersWithRenamedField);
     });
 
@@ -46,11 +48,14 @@ function ProductTable() {
     axios
       .get("/api/table")
       .then((response) => {
+        //console.log("Datos de productos:", response.data);
         setData(response.data);
+       
       })
       .catch((error) => {
         console.error("Error al obtener datos de productos", error);
       });
+     
   }, []);
 
   async function DELETE(producto_id) {
@@ -93,31 +98,24 @@ function ProductTable() {
     });
   };
 
-  const handleEdit = (producto_id) => {
-    const productToEdit = data.find(
-      (product) => product.producto_id === producto_id
-    );
-    const provider = providers.find(
-      (provider) => provider.proveedor_id === productToEdit.proveedor_id
-    );
-    const providerName = provider && provider.nombre;
-    const category = categories.find(
-      (category) => category.categoria_id === productToEdit.categoria_id
-    );
-    const categoryName = category && category.nombre_categoria;
-    setEditingRow({
-      index: producto_id,
-      data: {
-        ...productToEdit,
-        proveedor_id:
-          productToEdit.proveedor_id && productToEdit.proveedor_id.toString(),
-        categoria_id:
-          productToEdit.categoria_id && productToEdit.categoria_id.toString(),
-        proveedor: providerName,
-        categoria: categoryName,
-      },
-    });
-  };
+ 
+    const handleEdit = (producto_id) => {
+      const productToEdit = data.find((product) => product.producto_id === producto_id);
+  
+      //Buscar los nombres en cada tabla y asignarlos a los campos correspondientes
+      const proveedorId = providers.find(p => p.nombre_proveedor === productToEdit.proveedor_nombre)?.proveedor_id || '';
+      const categoriaId = categories.find(c => c.nombre_categoria === productToEdit.categoria_nombre)?.categoria_id || '';
+    
+      setEditingRow({
+        index: producto_id,
+        data: {
+          ...productToEdit,
+          proveedor_id: proveedorId,
+          categoria_id: categoriaId
+        },
+      });
+    };
+  
 
   const handleSave = async (producto_id) => {
     confirmAlert({
@@ -128,14 +126,22 @@ function ProductTable() {
           label: "Sí",
           onClick: async () => {
             try {
-              const editedProduct = data.find(
-                (product) => product.producto_id === producto_id
-              );
+              const { producto_id,codigo, nombre,stock, proveedor_id ,categoria_id} = editingRow.data;
 
-              // Envía una solicitud PUT o POST al servidor para actualizar el producto
-              await axios.put(`/api/table/${producto_id}`, editedProduct);
+              const dataToUpdate = {
+                producto_id,
+                codigo,
+                nombre,
+                stock,
+                proveedor_id,
+                categoria_id
+                
+              };
+         
+              console.log("Datos actualizados del producto:", dataToUpdate);
+              
+              await axios.put(`/api/table/${producto_id}`, dataToUpdate);
 
-              // Después de actualizar el producto, obtén nuevamente los datos actualizados desde el servidor
               const response = await axios.get("/api/table");
               if (response.status === 204) {
                 router.push("/dashboard/repuestosAlmacen");
@@ -186,7 +192,7 @@ function ProductTable() {
   };
   const preparedCurrentItems = currentItems.map(resolveNames);
   const preparedData = data.map(resolveNames);
-  console.log("Datos preparados:", preparedData);
+  //console.log("Datos preparados:", preparedData);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -222,14 +228,14 @@ function ProductTable() {
             onClick={() =>
               exportCurrentPageToPDF(currentItems.map(resolveNames))
             }
-            className="p-2 rounded bg-blue-500 text-white hover:bg-blue-700 flex items-center"
+            className="p-2 rounded bg-cyan-900 text-white hover:bg-cyan-700 flex items-center"
           >
             <FaFilePdf className="mr-2" />
             Exportar Página Actual
           </button>
           <button
             onClick={() => exportAllDataToPDF(data.map(resolveNames))}
-            className="p-2 rounded bg-green-500 text-white hover:bg-green-700 flex items-center"
+            className="p-2 rounded bg-cyan-900 text-white hover:bg-cyan-700 flex items-center"
           >
             <FaFilePdf className="mr-2" />
             Exportar Todos los Datos
@@ -273,34 +279,36 @@ function ProductTable() {
                   >
                     {Object.keys(row).map((key) => {
                       if (key === "producto_id") return null;
-
+                      const isProveedor = key === "proveedor_nombre"; 
+                      const isCategoria = key === "categoria_nombre";
                       return (
                         <td
                           key={key}
                           className="py-2 px-4 border-b border-gray-300 text-sm"
                         >
                           {isEditing ? (
-                            selectColumns.includes(key) ? (
+                             nonEditableColumns.includes(key) ? (
+                              row[key]
+                            ) : isProveedor || isCategoria ? (
                               <select
-                                value={editingRow.data[key]}
-                                onChange={(e) =>
+                                value={isProveedor ? editingRow.data.proveedor_id : editingRow.data.categoria_id}
+                                onChange={(e) => {
+                                  const selectedId = e.target.value;
+                                  //console.log(isProveedor ? "Proveedor seleccionado ID:" : "Categoría seleccionada ID:", selectedId);
                                   setEditingRow((prevRow) => ({
                                     ...prevRow,
                                     data: {
                                       ...prevRow.data,
-                                      [key]: e.target.value,
+                                      [isProveedor ? "proveedor_id" : "categoria_id"]: selectedId,
                                     },
-                                  }))
-                                }
+                                  }));
+                                }}
                                 className="py-2 px-3 border rounded w-full"
                               >
-                                <option value="">
-                                  Seleccionar{" "}
-                                  {key === "proveedor"
-                                    ? "proveedor"
-                                    : "categoría"}
+                                <option value="">{isProveedor ? "Seleccionar Proveedor" : "Seleccionar Categoría"}
+                    
                                 </option>
-                                {key === "proveedor"
+                                {isProveedor
                                   ? providers.map((provider) => (
                                       <option
                                         key={provider.proveedor_id}
@@ -339,6 +347,8 @@ function ProductTable() {
                           )}
                         </td>
                       );
+
+                      
                     })}
                     <td className="py-2 px-4 border-b border-gray-300 text-sm">
                       <div className="flex space-x-2">
