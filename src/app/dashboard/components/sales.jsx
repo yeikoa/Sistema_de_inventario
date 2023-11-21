@@ -95,10 +95,10 @@ export default function Sales() {
   };
 
   return (
-    <div className="container mx-auto p-4 flex flex-wrap gap-4">
+    <div className="container mx-auto p-4 flex flex-wrap gap-4 ">
       <ToastContainer />
       <div className="flex-1">
-        <h1 className="text-xl font-semibold text-gray-800 mb-4">Registrar Venta</h1>
+        <h1 className="text-xl font-semibold text-gray-800 mb-4 mt-10">Registrar Venta</h1>
         <form onSubmit={agregarVenta} className="space-y-3">
           <div>
             <label htmlFor="producto" className="block text-sm font-medium text-gray-700">Producto</label>
@@ -127,14 +127,14 @@ export default function Sales() {
             {cantidadError && <p className="text-red-500 text-xs mt-1">{cantidadError}</p>}
           </div>
 
-          <button type="submit" className="w-full bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 text-sm">
+          <button type="submit" className="w-full bg-cyan-700 text-white px-3 py-1 rounded-md hover:bg-cyan-900 focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 text-sm">
             Agregar a la lista
           </button>
         </form>
       </div>
 
-      <div className="flex-1">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Productos seleccionados</h2>
+      <div className="flex-1 flex flex-col">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4 mt-10">Productos seleccionados</h2>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 text-sm  border border-cyan-900">
             <thead className="bg-cyan-900">
@@ -153,8 +153,11 @@ export default function Sales() {
             </tbody>
           </table>
         </div>
-        <div className="mt-4">
-          <button onClick={validarVentas} className="bg-cyan-700 text-white px-3 py-1 rounded-md hover:bg-cyan-900 focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 text-sm">
+        <div className="mt-14 flex justify-center"> 
+          <button 
+            onClick={validarVentas} 
+            className="bg-cyan-700 text-white px-3 py-1 rounded-md hover:bg-cyan-900 focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50 text-sm"
+          >
             Validar Ventas
           </button>
         </div>

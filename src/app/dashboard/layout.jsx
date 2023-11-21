@@ -14,6 +14,9 @@ export default function DashboardLayout({ children }) {
         <Navsidebar isOpen={isSidebarOpen} />
         <div className="flex-1 p-4 overflow-y-auto">{children}</div> {/* Contenido principal */}
       </div>
+      <footer className="mt-auto bg-gray-50 text-gray-600 text-center py-4 border-t border-gray-300">
+        <p>Derechos reservados © Eligam</p>
+      </footer>
     </div>
   );
 }
