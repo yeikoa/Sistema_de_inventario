@@ -33,7 +33,7 @@ const Navbar = () => {
     <nav className="fixed top-0 w-full flex items-center justify-between p-6 bg-cyan-950 text-white">
       <div className="flex items-center space-x-2">
         <Link href="/dashboard">
-          <span className="text-lg font-bold flex items-center space-x-2">
+          <span className="text-lg font-bold flex items-center space-x-2 ml-12">
             <FaHome className="h-5 w-5" /><span>ELIGAM</span>
           </span>
         </Link>

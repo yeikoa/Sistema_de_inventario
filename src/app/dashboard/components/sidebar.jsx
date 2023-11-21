@@ -52,7 +52,7 @@ const Navsidebar = ({ isOpen }) => {
         className={`flex-1 flex flex-col items-center justify-start ${
           isOpen ? "w-full" : "w-8"
         }`}
-        style={{ marginTop: isOpen ? "-270px" : "10px" }}
+        style={{ marginTop: isOpen ? "-270px" : "-270px" }}
       >
         {routes.map((route) => (
           <div key={route.href} className="relative group">

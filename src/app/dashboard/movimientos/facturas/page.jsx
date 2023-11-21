@@ -38,7 +38,7 @@ export default function BillsMovements() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 bg-gray-200">
+    <div className="max-w-7xl mx-auto px-4 bg-white">
       <div className="mb-4 mt-8 flex border border-gray-300 bg-white rounded-md px-4 py-2">
         <AiOutlineSearch className="h-5 w-5 text-gray-500 mr-2" />
         <input
@@ -61,17 +61,17 @@ export default function BillsMovements() {
             movement.hora?.toString().toLowerCase().includes(searchTermLower)
           );
         }).map((movement, index) => (
-          <div key={index} className="bg-slate-600 p-4 rounded-md shadow-md w-full relative">
+          <div key={index} className="border border-white bg-cyan-950  hover:bg-cyan-800 p-4 rounded-md shadow-md w-full">
             <h2 className="text-lg font-semibold text-white">{movement.codigoFactura}</h2>
             <p className="text-gray-200 mt-2">Proveedor: {movement.proveedor_nombre}</p>
             <p className="text-gray-200">Precio: {movement.total} </p>
             <p className="text-gray-200">Fecha: {movement.fecha}</p>
 
             <button
-              className="absolute top-16 right-12 w-10 h-10"
+              className="ml-auto w-16 h-16 flex items-center justify-center"
               onClick={() => openBillDetails(movement)}
             >
-              <FcFinePrint  className=" text-5xl inline-block mr-2" />
+              <FcFinePrint  className=" text-5xl inline-block mt--4 mr-2" />
             </button>
           </div>
         ))}

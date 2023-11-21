@@ -1,24 +1,51 @@
-import Navbar from "./components/navbar";
-import Navsidebar from "./components/sidebar";
-import '.././globals.css'
+'use client'
+import React, { useState } from 'react';
+import Navbar from './components/navbar';
+import Navsidebar from './components/sidebar';
+import { FaBars } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa'; // Importa el icono de cerrar
+import '.././globals.css';
 
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function DashboardLayout({ children }) {
-  const isSidebarOpen = true;
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-200"> {/* Contenedor principal de columna */}
+    <div className="flex flex-col h-screen bg-white">
       <Navbar />
-      <div className="flex"> {/* Fila para Navbar y Conteido */}
-        <Navsidebar isOpen={isSidebarOpen} />
-        <div className="flex-1 p-4 overflow-y-auto bg-gray-200">{children}</div> {/* Contenido principal */}
+      <div className="flex bg-white">
+        <div className={`fixed top-0 left-0 h-screen w-10 ${isSidebarOpen ? 'ml-0' : '-ml-64'}`} style={{ transition: 'margin-left 0.3s' }}>
+          {isSidebarOpen && <Navsidebar />}
+        </div>
+        <div className={`flex-1 p-4 overflow-y-auto bg-white-200 ml-0`} style={{ transition: 'margin-left 0.3s' }}>
+          {isSidebarOpen ? (
+            /* Botón para cerrar el sidebar cuando está abierto */
+            <button
+              className={`fixed top-9 left-4 z-10 text-white ${isSidebarOpen ? 'block' : 'hidden'}`}
+              onClick={toggleSidebar}
+            >
+              <FaTimes />
+            </button>
+          ) : (
+            /* Botón para abrir el sidebar cuando está cerrado */
+            <button
+              className={`fixed top-9 left-4 z-10 text-white ${isSidebarOpen ? 'hidden' : 'block'}`}
+              onClick={toggleSidebar}
+            >
+              <FaBars />
+            </button>
+          )}
+          {children}
+        </div>
       </div>
-      <footer className="mt-auto bg-gray-50 text-gray-600 text-center py-4 border-t border-gray-300">
+      <footer className="mt-auto bg-cyan-950 text-gray-200 text-center py-4 border-t border-gray-300">
         <p>Derechos reservados © Eligam</p>
       </footer>
     </div>
   );
 }
-
-
