@@ -291,9 +291,9 @@ export default function Home() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl mb-4">Procesar Factura</h1>
       <div className="flex items-center mb-4">
-        <div className="w-1/2 p-4 border border-dashed rounded-lg flex flex-col items-center justify-center">
-          <label htmlFor="fileInput" className="cursor-pointer">
-            <div className="w-16 h-16 bg-blue-500 text-white flex items-center justify-center rounded-lg">
+        <div className="w-1/2 p-4 border border-dashed rounded-lg flex flex-col items-center justify-center bg-slate-100">
+          <label htmlFor="fileInput" className="cursor-pointer bg-slate-100">
+            <div className="w-16 h-16 bg-cyan-900 text-white flex items-center justify-center rounded-lg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -309,7 +309,7 @@ export default function Home() {
                 />
               </svg>
             </div>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-gray-600 ">
               Arrastra un archivo aquí o haz clic para cargarlo
             </p>
           </label>
@@ -324,7 +324,7 @@ export default function Home() {
         <div className="ml-4">
           <button
             onClick={parseXML}
-            className="bg-blue-500 text-white py-2 px-4 rounded"
+            className="bg-cyan-900 text-white py-2 px-4 rounded"
           >
             Procesar XML
           </button>
@@ -413,10 +413,10 @@ export default function Home() {
   </div>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
+        <table className="w-full border-collapse border border-cyan-900">
+          <thead className='bg-cyan-900 text-white'>
             <tr>
-              <th className="px-4 py-2">Codigo</th>
+              <th className="px-4 py-2 ">Codigo</th>
               <th className="px-4 py-2 text-left">Descripción</th>
               <th className="px-4 py-2">Cantidad</th>
               <th className="px-4 py-2">Precio Unitario</th>
@@ -427,18 +427,18 @@ export default function Home() {
           </thead>
           <tbody>
             {productos.map((producto, index) => (
-              <tr key={index}>
-                <td className="px-4 py-2">{producto.codigo}</td>
-                <td className="px-4 py-2">{producto.nombre}</td>
-                <td className="px-4 py-2">{producto.stock}</td>
-                <td className="px-4 py-2">{producto.precioUnitario}</td>
-                <td className="px-4 py-2">{producto.montoTotal}</td>
-                <td className="px-4 py-2">
+              <tr className='bg-slate-200' key={index}>
+                <td className="px-4 py-2 border-b border-cyan-900" >{producto.codigo}</td>
+                <td className="px-4 py-2 border-b border-cyan-900">{producto.nombre}</td>
+                <td className="px-4 py-2 border-b border-cyan-900">{producto.stock}</td>
+                <td className="px-4 py-2 border-b border-cyan-900" border-b border-cyan-900>{producto.precioUnitario}</td>
+                <td className="px-4 py-2 border-b border-cyan-900">{producto.montoTotal}</td>
+                <td className="px-4 py-2 border-b border-cyan-900">
                   <select
                     name="categoriaP_id"
                     value={producto.categoriaP_id}
                     onChange={(e) => handleChanges(e, index)}
-                    className="w-full p-1 border rounded"
+                    className="w-full p-1 border rounded bg-slate-50"
                   >
                     <option value="">Categoría</option>
                     {categories.map((category) => (
@@ -451,7 +451,7 @@ export default function Home() {
                     ))}
                   </select>
                 </td>
-                <td className="px-4 py-2">{producto.precioVenta}</td>
+                <td className="px-4 py-2 border-b border-cyan-900">{producto.precioVenta}</td>
               </tr>
             ))}
           </tbody>
@@ -460,7 +460,7 @@ export default function Home() {
       <div className="mt-4 text-right">
         <button
           onClick={handleEnviar}
-          className="bg-blue-500 text-white py-2 px-4 rounded"
+          className="bg-cyan-900 text-white py-2 px-4 rounded"
         >
           Enviar
         </button>
