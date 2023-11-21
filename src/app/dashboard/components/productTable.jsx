@@ -275,7 +275,7 @@ function ProductTable() {
                 return (
                   <tr
                     key={row.producto_id}
-                    className={isEditing ? "bg-cyan-100" : "bg-slate-200"}
+                    className={isEditing ? "bg-slate-50" : "bg-slate-200"}
                   >
                     {Object.keys(row).map((key) => {
                       if (key === "producto_id") return null;
@@ -288,7 +288,7 @@ function ProductTable() {
                         >
                           {isEditing ? (
                              nonEditableColumns.includes(key) ? (
-                              row[key]
+                              key === "precioVenta" ? `₡${row[key]}` : row[key]
                             ) : isProveedor || isCategoria ? (
                               <select
                                 value={isProveedor ? editingRow.data.proveedor_id : editingRow.data.categoria_id}
@@ -343,7 +343,8 @@ function ProductTable() {
                               />
                             )
                           ) : (
-                            row[key]
+                         
+                            key === "precioVenta" ? `₡${row[key]}` : row[key]
                           )}
                         </td>
                       );

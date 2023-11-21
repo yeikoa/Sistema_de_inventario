@@ -213,6 +213,22 @@ export default function Home() {
     console.log("Prueba de Datos para Envío:", datosFactura);
   }, [productos]); // Dependiendo de productos para recalcular cuando cambien
 
+  const limpiarDatosYScrollArriba = () => {
+    // Resetear todos los estados a sus valores iniciales
+    setProductos([]);
+    setFacturaXML("");
+    setSelectedIva("");
+    setSelectedUtility("");
+    setSelectedProvider("");
+    setPrecioVenta("");
+    setFecha("");
+    setCodigoFactura("");
+    setTotalComprobante(0);
+    setFileName("");
+
+    // Llevar al usuario a la parte superior de la página
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  };
   const handleEnviar = async () => {
     try {
       const datosParaEnvio = prepararDatosParaEnvio();
@@ -241,6 +257,7 @@ export default function Home() {
           draggable: true,
           progress: undefined,
         });
+        limpiarDatosYScrollArriba();
       } else {
         // Usar toast para mostrar un mensaje de error
         toast.error("Error al enviar los datos", {
@@ -402,13 +419,14 @@ export default function Home() {
     <label htmlFor="total" className="block font-medium">
       Total:
     </label>
+    <span className="p-1 bg-gray-200">₡</span>
     <input
       readOnly
       type="number"
       id="total"
       value={totalComprobante}
       
-      className="w-full p-1 border rounded"
+      className="flex-1 p-1 rounded-r"
     />
   </div>
       </div>
@@ -431,8 +449,8 @@ export default function Home() {
                 <td className="px-4 py-2 border-b border-cyan-900" >{producto.codigo}</td>
                 <td className="px-4 py-2 border-b border-cyan-900">{producto.nombre}</td>
                 <td className="px-4 py-2 border-b border-cyan-900">{producto.stock}</td>
-                <td className="px-4 py-2 border-b border-cyan-900" border-b border-cyan-900>{producto.precioUnitario}</td>
-                <td className="px-4 py-2 border-b border-cyan-900">{producto.montoTotal}</td>
+                <td className="px-4 py-2 border-b border-cyan-900" border-b border-cyan-900>₡{producto.precioUnitario}</td>
+                <td className="px-4 py-2 border-b border-cyan-900">₡{producto.montoTotal}</td>
                 <td className="px-4 py-2 border-b border-cyan-900">
                   <select
                     name="categoriaP_id"
@@ -451,7 +469,7 @@ export default function Home() {
                     ))}
                   </select>
                 </td>
-                <td className="px-4 py-2 border-b border-cyan-900">{producto.precioVenta}</td>
+                <td className="px-4 py-2 border-b border-cyan-900">₡{producto.precioVenta}</td>
               </tr>
             ))}
           </tbody>
