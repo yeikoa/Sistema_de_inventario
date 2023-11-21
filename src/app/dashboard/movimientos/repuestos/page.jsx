@@ -1,51 +1,56 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { AiOutlineSearch } from 'react-icons/ai';
+import { AiOutlineSearch, AiFillPlusCircle, AiFillMinusCircle, AiFillDelete } from 'react-icons/ai';
 import axios from 'axios';
 
 export default function ProductsMovements() {
   const [searchTerm, setSearchTerm] = useState("");
   const [productMovements, setProductMovements] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 25; // Cantidad de elementos por página
 
   useEffect(() => {
-    // Realiza una solicitud GET a tu API para obtener los movimientos de productos
     axios.get("/api/movimientos/productos")
       .then((response) => {
-        setProductMovements(response.data); // Asigna los datos de la respuesta a productMovements
+        const sortedData = response.data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+        setProductMovements(sortedData);
       })
       .catch((error) => {
         console.error("Error al cargar los movimientos de productos:", error);
       });
   }, []);
 
-  // Función para formatear la fecha y hora en un formato más legible
   const formatDateTime = (dateTimeStr) => {
     const dateTime = new Date(dateTimeStr);
     const options = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true, // Habilita el formato 12 horas (AM/PM)
+      year: 'numeric', month: 'long', day: 'numeric', 
+      hour: 'numeric', minute: 'numeric', hour12: true,
     };
     return dateTime.toLocaleString(undefined, options);
   };
 
-  // Función para asignar una clase CSS de fondo en función del tipo de operación
-  const getOperationBackgroundClass = (tipoOperacion) => {
+  const getOperationIcon = (tipoOperacion) => {
     switch (tipoOperacion) {
       case 'entrada':
-        return 'bg-green-100 border border-4 border-green-100';
-      case 'agregado':
-        return 'bg-blue-100 border-4 border-blue-100';
+        return <AiFillPlusCircle className="text-green-700 mr-2" />;
       case 'eliminado':
-        return 'bg-red-100 border-4 border-red-100';
+        return <AiFillDelete className="text-red-500 mr-2" />;
       case 'disminuido':
-        return 'bg-orange-100 border-4 border-orange-100';
+        return <AiFillMinusCircle className="text-orange-500 mr-2" />;
       default:
-        return '';
+        return null; // No icon for other types
     }
+  };
+
+  // Paginación
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = productMovements.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(productMovements.length / itemsPerPage);
+
+  const changePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({top: 0, behavior: 'smooth'});
   };
 
   return (
@@ -60,19 +65,19 @@ export default function ProductsMovements() {
           className="border-0 outline-none flex-1"
         />
       </div>
-      
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300">
-          <thead className="bg-gray-100">
+
+      <div className="overflow-x-auto shadow-lg rounded-lg">
+        <table className="w-full text-left bg-slate-200 rounded-lg">
+          <thead className="text-xs font-semibold uppercase text-white bg-cyan-950">
             <tr>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Fecha y Hora</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Nombre</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Cantidad</th>
-              <th className="py-2 px-4 border-b border-gray-300 text-left text-sm uppercase font-semibold text-gray-600">Tipo de Operación</th>
+              <th className="px-6 py-3">Fecha y Hora</th>
+              <th className="px-6 py-3">Nombre</th>
+              <th className="px-6 py-3">Cantidad</th>
+              <th className="px-6 py-3">Tipo de Operación</th>
             </tr>
           </thead>
-          <tbody>
-            {productMovements
+          <tbody className="divide-y divide-black">
+            {currentItems
               .filter((movement) => {
                 const searchTermLower = searchTerm.toLowerCase();
                 return (
@@ -83,25 +88,29 @@ export default function ProductsMovements() {
                 );
               })
               .map((movement, index) => (
-                <tr key={index}>
-                  <td className="py-2 px-4 border-b border-gray-300 text-sm">
-                    {formatDateTime(movement.fecha)}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-300 text-sm">
-                    {movement.nombre}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-300 text-sm">
-                    {movement.cantidad}
-                  </td>
-                  <td className={`py-2 px-4 border-b border-gray-300 text-sm`}>
-                    <span className={getOperationBackgroundClass(movement.tipo_operacion)}>
-                      {movement.tipo_operacion}
-                    </span>
+                <tr key={index} className="hover:bg-gray-500">
+                  <td className="px-6 py-4 text-black">{formatDateTime(movement.fecha)}</td>
+                  <td className="px-6 py-4 text-black">{movement.nombre}</td>
+                  <td className="px-6 py-4 text-black">{movement.cantidad}</td>
+                  <td className="px-6 py-4 flex items-center">
+                    {getOperationIcon(movement.tipo_operacion)}
+                    <span className="font-medium text-sm text-black">{movement.tipo_operacion}</span>
                   </td>
                 </tr>
               ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="flex justify-center mt-4">
+        {[...Array(totalPages).keys()].map(number => (
+          <button 
+            key={number} 
+            onClick={() => changePage(number + 1)}
+            className={`mx-1 px-3 py-1 rounded ${currentPage === number + 1 ? 'bg-cyan-950 text-white' : 'bg-slate-200'}`}>
+            {number + 1}
+          </button>
+        ))}
       </div>
     </div>
   );
