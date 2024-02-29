@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { AiOutlineSearch, AiFillPlusCircle, AiFillMinusCircle, AiFillDelete } from 'react-icons/ai';
+import { AiOutlineSearch, AiFillPlusCircle, AiFillMinusCircle, AiFillDelete,AiFillEdit } from 'react-icons/ai';
 import axios from 'axios';
 
 export default function ProductsMovements() {
@@ -37,6 +37,8 @@ export default function ProductsMovements() {
         return <AiFillDelete className="text-red-500 mr-2" />;
       case 'disminuido':
         return <AiFillMinusCircle className="text-orange-500 mr-2" />;
+      case 'editado':
+        return <AiFillEdit className="text-yellow-500 mr-2" />;
       default:
         return null; // No icon for other types
     }

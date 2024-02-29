@@ -33,8 +33,8 @@ function ProductTable() {
         nombre_proveedor: provider.nombre, // Cambiar 'nombre' a 'nombre_proveedor'
       }));
       //console.log(
-       // "Proveedores con campo renombrado:",
-       // providersWithRenamedField
+      // "Proveedores con campo renombrado:",
+      // providersWithRenamedField
       //);
       setProviders(providersWithRenamedField);
     });
@@ -50,16 +50,26 @@ function ProductTable() {
       .then((response) => {
         //console.log("Datos de productos:", response.data);
         setData(response.data);
-       
       })
       .catch((error) => {
         console.error("Error al obtener datos de productos", error);
       });
-     
   }, []);
 
   async function DELETE(producto_id) {
     try {
+      const deleteMov = {
+        productoR_id: producto_id,
+        fecha: new Date().toISOString(),
+        tipo_operacion: "eliminado",
+        cantidad: 1,
+        nombre: data.find((product) => product.producto_id === producto_id)
+          .nombre,
+      };
+      const responseE = await axios.post(
+        "/api/movimientos/productos",
+        deleteMov
+      );
       // Envía una solicitud DELETE al servidor para eliminar el producto por su ID
       await axios.delete(`/api/table/${producto_id}`);
     } catch (error) {
@@ -76,10 +86,8 @@ function ProductTable() {
           label: "Sí",
           onClick: async () => {
             try {
-              // Llama a la función DELETE de tu API para eliminar el producto por su ID
               await DELETE(producto_id);
 
-              // Después de eliminar el producto, obtén nuevamente los datos actualizados desde el servidor
               const response = await axios.get("/api/table");
               if (response.status === 204) {
                 router.push("/dashboard/repuestosAlmacen");
@@ -98,24 +106,30 @@ function ProductTable() {
     });
   };
 
- 
-    const handleEdit = (producto_id) => {
-      const productToEdit = data.find((product) => product.producto_id === producto_id);
-  
-      //Buscar los nombres en cada tabla y asignarlos a los campos correspondientes
-      const proveedorId = providers.find(p => p.nombre_proveedor === productToEdit.proveedor_nombre)?.proveedor_id || '';
-      const categoriaId = categories.find(c => c.nombre_categoria === productToEdit.categoria_nombre)?.categoria_id || '';
-    
-      setEditingRow({
-        index: producto_id,
-        data: {
-          ...productToEdit,
-          proveedor_id: proveedorId,
-          categoria_id: categoriaId
-        },
-      });
-    };
-  
+  const handleEdit = (producto_id) => {
+    const productToEdit = data.find(
+      (product) => product.producto_id === producto_id
+    );
+
+    //Buscar los nombres en cada tabla y asignarlos a los campos correspondientes
+    const proveedorId =
+      providers.find(
+        (p) => p.nombre_proveedor === productToEdit.proveedor_nombre
+      )?.proveedor_id || "";
+    const categoriaId =
+      categories.find(
+        (c) => c.nombre_categoria === productToEdit.categoria_nombre
+      )?.categoria_id || "";
+
+    setEditingRow({
+      index: producto_id,
+      data: {
+        ...productToEdit,
+        proveedor_id: proveedorId,
+        categoria_id: categoriaId,
+      },
+    });
+  };
 
   const handleSave = async (producto_id) => {
     confirmAlert({
@@ -126,7 +140,14 @@ function ProductTable() {
           label: "Sí",
           onClick: async () => {
             try {
-              const { producto_id,codigo, nombre,stock, proveedor_id ,categoria_id} = editingRow.data;
+              const {
+                producto_id,
+                codigo,
+                nombre,
+                stock,
+                proveedor_id,
+                categoria_id,
+              } = editingRow.data;
 
               const dataToUpdate = {
                 producto_id,
@@ -134,14 +155,25 @@ function ProductTable() {
                 nombre,
                 stock,
                 proveedor_id,
-                categoria_id
-                
+                categoria_id,
               };
-         
-              console.log("Datos actualizados del producto:", dataToUpdate);
-              
-              await axios.put(`/api/table/${producto_id}`, dataToUpdate);
 
+              console.log("Datos actualizados del producto:", dataToUpdate);
+
+              await axios.put(`/api/table/${producto_id}`, dataToUpdate);
+              //Movimientos
+              const salesMoment = {
+                productoR_id: producto_id,
+                fecha: new Date().toISOString(),
+                tipo_operacion: "editado",
+                cantidad: 0,
+                nombre: nombre,
+              };
+              const responseM = await axios.post(
+                "/api/movimientos/productos",
+                salesMoment
+              );
+              //No esta funcionando el if
               const response = await axios.get("/api/table");
               if (response.status === 204) {
                 router.push("/dashboard/repuestosAlmacen");
@@ -279,7 +311,7 @@ function ProductTable() {
                   >
                     {Object.keys(row).map((key) => {
                       if (key === "producto_id") return null;
-                      const isProveedor = key === "proveedor_nombre"; 
+                      const isProveedor = key === "proveedor_nombre";
                       const isCategoria = key === "categoria_nombre";
                       return (
                         <td
@@ -287,11 +319,19 @@ function ProductTable() {
                           className="py-2 px-4 border-b border-cyan-900 text-sm"
                         >
                           {isEditing ? (
-                             nonEditableColumns.includes(key) ? (
-                              key === "precioVenta" ? `₡${row[key]}` : row[key]
+                            nonEditableColumns.includes(key) ? (
+                              key === "precioVenta" ? (
+                                `₡${row[key]}`
+                              ) : (
+                                row[key]
+                              )
                             ) : isProveedor || isCategoria ? (
                               <select
-                                value={isProveedor ? editingRow.data.proveedor_id : editingRow.data.categoria_id}
+                                value={
+                                  isProveedor
+                                    ? editingRow.data.proveedor_id
+                                    : editingRow.data.categoria_id
+                                }
                                 onChange={(e) => {
                                   const selectedId = e.target.value;
                                   //console.log(isProveedor ? "Proveedor seleccionado ID:" : "Categoría seleccionada ID:", selectedId);
@@ -299,14 +339,18 @@ function ProductTable() {
                                     ...prevRow,
                                     data: {
                                       ...prevRow.data,
-                                      [isProveedor ? "proveedor_id" : "categoria_id"]: selectedId,
+                                      [isProveedor
+                                        ? "proveedor_id"
+                                        : "categoria_id"]: selectedId,
                                     },
                                   }));
                                 }}
                                 className="py-2 px-3 border rounded w-full"
                               >
-                                <option value="">{isProveedor ? "Seleccionar Proveedor" : "Seleccionar Categoría"}
-                    
+                                <option value="">
+                                  {isProveedor
+                                    ? "Seleccionar Proveedor"
+                                    : "Seleccionar Categoría"}
                                 </option>
                                 {isProveedor
                                   ? providers.map((provider) => (
@@ -342,14 +386,13 @@ function ProductTable() {
                                 className="py-2 px-3 border rounded w-full"
                               />
                             )
+                          ) : key === "precioVenta" ? (
+                            `₡${row[key]}`
                           ) : (
-                         
-                            key === "precioVenta" ? `₡${row[key]}` : row[key]
+                            row[key]
                           )}
                         </td>
                       );
-
-                      
                     })}
                     <td className="py-2 px-4 border-b border-cyan-900 text-sm">
                       <div className="flex space-x-2">

@@ -1,5 +1,5 @@
 "use client";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import xml2js from "xml2js";
@@ -16,9 +16,9 @@ export default function Home() {
   const [selectedProvider, setSelectedProvider] = useState("");
   const [providers, setProviders] = useState([]);
   const [precioVenta, setPrecioVenta] = useState("");
-  const[fecha, setFecha] = useState("");
-  const[codigoFactura, setCodigoFactura] = useState("");
-  const[totalComprobante, setTotalComprobante] = useState(0);
+  const [fecha, setFecha] = useState("");
+  const [codigoFactura, setCodigoFactura] = useState("");
+  const [totalComprobante, setTotalComprobante] = useState(0);
 
   const [fileName, setFileName] = useState("");
 
@@ -69,7 +69,13 @@ export default function Home() {
   };
 
   const parseXML = () => {
-    if (!facturaXML || !selectedProvider || !selectedIva || !selectedUtility || !fecha){
+    if (
+      !facturaXML ||
+      !selectedProvider ||
+      !selectedIva ||
+      !selectedUtility ||
+      !fecha
+    ) {
       toast.error("Escoger todos los datos para procesar la factura.", {
         position: "top-right",
         autoClose: 5000,
@@ -81,7 +87,6 @@ export default function Home() {
       });
       return;
     }
-      
 
     const parser = new xml2js.Parser();
     parser.parseString(facturaXML, (err, result) => {
@@ -90,15 +95,16 @@ export default function Home() {
       } else {
         const lineasDetalle =
           result.FacturaElectronica.DetalleServicio[0].LineaDetalle;
-          const codigoFactura =result.FacturaElectronica.NumeroConsecutivo[0];
-          setCodigoFactura(codigoFactura);
-          const totalComprobante = result.FacturaElectronica.ResumenFactura[0].TotalComprobante;
-          setTotalComprobante(totalComprobante);
-          
+        const codigoFactura = result.FacturaElectronica.NumeroConsecutivo[0];
+        setCodigoFactura(codigoFactura);
+        const totalComprobante =
+          result.FacturaElectronica.ResumenFactura[0].TotalComprobante;
+        setTotalComprobante(totalComprobante);
+
         const productos = lineasDetalle.map((linea) => {
           const codigoComercial = linea.CodigoComercial[0].Codigo[0];
           const precioUnitario = parseFloat(linea.PrecioUnitario[0]);
-         
+
           // Calcula la tasa de IVA y utilidad
           const ivaRate = getIvaTasa(selectedIva);
           const utilityRate = getUtilityTasa(selectedUtility);
@@ -119,7 +125,6 @@ export default function Home() {
             utilidadP_id: selectedUtility,
             proveedorP_id: selectedProvider,
             precioVenta: precioVentaRedondeado,
-            
           };
         });
 
@@ -170,14 +175,13 @@ export default function Home() {
     setProductos(newProductos);
   };
   const facturaEnviar = () => {
-
     const datosFactura = {
       fecha: fecha,
       total: totalComprobante,
       proveedor_id: selectedProvider,
       codigoFactura: codigoFactura,
     };
-    
+
     return datosFactura;
   };
   const detalleFactura = () => {
@@ -227,7 +231,7 @@ export default function Home() {
     setFileName("");
 
     // Llevar al usuario a la parte superior de la página
-    window.scrollTo({top: 0, behavior: 'smooth'});
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const handleEnviar = async () => {
     try {
@@ -242,11 +246,11 @@ export default function Home() {
           draggable: true,
           progress: undefined,
         });
-        return; 
+        return;
       }
       const productResponse = await axios.post("/api/facturas", datosParaEnvio);
-  
-      if(productResponse.status === 200){
+
+      if (productResponse.status === 200) {
         // Usar toast para mostrar un mensaje de éxito
         toast.success("Datos enviados correctamente", {
           position: "top-right",
@@ -267,11 +271,11 @@ export default function Home() {
             nombre: producto.nombre,
           };
 
-        // Realizar la inserción en la tabla RegistroInventario
-        const registroResponse = await axios.post(
-          "/api/movimientos/productos",
-          registroInventarioData
-        );
+          // Realizar la inserción en la tabla RegistroInventario
+          const registroResponse = await axios.post(
+            "/api/movimientos/productos",
+            registroInventarioData
+          );
         }
         limpiarDatosYScrollArriba();
       } else {
@@ -288,7 +292,7 @@ export default function Home() {
       }
     } catch (error) {
       // Usar toast para mostrar un mensaje de error
-      toast.error("Faltan datos por asignar: " , {
+      toast.error("Faltan datos por asignar: ", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -299,25 +303,24 @@ export default function Home() {
       });
       //console.error("Error en la solicitud", error);
     }
-  
 
     try {
       const factura = facturaEnviar();
       const detallesFactura = detalleFactura();
       const datosEnvio = {
         factura,
-        detalles: detallesFactura
+        detalles: detallesFactura,
       };
-      const facturaResponse = await axios.post("/api/movimientos/facturas", datosEnvio);
-      if(facturaResponse.status === 200){
-        console.log("Datos enviados correctamente")
-      }else{
-        console.log("Error al enviar los datos")
+      const facturaResponse = await axios.post(
+        "/api/movimientos/facturas",
+        datosEnvio
+      );
+      if (facturaResponse.status === 200) {
+        console.log("Datos enviados correctamente");
+      } else {
+        console.log("Error al enviar los datos");
       }
-    } catch (error) {
-      
-    }
-
+    } catch (error) {}
   };
 
   return (
@@ -420,35 +423,34 @@ export default function Home() {
           </select>
         </div>
         <div className="w-1/4">
-    <label htmlFor="fecha" className="block font-medium">
-      Fecha:
-    </label>
-    <input
-      type="date"
-      id="fecha"
-      value={fecha}
-      onChange={(e) => setFecha(e.target.value)}
-      className="w-full p-1 border rounded"
-    />
-  </div>
-  <div className="w-1/4">
-    <label htmlFor="total" className="block font-medium">
-      Total:
-    </label>
-    <span className="p-1 bg-gray-200">₡</span>
-    <input
-      readOnly
-      type="number"
-      id="total"
-      value={totalComprobante}
-      
-      className="flex-1 p-1 rounded-r"
-    />
-  </div>
+          <label htmlFor="fecha" className="block font-medium">
+            Fecha:
+          </label>
+          <input
+            type="date"
+            id="fecha"
+            value={fecha}
+            onChange={(e) => setFecha(e.target.value)}
+            className="w-full p-1 border rounded"
+          />
+        </div>
+        <div className="w-1/4">
+          <label htmlFor="total" className="block font-medium">
+            Total:
+          </label>
+          <span className="p-1 bg-gray-200">₡</span>
+          <input
+            readOnly
+            type="number"
+            id="total"
+            value={totalComprobante}
+            className="flex-1 p-1 rounded-r"
+          />
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse border border-cyan-900">
-          <thead className='bg-cyan-900 text-white'>
+          <thead className="bg-cyan-900 text-white">
             <tr>
               <th className="px-4 py-2 ">Codigo</th>
               <th className="px-4 py-2 text-left">Descripción</th>
@@ -461,12 +463,26 @@ export default function Home() {
           </thead>
           <tbody>
             {productos.map((producto, index) => (
-              <tr className='bg-slate-200' key={index}>
-                <td className="px-4 py-2 border-b border-cyan-900" >{producto.codigo}</td>
-                <td className="px-4 py-2 border-b border-cyan-900">{producto.nombre}</td>
-                <td className="px-4 py-2 border-b border-cyan-900">{producto.stock}</td>
-                <td className="px-4 py-2 border-b border-cyan-900" border-b border-cyan-900>₡{producto.precioUnitario}</td>
-                <td className="px-4 py-2 border-b border-cyan-900">₡{producto.montoTotal}</td>
+              <tr className="bg-slate-200" key={index}>
+                <td className="px-4 py-2 border-b border-cyan-900">
+                  {producto.codigo}
+                </td>
+                <td className="px-4 py-2 border-b border-cyan-900">
+                  {producto.nombre}
+                </td>
+                <td className="px-4 py-2 border-b border-cyan-900">
+                  {producto.stock}
+                </td>
+                <td
+                  className="px-4 py-2 border-b border-cyan-900"
+                  border-b
+                  border-cyan-900
+                >
+                  ₡{producto.precioUnitario}
+                </td>
+                <td className="px-4 py-2 border-b border-cyan-900">
+                  ₡{producto.montoTotal}
+                </td>
                 <td className="px-4 py-2 border-b border-cyan-900">
                   <select
                     name="categoriaP_id"
@@ -485,7 +501,9 @@ export default function Home() {
                     ))}
                   </select>
                 </td>
-                <td className="px-4 py-2 border-b border-cyan-900">₡{producto.precioVenta}</td>
+                <td className="px-4 py-2 border-b border-cyan-900">
+                  ₡{producto.precioVenta}
+                </td>
               </tr>
             ))}
           </tbody>
