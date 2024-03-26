@@ -19,7 +19,7 @@ export async function GET() {
     );
   }
 }
-export async function POST(request) {
+export async function PUT(request) {
   try {
       // Los datos recibidos ahora serán una lista de objetos con producto_id y cantidad vendida
       const ventas = await request.json();

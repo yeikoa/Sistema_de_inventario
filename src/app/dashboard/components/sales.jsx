@@ -9,11 +9,9 @@ import { FaTrash } from "react-icons/fa";
 export default function Sales() {
   const [productos, setProductos] = useState([]);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
-  // Inicializa ventas como un array vacío
   const [ventas, setVentas] = useState([]);
   const [cantidadError, setCantidadError] = useState("");
 
-  // Cargar ventas desde localStorage después de que el componente se monta
   useEffect(() => {
     const ventasGuardadas = localStorage.getItem("ventas");
     if (ventasGuardadas) {
@@ -21,7 +19,6 @@ export default function Sales() {
     }
   }, []);
 
-  // Guardar ventas en localStorage cada vez que cambian
   useEffect(() => {
     localStorage.setItem("ventas", JSON.stringify(ventas));
   }, [ventas]);
@@ -75,6 +72,15 @@ export default function Sales() {
       return;
     }
     if (productoSeleccionado && productoSeleccionado.cantidad > 0) {
+      const updatedProductos = productos.map((p) => {
+        if (p.value === productoSeleccionado.value) {
+          return { ...p, stock: p.stock - productoSeleccionado.cantidad };
+        }
+        return p;
+      });
+      setProductos(updatedProductos);
+
+      // Add product to ventas state
       setVentas([...ventas, productoSeleccionado]);
       setProductoSeleccionado(null);
     }
@@ -86,10 +92,7 @@ export default function Sales() {
         productoId: v.value,
         cantidad: v.cantidad,
       }));
-      const productResponse = await axios.post(
-        "/api/salidas",
-        ventasParaEnviar
-      );
+      const productResponse = await axios.put("/api/salidas", ventasParaEnviar);
       if (productResponse.status === 200) {
         toast.success("Datos enviados correctamente");
         setVentas([]);
@@ -120,9 +123,20 @@ export default function Sales() {
   };
 
   const quitarProducto = (index) => {
-    // Crea una nueva lista excluyendo el producto con el índice dado
+    // Remove product from ventas state
     const nuevasVentas = ventas.filter((_, ventaIndex) => ventaIndex !== index);
     setVentas(nuevasVentas);
+    const productoDevuelto = ventas[index];
+    const productosActualizados = productos.map((p) => {
+      if (p.value === productoDevuelto.value) {
+        return {
+          ...p,
+          stock: parseInt(p.stock, 10) + parseInt(productoDevuelto.cantidad),
+        };
+      }
+      return p;
+    });
+    setProductos(productosActualizados);
   };
 
   return (
