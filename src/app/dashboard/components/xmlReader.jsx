@@ -104,6 +104,8 @@ export default function Home() {
         const productos = lineasDetalle.map((linea) => {
           const codigoComercial = linea.CodigoComercial[0].Codigo[0];
           const precioUnitario = parseFloat(linea.PrecioUnitario[0]);
+          //Cambiamos lo de los ceros  y falta revisar lo de 1. y otros numeros
+          const precioTotal = parseFloat(linea.MontoTotal[0]);
 
           // Calcula la tasa de IVA y utilidad
           const ivaRate = getIvaTasa(selectedIva);
@@ -113,12 +115,13 @@ export default function Home() {
           const precioVenta =
             precioUnitario * (1 + utilityRate) * (1 + ivaRate);
           let precioVentaRedondeado = redondearPrecio(precioVenta);
+          
           return {
             codigo: codigoComercial,
             nombre: linea.Detalle[0],
             stock: linea.Cantidad[0],
             precioUnitario: precioUnitario,
-            montoTotal: linea.MontoTotal[0],
+            montoTotal: precioTotal,
             categoriaP_id: "",
             categoriaP_id: "",
             ivaP_id: selectedIva,
