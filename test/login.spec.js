@@ -1,16 +1,18 @@
-const { Builder, By, Key, until } = require('selenium-webdriver');
+const { Builder, By } = require('selenium-webdriver');
 
 describe('Login', () => {
   it('should log in', async () => {
     let driver = await new Builder().forBrowser('chrome').build();
-    await driver.get('https://eligam.vercel.app/'); 
+    await driver.get('https://eligam.vercel.app/');
     await driver.findElement(By.id('email-user')).sendKeys('yeiko2003@gmail.com');
     await driver.findElement(By.id('pass-user')).sendKeys('Duke2003');
     await driver.findElement(By.id('login')).click();
-    await driver.sleep(5000);
     
+    // Agregar un tiempo de espera de 5 segundos para que la página cargue completamente
+    await driver.sleep(15000);
+    await driver.findElement(By.xpath("//a[contains(@href,'/dashboard/registro')]")).click(); // Hacer clic en el enlace
+    await driver.sleep(60000);
     await driver.close();
-
   });
 });
 

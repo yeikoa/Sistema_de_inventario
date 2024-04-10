@@ -17,7 +17,7 @@ const Navbar = () => {
   };
 
   const routes = [
-    { href: '/dashboard/registro', name: 'Registro', subroutes: ['Repuestos', 'Proveedores', 'Facturas'], icon: <FaRegListAlt className="h-5 w-5" /> },
+    { href: '/dashboard/registro', name: 'Registro', subroutes: ['Repuestos', 'Proveedores', 'Facturas'], icon: <FaRegListAlt className="h-5 w-5"/>},
     { href: '/dashboard/movimientos', name: 'Movimientos', subroutes: ['Facturas', 'Proveedores', 'Repuestos'], icon: <FaExchangeAlt className="h-5 w-5" /> }
   ];
 
@@ -30,7 +30,7 @@ const Navbar = () => {
 
   return (
     <div className='pt-16'>
-    <nav className="fixed top-0 w-full flex items-center justify-between p-6 bg-cyan-950 text-white">
+    <nav className="fixed top-0 w-full flex items-center justify-between p-6 bg-cyan-950 text-white"id='nav'>
       <div className="flex items-center space-x-2">
         <Link href="/dashboard">
           <span className="text-lg font-bold flex items-center space-x-2 ml-12">

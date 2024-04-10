@@ -2,11 +2,9 @@
 import "../style.css";
 import React, { useState, useEffect } from "react";
 import { RecoverPass } from "./recoverPass";
-
 import { FaUserLock, FaLock, FaMotorcycle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -35,7 +33,6 @@ export function LoginPage() {
         return;
       }
 
-      // Verificar si la respuesta de tu API de usuarios contiene un error
       if (responseNextAuth?.user?.error) {
         setErrors([responseNextAuth.user.error]);
         return;
@@ -46,7 +43,6 @@ export function LoginPage() {
       });
     } catch (error) {
       console.error(error);
-      // Manejar otros errores aquí
     } finally {
       setLoading(false);
     }
