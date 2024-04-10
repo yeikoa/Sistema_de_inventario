@@ -84,6 +84,7 @@ export function LoginPage() {
                   <FaUserLock />
                 </span>
                 <input
+                  id="email-user"
                   type="email"
                   placeholder="test@test.com"
                   className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-cyan-900 focus:border-cyan-900 transition-colors duration-300"
@@ -100,6 +101,7 @@ export function LoginPage() {
                   <FaLock />
                 </span>
                 <input
+                  id="pass-user"
                   type="password"
                   placeholder="Ingresa tu contraseña"
                   className="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-cyan-900 focus:border-cyan-900 transition-colors duration-300"
@@ -117,6 +119,7 @@ export function LoginPage() {
               </div>
             )}
             <button
+              id="login"
               type="button"
               className={`block w-full px-4 py-2 text-white rounded-md ${
                 loading
