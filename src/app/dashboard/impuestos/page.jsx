@@ -103,11 +103,10 @@ function Tax() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-400 flex items-center justify-center">
+    <div className="min-h-screen bg-white flex items-center justify-center">
       <div className="max-w-4xl w-full p-5 bg-cyan-950 rounded-lg shadow-xl">
         <h1 className="text-3xl font-bold text-center text-gray-200 mb-8">Administrador de Impuestos</h1>
 
-        {/* Navegación de Pestañas */}
         <div className="flex mb-6">
           <button
             onClick={() => handleTabChange('iva')}
@@ -123,7 +122,6 @@ function Tax() {
           </button>
         </div>
 
-        {/* Formulario */}
         <form onSubmit={(e) => {e.preventDefault(); showSaveConfirmation();}} className="mb-6">
           <div className="flex flex-wrap -mx-3 mb-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -152,7 +150,6 @@ function Tax() {
           </div>
         </form>
 
-        {/* Lista de Tasas */}
         <div className="bg-gray-500 p-4 rounded-md">
           <ul>
             {tasas.map((tasa) => (

@@ -26,11 +26,11 @@ export default function Home() {
     axios.get("/api/categories").then((response) => {
       setCategories(response.data);
     });
-    axios.get("/api/impuestos/iva").then((response) => {
+    axios.get("/api/iva").then((response) => {
       setIva(response.data);
     });
 
-    axios.get("/api/impuestos/utilidad").then((response) => {
+    axios.get("/api/utilidad").then((response) => {
       setUtility(response.data);
     });
     axios.get("/api/proveedores").then((response) => {

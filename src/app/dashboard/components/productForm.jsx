@@ -124,7 +124,7 @@ export function ProductForm() {
   };
 
   useEffect(() => {
-    axios.get("/api/providerss").then((response) => {
+    axios.get("/api/proveedores").then((response) => {
       setProviders(response.data);
     });
 
@@ -132,11 +132,11 @@ export function ProductForm() {
       setCategories(response.data);
     });
 
-    axios.get("/api/impuestos/iva").then((response) => {
+    axios.get("/api/iva").then((response) => {
       setIva(response.data);
     });
 
-    axios.get("/api/impuestos/utilidad").then((response) => {
+    axios.get("/api/utilidad").then((response) => {
       setUtility(response.data);
     });
   }, []);
