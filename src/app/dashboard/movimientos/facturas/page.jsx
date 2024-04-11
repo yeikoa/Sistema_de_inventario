@@ -68,6 +68,7 @@ export default function BillsMovements() {
             <p className="text-gray-200">Fecha: {movement.fecha}</p>
 
             <button
+            id='btnDetalleFactura'
               className="ml-auto w-16 h-16 flex items-center justify-center"
               onClick={() => openBillDetails(movement)}
             >
@@ -81,6 +82,7 @@ export default function BillsMovements() {
   <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50 transition duration-300 ease-in-out">
     <div className="bg-gray-200 w-full max-w-lg p-6 rounded-lg shadow-xl border-2 border-white relative overflow-y-auto" style={{ maxHeight: "80vh" }}>
       <button
+      id='btnCerrarDetalleFactura'
         onClick={closeBillDetails}
         className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition duration-200 ease-in-out"
       >
@@ -88,7 +90,7 @@ export default function BillsMovements() {
       </button>
       <h2 className="text-xl font-semibold text-cyan-950 mb-4">Detalles de Factura - {selectedBill.codigoFactura}</h2>
       <div className="mb-4">
-        {/* Aquí puedes agregar más detalles del encabezado de la factura si lo necesitas */}
+        {/*  más detalles del encabezado de la factura  */}
       </div>
       <div>
         {billDetails && billDetails.map((detail, index) => (
