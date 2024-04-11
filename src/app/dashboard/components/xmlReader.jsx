@@ -350,7 +350,7 @@ export default function Home() {
             </p>
           </label>
           <input
-            type="xml"
+            type="file"
             onChange={handleFileChange}
             className="hidden"
             id="fileInput"
