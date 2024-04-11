@@ -32,6 +32,15 @@ function RTCategorias() {
       toast.error("El nombre de la categoría no puede estar vacío.");
       return;
     }
+    const categoriaExistente = categorias.find(
+      (cat) =>
+        cat.nombre_categoria.toLowerCase() ===
+        categoriaActiva.nombre_categoria.toLowerCase()
+    );
+    if (categoriaExistente) {
+      toast.error("Ya existe una categoría con este nombre.");
+      return;
+    }
     if (categoriaActiva.categoria_id) {
       confirmAlert({
         title: "Confirmar actualización",
