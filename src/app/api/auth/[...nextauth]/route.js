@@ -26,7 +26,7 @@ const handler = NextAuth({
           }
         );
         const user = res.data;
-        console.log(user);
+        //console.log(user);
 
         if (user.error) throw user;
 

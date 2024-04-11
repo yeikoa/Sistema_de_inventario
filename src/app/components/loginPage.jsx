@@ -45,7 +45,7 @@ export function LoginPage() {
         onClose: () => router.push("/dashboard"),
       });
     } catch (error) {
-      console.error(error);
+      //console.error(error);
       // Manejar otros errores aquí
     } finally {
       setLoading(false);
