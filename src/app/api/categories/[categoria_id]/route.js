@@ -22,7 +22,7 @@ export async function DELETE(request, { params }) {
         );
       }
   
-      console.log(result);
+      //console.log(result);
       return new Response(null, { status: 204 });
     } catch (error) {
       return NextResponse.json(
@@ -38,7 +38,7 @@ export async function DELETE(request, { params }) {
       const { categoria_id, nombre_categoria} =
         await request.json();
   
-      // Actualizar un usuario existente en la tabla 'Usuarios'
+      
       await conn.query(
         "UPDATE Categorias SET nombre_categoria = ? WHERE categoria_id = ?",
         [nombre_categoria, categoria_id]
@@ -52,7 +52,7 @@ export async function DELETE(request, { params }) {
       });
     } catch (error) {
       // Manejar errores
-      console.error(error);
+     // console.error(error);
       return NextResponse.json(
         {
           message: error.message,
