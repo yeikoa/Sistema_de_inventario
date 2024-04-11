@@ -210,18 +210,17 @@ export default function Home() {
         utilidadP_id: producto.utilidadP_id,
       };
     });
-    console.log("Datos Filtrados para Envío:", datosFiltrados);
+    //console.log("Datos Filtrados para Envío:", datosFiltrados);
     return datosFiltrados;
   };
   //para probar
   useEffect(() => {
     const datosFactura = detalleFactura();
     const datosParaEnvio = prepararDatosParaEnvio();
-    console.log("Prueba de Datos para Envío:", datosFactura);
+    //console.log("Prueba de Datos para Envío:", datosFactura);
   }, [productos]); // Dependiendo de productos para recalcular cuando cambien
 
   const limpiarDatosYScrollArriba = () => {
-    // Resetear todos los estados a sus valores iniciales
     setProductos([]);
     setFacturaXML("");
     setSelectedIva("");
@@ -233,7 +232,6 @@ export default function Home() {
     setTotalComprobante(0);
     setFileName("");
 
-    // Llevar al usuario a la parte superior de la página
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const handleEnviar = async () => {
@@ -254,7 +252,6 @@ export default function Home() {
       const productResponse = await axios.post("/api/facturas", datosParaEnvio);
 
       if (productResponse.status === 200) {
-        // Usar toast para mostrar un mensaje de éxito
         toast.success("Datos enviados correctamente", {
           position: "top-right",
           autoClose: 5000,
@@ -267,10 +264,10 @@ export default function Home() {
         const productId = productResponse.data.id;
         for (const producto of productos) {
           const registroInventarioData = {
-            productoR_id: producto.productId, // Asegúrate de que esta es la propiedad correcta
+            productoR_id: producto.productId, 
             fecha: new Date().toISOString(),
             tipo_operacion: "entrada",
-            cantidad: parseInt(producto.stock), // Aquí accedes a la cantidad de cada producto
+            cantidad: parseInt(producto.stock), 
             nombre: producto.nombre,
           };
 
@@ -319,9 +316,9 @@ export default function Home() {
         datosEnvio
       );
       if (facturaResponse.status === 200) {
-        console.log("Datos enviados correctamente");
+       // console.log("Datos enviados correctamente");
       } else {
-        console.log("Error al enviar los datos");
+        //console.log("Error al enviar los datos");
       }
     } catch (error) {}
   };

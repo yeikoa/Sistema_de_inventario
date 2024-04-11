@@ -397,7 +397,8 @@ function ProductTable() {
                     <td className="py-2 px-4 border-b border-cyan-900 text-sm">
                       <div className="flex space-x-2">
                         {isEditing ? (
-                          <button
+                          <button 
+                          id="saveButton"
                             className="text-green-500 p-2 rounded-full hover:bg-green-100"
                             onClick={() => handleSave(row.producto_id)}
                           >
@@ -405,6 +406,7 @@ function ProductTable() {
                           </button>
                         ) : (
                           <button
+                          id="editButton"
                             className="text-blue-500 p-2 rounded-full hover:bg-blue-100"
                             onClick={() => handleEdit(row.producto_id)}
                           >
