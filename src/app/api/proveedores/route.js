@@ -8,7 +8,7 @@ export async function GET() {
       );
       return NextResponse.json(results);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       return NextResponse.json(
         {
           message: error.message,
@@ -38,7 +38,7 @@ export async function GET() {
           email,
           direccion,
         });
-        console.log(sql,nombre,vendedor,telefono,email,direccion,);
+        //console.log(sql,nombre,vendedor,telefono,email,direccion,);
         // Si la inserción es exitosa, enviar respuesta con los datos insertados
         return NextResponse.json({
             success: true,
@@ -51,7 +51,7 @@ export async function GET() {
         });
     } catch (error) {
         // Manejar el error, posiblemente con más detalle
-        console.error(error);
+        //console.error(error);
         return NextResponse.json(
             { message: "Error al registrar el proveedor: " + error.message },
             { status: 500 }
