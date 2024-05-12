@@ -1,33 +1,32 @@
-"use client";
 import React from "react";
 import Link from "next/link";
 import { FaUserFriends, FaGg } from "react-icons/fa";
 import { IoMdExit, IoMdArrowRoundBack } from "react-icons/io";
 import { signOut, useSession } from "next-auth/react";
-import { confirmAlert } from "react-confirm-alert";
+import Swal from 'sweetalert2';
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { MdCategory } from 'react-icons/md';
+
 const Navsidebar = ({ isOpen }) => {
   const { data: session } = useSession();
 
   const handleSignOut = async () => {
-    confirmAlert({
+    Swal.fire({
       title: "Cerrar sesión",
-      message: "¿Estás seguro que deseas cerrar sesión?",
-      buttons: [
-        {
-          label: "Sí",
-          onClick: async() => {
-            await signOut();
-          },
-        },
-        {
-          label: "No",
-          onClick: () => {},
-        },
-      ],
+      text: "¿Estás seguro que deseas cerrar sesión?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí",
+      cancelButtonText: "No",
+      background: "#1F4C4A",
+      color: "#E8EAE0",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        signOut();
+      }
     });
-    //await signOut();
   };
 
   const routes = [

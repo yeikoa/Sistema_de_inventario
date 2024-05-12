@@ -31,6 +31,7 @@ export default function Sales() {
           value: producto.producto_id,
           label: producto.nombre,
           stock: producto.stock,
+          precio:producto.precioVenta
         }));
         setProductos(productosOptions);
       } catch (error) {
@@ -212,6 +213,12 @@ export default function Sales() {
                   Cantidad
                 </th>
                 <th className="px-6 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">
+                  Precio
+                </th>
+                <th className="px-6 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">
+                  Total
+                </th>
+                <th className="px-6 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">
                   Acciones
                 </th>
               </tr>
@@ -226,6 +233,14 @@ export default function Sales() {
                     {venta.cantidad}
                   </td>
                   <td className="px-6 py-2 whitespace-nowrap text-sm text-black border-b border-cyan-900">
+                    {/* Precio unitario */}
+                    ₡ {venta.precio}
+                  </td>
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-black border-b border-cyan-900">
+                    {/* Precio total por producto */}
+                    ₡ {(venta.precio * venta.cantidad).toFixed(2)}
+                  </td>
+                  <td className="px-6 py-2 whitespace-nowrap text-sm text-black border-b border-cyan-900">
                     <button
                       onClick={() => quitarProducto(index)}
                       className="text-red-600 hover:text-red-800"
@@ -235,6 +250,17 @@ export default function Sales() {
                   </td>
                 </tr>
               ))}
+              {/* Fila para mostrar el total de salidas */}
+              <tr>
+                <td className="px-6 py-2 whitespace-nowrap text-sm text-black border-b border-cyan-900">
+                  Precio total de salida de productos
+                </td>
+                <td colSpan="3" className="px-6 py-2 whitespace-nowrap text-right text-sm text-black border-b border-cyan-900">
+                  {/* Suma total de los precios de los productos seleccionados */}
+                  ₡ {ventas.reduce((total, venta) => total + venta.precio * venta.cantidad, 0).toFixed(2)}
+                </td>
+                <td className="px-6 py-2 whitespace-nowrap text-sm text-black border-b border-cyan-900"></td>
+              </tr>
             </tbody>
           </table>
         </div>
