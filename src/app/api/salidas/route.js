@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     // Obtencion de algunos datos de la tabla Productos, mas los nombres de las tablas Proveedores y Categorias
-    const results = await conn.query(`SELECT producto_id, nombre, stock FROM Productos `);
+    const results = await conn.query(`SELECT producto_id, nombre, stock, precioVenta FROM Productos `);
     // Si la consulta es exitosa, respondemos con un JSON que contiene los resultados
     return NextResponse.json(results);
   } catch (error) {
