@@ -64,9 +64,9 @@ export default function Home() {
     }
   };
 
-  const redondearPrecio = (precio) => {
-    return Math.round(precio / 10) * 10;
-  };
+  // const redondearPrecio = (precio) => {
+  //   return Math.round(precio / 10) * 10;
+  // };
 
   const parseXML = () => {
     if (
@@ -114,7 +114,7 @@ export default function Home() {
           // Calcula el precio de venta
           const precioVenta =
             precioUnitario * (1 + utilityRate) * (1 + ivaRate);
-          let precioVentaRedondeado = redondearPrecio(precioVenta);
+          let precioVentaRedondeado =precioVenta.toFixed(2);
           
           return {
             codigo: codigoComercial,

@@ -10,6 +10,8 @@ import {
   FaTruck,
   FaTags,
 } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export function ProductForm() {
   const [products, setProducts] = useState({
@@ -37,7 +39,7 @@ export function ProductForm() {
       [e.target.name]: e.target.value,
       
     });
-    console.log(products);
+    //console.log(products);
   };
 
   const handleSubmit = async (e) => {
@@ -54,7 +56,7 @@ export function ProductForm() {
       !products.categoriaP_id ||
       !products.precioVenta
     ) {
-      setError("Todos los campos son obligatorios");
+      toast.error("Todos los campos son obligatorios. Por favor, complete todos los campos.");
       return;
     }
 
@@ -65,9 +67,7 @@ export function ProductForm() {
       parseFloat(products.utilidadP_id) <= 0 ||
       parseFloat(products.ivaP_id) <= 0
     ) {
-      setError(
-        "El precio, la utilidad y la cantidad deben ser números positivos"
-      );
+      toast.error("El precio, la utilidad y la cantidad deben ser números positivos");
       return;
     }
 
@@ -83,9 +83,9 @@ export function ProductForm() {
         const registroInventarioData = {
           productoR_id: productId,
           fecha: new Date().toISOString(),
-          tipo_operacion: "entrada", // Tipo de operación como entrada
-          cantidad: parseInt(products.stock), // Cantidad ingresada
-          nombre: products.nombre, // Nombre del producto
+          tipo_operacion: "entrada", 
+          cantidad: parseInt(products.stock), 
+          nombre: products.nombre, 
         };
 
         // Realizar la inserción en la tabla RegistroInventario
@@ -105,7 +105,7 @@ export function ProductForm() {
             ivaP_id: "",
             utilidadP_id: "",
           });
-          setSuccess("Producto registrado con éxito");
+          toast.success("Producto registrado con éxito");
         } else {
           setError(
             registroResponse.data.message ||
@@ -140,22 +140,34 @@ export function ProductForm() {
       setUtility(response.data);
     });
   }, []);
+  const getIvaTasa = (ivaId) => {
+    const ivaSeleccionado = iva.find((i) => i.iva_id === parseInt(ivaId, 10));
+    return ivaSeleccionado ? parseFloat(ivaSeleccionado.tasa) : 0;
+  };
+
+  const getUtilityTasa = (utilityId) => {
+    const utilitySeleccionado = utility.find((u) => u.utilidad_id === parseInt(utilityId, 10));
+    return utilitySeleccionado ? parseFloat(utilitySeleccionado.tasa) : 0;
+  };
 
   useEffect(() => {
-    if (products.productPrice && products.utilidadP_id && products.ivaP_id) {
-      const price = parseFloat(products.productPrice);
-      const profit = price * (products.utilidadP_id / 100);
-      const ivaAmount = price * (products.ivaP_id / 100);
-      const calculatedPrecioVenta = (price + profit + ivaAmount).toFixed(2);
-      setProducts({
-        ...products,
-        precioVenta: calculatedPrecioVenta, // Actualiza products.precioVenta
-      });
-    }
-  }, [products.productPrice, products.utilidadP_id, products.ivaP_id]);
+    const ivaRate = getIvaTasa(products.ivaP_id);
+    const utilityRate = getUtilityTasa(products.utilidadP_id);
+    const precioUnitario = parseFloat(products.precioCompra);
+
+    const precioVenta = precioUnitario * (1 + utilityRate) * (1 + ivaRate);
+    const precioVentaRedondeado = precioVenta.toFixed(2);
+
+    setProducts((prevProducts) => ({
+      ...prevProducts,
+      precioVenta: precioVentaRedondeado,
+    }));
+  }, [products.precioCompra, products.utilidadP_id, products.ivaP_id]);
+
 
   return (
     <div className="bg-white min-h-screen p-8">
+       <ToastContainer />
       <div className="mx-auto p-6 bg-cyan-950 text-white rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold mb-4">
           Registrar Nuevo Producto
@@ -235,7 +247,7 @@ export function ProductForm() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
-                htmlFor="productPrice"
+                htmlFor="precioCompra"
                 className="text-sm font-medium mb-2 flex items-center"
               >
                 <FaDollarSign className="text-green-600 mr-2" />
@@ -243,11 +255,11 @@ export function ProductForm() {
               </label>
               <input
                 type="number"
-                id="productPrice"
-                name="productPrice"
+                id="precioCompra"
+                name="precioCompra"
                 className="w-full md:w-2/3 border rounded p-2 text-black"
                 placeholder="Ingrese el precio de compra del producto"
-                value={products.productPrice}
+                value={products.precioCompra}
                 onChange={handleChanges}
               />
             </div>
