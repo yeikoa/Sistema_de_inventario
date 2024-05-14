@@ -37,9 +37,7 @@ export function ProductForm() {
     setProducts({
       ...products,
       [e.target.name]: e.target.value,
-      
     });
-    //console.log(products);
   };
 
   const handleSubmit = async (e) => {
@@ -166,11 +164,10 @@ export function ProductForm() {
 
 
   return (
-    <div className="bg-white min-h-screen p-8">
-       <ToastContainer />
-      <div className="mx-auto p-6 bg-cyan-950 text-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-semibold mb-4">
-          Registrar Nuevo Producto
+    <div className="bg-white min-h-screen flex items-center justify-center">
+      <div className="p-8 max-w-xl w-full bg-cyan-950 text-white rounded-lg shadow-md">
+        <h1 className="text-2xl font-semibold mb-4 text-center">
+          Registrar nuevo producto
         </h1>
 
         {error && (
@@ -185,42 +182,44 @@ export function ProductForm() {
         )}
 
         <form className="space-y-6 " onSubmit={handleSubmit}>
-          <div>
-            <label
-              htmlFor="codigo"
-              className="text-sm font-medium mb-2 flex items-center "
-            >
-              <FaBarcode className=" mr-2" />
-              Código del Producto
-            </label>
-            <input
-              type="text"
-              id="codigo"
-              name="codigo"
-              className="w-full md:w-2/3 border rounded p-2 text-black"
-              placeholder="Ingrese el código del producto"
-              value={products.codigo}
-              onChange={handleChanges}
-            />
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label
+                htmlFor="codigo"
+                className="text-sm font-medium mb-2 flex items-center "
+              >
+                <FaBarcode className=" mr-2" />
+                Código del producto
+              </label>
+              <input
+                type="text"
+                id="codigo"
+                name="codigo"
+                className="w-full border rounded p-2 text-black"
+                placeholder="Ingrese el código del producto"
+                value={products.codigo}
+                onChange={handleChanges}
+              />
+            </div>
 
-          <div>
-            <label
-              htmlFor="nombre"
-              className="text-sm font-medium mb-2 flex items-center"
-            >
-              <FaTags className="text-white mr-2" />
-              Nombre del Producto
-            </label>
-            <input
-              type="text"
-              id="nombre"
-              name="nombre"
-              className="w-full md:w-2/3 border rounded p-2 text-black"
-              placeholder="Ingrese el nombre del producto"
-              value={products.nombre}
-              onChange={handleChanges}
-            />
+            <div>
+              <label
+                htmlFor="nombre"
+                className="text-sm font-medium mb-2 flex items-center"
+              >
+                <FaTags className="text-white mr-2" />
+                Nombre del producto
+              </label>
+              <input
+                type="text"
+                id="nombre"
+                name="nombre"
+                className="w-full border rounded p-2 text-black"
+                placeholder="Ingrese el nombre del producto"
+                value={products.nombre}
+                onChange={handleChanges}
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -236,7 +235,7 @@ export function ProductForm() {
                 type="number"
                 id="stock"
                 name="stock"
-                className="w-full md:w-2/3 border rounded p-2 text-black"
+                className="w-full border rounded p-2 text-black"
                 placeholder="Ingrese la cantidad del producto"
                 value={products.stock}
                 onChange={handleChanges}
@@ -251,13 +250,13 @@ export function ProductForm() {
                 className="text-sm font-medium mb-2 flex items-center"
               >
                 <FaDollarSign className="text-green-600 mr-2" />
-                Precio de Compra
+                Precio de compra
               </label>
               <input
                 type="number"
                 id="precioCompra"
                 name="precioCompra"
-                className="w-full md:w-2/3 border rounded p-2 text-black"
+                className="w-full border rounded p-2 text-black"
                 placeholder="Ingrese el precio de compra del producto"
                 value={products.precioCompra}
                 onChange={handleChanges}
@@ -269,16 +268,16 @@ export function ProductForm() {
                 className="text-sm font-medium mb-2 flex items-center"
               >
                 <FaPercent className="text-green-600 mr-2" />
-                Utilidad del Producto
+                Utilidad del producto
               </label>
               <select
                 id="utilidadP_id"
                 name="utilidadP_id"
-                className="w-full md:w-2/3 border rounded p-2 text-black"
+                className="w-full border rounded p-2 text-black"
                 value={products.utilidadP_id}
                 onChange={handleChanges}
               >
-                <option value=""></option>
+                <option value="">Seleccionar utilidad</option>
                 {utility.map((u) => (
                   <option key={u.utilidad_id} value={u.utilidad_id}>
                     {u.tasa}
@@ -300,11 +299,11 @@ export function ProductForm() {
               <select
                 id="ivaP_id"
                 name="ivaP_id"
-                className="w-full md:w-2/3 border rounded p-2 text-black"
+                className="w-full border rounded p-2 text-black"
                 value={products.ivaP_id}
                 onChange={handleChanges}
               >
-                <option value="">IVA</option>
+                <option value="">Seleccionar IVA</option>
                 {iva.map((i) => (
                   <option key={i.iva_id} value={i.iva_id}>
                     {i.tasa}
@@ -324,7 +323,7 @@ export function ProductForm() {
                 type="number"
                 id="precioVenta"
                 name="precioVenta"
-                className="w-full md:w-2/3 border rounded p-2 text-black"
+                className="w-full border rounded p-2 text-black"
                 value={products.precioVenta}
                 readOnly
               />
@@ -343,7 +342,7 @@ export function ProductForm() {
               <select
                 id="proveedorP_id"
                 name="proveedorP_id"
-                className="w-full md:w-2/3 border rounded p-2 text-black"
+                className="w-full border rounded p-2 text-black"
                 value={products.proveedorP_id}
                 onChange={handleChanges}
               >
@@ -369,7 +368,7 @@ export function ProductForm() {
               <select
                 id="categoriaP_id"
                 name="categoriaP_id"
-                className="w-full md:w-2/3 border rounded p-2 text-black"
+                className="w-full border rounded p-2 text-black"
                 value={products.categoriaP_id}
                 onChange={handleChanges}
               >
@@ -391,9 +390,10 @@ export function ProductForm() {
             className="w-full bg-gray-800 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center justify-center"
           >
             <FaSave className="mr-2" />
-            Registrar Producto
+            Registrar producto
           </button>
         </form>
+        <ToastContainer />
       </div>
     </div>
   );
