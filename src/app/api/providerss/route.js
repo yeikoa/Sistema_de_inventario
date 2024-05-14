@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const results = await conn.query(
-      "SELECT * FROM Proveedores where estado = 'activo'"
+      "SELECT proveedor_id, nombre FROM Proveedores where estado = 'activo'"
     );
     return NextResponse.json(results);
   } catch (error) {

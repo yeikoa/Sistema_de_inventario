@@ -10,6 +10,8 @@ import {
   FaTruck,
   FaTags,
 } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export function ProductForm() {
   const [products, setProducts] = useState({
@@ -35,9 +37,7 @@ export function ProductForm() {
     setProducts({
       ...products,
       [e.target.name]: e.target.value,
-      
     });
-    console.log(products);
   };
 
   const handleSubmit = async (e) => {
@@ -54,7 +54,7 @@ export function ProductForm() {
       !products.categoriaP_id ||
       !products.precioVenta
     ) {
-      setError("Todos los campos son obligatorios");
+      toast.error("Todos los campos son obligatorios. Por favor, complete todos los campos.");
       return;
     }
 
@@ -65,9 +65,7 @@ export function ProductForm() {
       parseFloat(products.utilidadP_id) <= 0 ||
       parseFloat(products.ivaP_id) <= 0
     ) {
-      setError(
-        "El precio, la utilidad y la cantidad deben ser números positivos"
-      );
+      toast.error("El precio, la utilidad y la cantidad deben ser números positivos");
       return;
     }
 
@@ -83,9 +81,9 @@ export function ProductForm() {
         const registroInventarioData = {
           productoR_id: productId,
           fecha: new Date().toISOString(),
-          tipo_operacion: "entrada", // Tipo de operación como entrada
-          cantidad: parseInt(products.stock), // Cantidad ingresada
-          nombre: products.nombre, // Nombre del producto
+          tipo_operacion: "entrada", 
+          cantidad: parseInt(products.stock), 
+          nombre: products.nombre, 
         };
 
         // Realizar la inserción en la tabla RegistroInventario
@@ -105,7 +103,7 @@ export function ProductForm() {
             ivaP_id: "",
             utilidadP_id: "",
           });
-          setSuccess("Producto registrado con éxito");
+          toast.success("Producto registrado con éxito");
         } else {
           setError(
             registroResponse.data.message ||
@@ -140,25 +138,36 @@ export function ProductForm() {
       setUtility(response.data);
     });
   }, []);
+  const getIvaTasa = (ivaId) => {
+    const ivaSeleccionado = iva.find((i) => i.iva_id === parseInt(ivaId, 10));
+    return ivaSeleccionado ? parseFloat(ivaSeleccionado.tasa) : 0;
+  };
+
+  const getUtilityTasa = (utilityId) => {
+    const utilitySeleccionado = utility.find((u) => u.utilidad_id === parseInt(utilityId, 10));
+    return utilitySeleccionado ? parseFloat(utilitySeleccionado.tasa) : 0;
+  };
 
   useEffect(() => {
-    if (products.productPrice && products.utilidadP_id && products.ivaP_id) {
-      const price = parseFloat(products.productPrice);
-      const profit = price * (products.utilidadP_id / 100);
-      const ivaAmount = price * (products.ivaP_id / 100);
-      const calculatedPrecioVenta = (price + profit + ivaAmount).toFixed(2);
-      setProducts({
-        ...products,
-        precioVenta: calculatedPrecioVenta, // Actualiza products.precioVenta
-      });
-    }
-  }, [products.productPrice, products.utilidadP_id, products.ivaP_id]);
+    const ivaRate = getIvaTasa(products.ivaP_id);
+    const utilityRate = getUtilityTasa(products.utilidadP_id);
+    const precioUnitario = parseFloat(products.precioCompra);
+
+    const precioVenta = precioUnitario * (1 + utilityRate) * (1 + ivaRate);
+    const precioVentaRedondeado = precioVenta.toFixed(2);
+
+    setProducts((prevProducts) => ({
+      ...prevProducts,
+      precioVenta: precioVentaRedondeado,
+    }));
+  }, [products.precioCompra, products.utilidadP_id, products.ivaP_id]);
+
 
   return (
-    <div className="bg-gray-200 min-h-screen p-8">
-      <div className="mx-auto p-6 bg-cyan-950 text-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-semibold mb-4">
-          Registrar Nuevo Producto
+    <div className="bg-white min-h-screen flex items-center justify-center">
+      <div className="p-8 max-w-xl w-full bg-cyan-950 text-white rounded-lg shadow-md">
+        <h1 className="text-2xl font-semibold mb-4 text-center">
+          Registrar nuevo producto
         </h1>
 
         {error && (
@@ -173,42 +182,44 @@ export function ProductForm() {
         )}
 
         <form className="space-y-6 " onSubmit={handleSubmit}>
-          <div>
-            <label
-              htmlFor="codigo"
-              className="text-sm font-medium mb-2 flex items-center "
-            >
-              <FaBarcode className=" mr-2" />
-              Código del Producto
-            </label>
-            <input
-              type="text"
-              id="codigo"
-              name="codigo"
-              className="w-full md:w-2/3 border rounded p-2 text-black"
-              placeholder="Ingrese el código del producto"
-              value={products.codigo}
-              onChange={handleChanges}
-            />
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label
+                htmlFor="codigo"
+                className="text-sm font-medium mb-2 flex items-center "
+              >
+                <FaBarcode className=" mr-2" />
+                Código del producto
+              </label>
+              <input
+                type="text"
+                id="codigo"
+                name="codigo"
+                className="w-full border rounded p-2 text-black"
+                placeholder="Ingrese el código del producto"
+                value={products.codigo}
+                onChange={handleChanges}
+              />
+            </div>
 
-          <div>
-            <label
-              htmlFor="nombre"
-              className="text-sm font-medium mb-2 flex items-center"
-            >
-              <FaTags className="text-white mr-2" />
-              Nombre del Producto
-            </label>
-            <input
-              type="text"
-              id="nombre"
-              name="nombre"
-              className="w-full md:w-2/3 border rounded p-2 text-black"
-              placeholder="Ingrese el nombre del producto"
-              value={products.nombre}
-              onChange={handleChanges}
-            />
+            <div>
+              <label
+                htmlFor="nombre"
+                className="text-sm font-medium mb-2 flex items-center"
+              >
+                <FaTags className="text-white mr-2" />
+                Nombre del producto
+              </label>
+              <input
+                type="text"
+                id="nombre"
+                name="nombre"
+                className="w-full border rounded p-2 text-black"
+                placeholder="Ingrese el nombre del producto"
+                value={products.nombre}
+                onChange={handleChanges}
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -224,7 +235,7 @@ export function ProductForm() {
                 type="number"
                 id="stock"
                 name="stock"
-                className="w-full md:w-2/3 border rounded p-2 text-black"
+                className="w-full border rounded p-2 text-black"
                 placeholder="Ingrese la cantidad del producto"
                 value={products.stock}
                 onChange={handleChanges}
@@ -235,19 +246,19 @@ export function ProductForm() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
-                htmlFor="productPrice"
+                htmlFor="precioCompra"
                 className="text-sm font-medium mb-2 flex items-center"
               >
                 <FaDollarSign className="text-green-600 mr-2" />
-                Precio de Compra
+                Precio de compra
               </label>
               <input
                 type="number"
-                id="productPrice"
-                name="productPrice"
-                className="w-full md:w-2/3 border rounded p-2 text-black"
+                id="precioCompra"
+                name="precioCompra"
+                className="w-full border rounded p-2 text-black"
                 placeholder="Ingrese el precio de compra del producto"
-                value={products.productPrice}
+                value={products.precioCompra}
                 onChange={handleChanges}
               />
             </div>
@@ -257,16 +268,16 @@ export function ProductForm() {
                 className="text-sm font-medium mb-2 flex items-center"
               >
                 <FaPercent className="text-green-600 mr-2" />
-                Utilidad del Producto
+                Utilidad del producto
               </label>
               <select
                 id="utilidadP_id"
                 name="utilidadP_id"
-                className="w-full md:w-2/3 border rounded p-2 text-black"
+                className="w-full border rounded p-2 text-black"
                 value={products.utilidadP_id}
                 onChange={handleChanges}
               >
-                <option value=""></option>
+                <option value="">Seleccionar utilidad</option>
                 {utility.map((u) => (
                   <option key={u.utilidad_id} value={u.utilidad_id}>
                     {u.tasa}
@@ -288,11 +299,11 @@ export function ProductForm() {
               <select
                 id="ivaP_id"
                 name="ivaP_id"
-                className="w-full md:w-2/3 border rounded p-2 text-black"
+                className="w-full border rounded p-2 text-black"
                 value={products.ivaP_id}
                 onChange={handleChanges}
               >
-                <option value="">IVA</option>
+                <option value="">Seleccionar IVA</option>
                 {iva.map((i) => (
                   <option key={i.iva_id} value={i.iva_id}>
                     {i.tasa}
@@ -312,7 +323,7 @@ export function ProductForm() {
                 type="number"
                 id="precioVenta"
                 name="precioVenta"
-                className="w-full md:w-2/3 border rounded p-2 text-black"
+                className="w-full border rounded p-2 text-black"
                 value={products.precioVenta}
                 readOnly
               />
@@ -331,7 +342,7 @@ export function ProductForm() {
               <select
                 id="proveedorP_id"
                 name="proveedorP_id"
-                className="w-full md:w-2/3 border rounded p-2 text-black"
+                className="w-full border rounded p-2 text-black"
                 value={products.proveedorP_id}
                 onChange={handleChanges}
               >
@@ -357,7 +368,7 @@ export function ProductForm() {
               <select
                 id="categoriaP_id"
                 name="categoriaP_id"
-                className="w-full md:w-2/3 border rounded p-2 text-black"
+                className="w-full border rounded p-2 text-black"
                 value={products.categoriaP_id}
                 onChange={handleChanges}
               >
@@ -379,9 +390,10 @@ export function ProductForm() {
             className="w-full bg-gray-800 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center justify-center"
           >
             <FaSave className="mr-2" />
-            Registrar Producto
+            Registrar producto
           </button>
         </form>
+        <ToastContainer />
       </div>
     </div>
   );

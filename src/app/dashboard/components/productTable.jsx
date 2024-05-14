@@ -26,7 +26,7 @@ function ProductTable() {
   const [itemsPerPage] = useState(10);
 
   useEffect(() => {
-    axios.get("/api/providerss").then((response) => {
+    axios.get("/api/proveedores").then((response) => {
       //setProviders(response.data);
       const providersWithRenamedField = response.data.map((provider) => ({
         ...provider,
@@ -158,7 +158,7 @@ function ProductTable() {
                 categoria_id,
               };
 
-              console.log("Datos actualizados del producto:", dataToUpdate);
+              //console.log("Datos actualizados del producto:", dataToUpdate);
 
               await axios.put(`/api/table/${producto_id}`, dataToUpdate);
               //Movimientos
@@ -252,9 +252,7 @@ function ProductTable() {
             <option value="codigo">Código</option>
             <option value="nombre">Nombre</option>
             <option value="precioVenta">Precio Venta</option>
-            <option value="cantidad">Cantidad</option>
-            <option value="proveedor">Proveedor</option>
-            <option value="categoria">Categoría</option>
+           
           </select>
           <button
             onClick={() =>
