@@ -1,7 +1,9 @@
-'use client'
+"use client"
 import axios from "axios";
-import { useState } from "react";
-import {FaSave, FaUser, FaBuilding, FaPhone, FaEnvelope, FaMapMarkedAlt} from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { FaSave, FaUser, FaBuilding, FaPhone, FaEnvelope, FaMapMarkedAlt } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function FormularioProveedor() {
   const [proveedor, setProveedor] = useState({
@@ -11,9 +13,20 @@ export default function FormularioProveedor() {
     email: "",
     direccion: "",
   });
+  const [proveedoresExistentes, setProveedoresExistentes] = useState([]);
 
-  const [error, setError] = useState("");
-  const [exito, setExito] = useState("");
+  useEffect(() => {
+    cargarProveedores();
+  }, []);
+
+  const cargarProveedores = async () => {
+    try {
+      const response = await axios.get("/api/proveedores");
+      setProveedoresExistentes(response.data);
+    } catch (error) {
+      console.error("Error al cargar los proveedores:", error);
+    }
+  };
 
   const handleCambios = (e) => {
     setProveedor({
@@ -24,33 +37,37 @@ export default function FormularioProveedor() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setExito("");
 
-    // Validación de los campos requeridos
     if (!proveedor.nombre || !proveedor.vendedor || !proveedor.telefono || !proveedor.email || !proveedor.direccion) {
-      setError("Todos los campos son obligatorios. Por favor, complete todos los campos.");
+      toast.error("Todos los campos son obligatorios. Por favor, complete todos los campos.");
       return;
     }
 
-    // Validación del formato del correo electrónico
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(proveedor.email)) {
-      setError("El formato del correo electrónico es inválido. Por favor, ingrese un correo electrónico válido.");
+      toast.error("El formato del correo electrónico es inválido. Por favor, ingrese un correo electrónico válido.");
       return;
     }
 
-    // Aquí se pueden añadir más validaciones personalizadas si es necesario
+    // Verificar si ya existe un proveedor con el mismo nombre de vendedor
+    const proveedorExistente = proveedoresExistentes.find((prov) => prov.vendedor === proveedor.vendedor);
+    if (proveedorExistente) {
+      toast.error("Ya existe un proveedor con el mismo nombre de vendedor.");
+      return;
+    }
 
     try {
-      // Enviar datos al servidor para registrar el proveedor
       const respuesta = await axios.post("/api/proveedores", proveedor);
 
-      if (respuesta.data.exito) {
-        //Se guardan los datos correctamente, pero no se ejecuta
-        //el if por eso la logica se implementa en el else
-        //dado que se esta haciendo el registro de manera correcta
-        setExito("Proveedor registrado con éxito");
+      if (respuesta.data.success) {
+        toast.success("Proveedor registrado con éxito");
+        setProveedor({
+          nombre: "",
+          vendedor: "",
+          telefono: "",
+          email: "",
+          direccion: "",
+        });
       } else {
         const providerId = respuesta.data.id;
         const registroProveedorData = {
@@ -64,7 +81,8 @@ export default function FormularioProveedor() {
           fecha_cambio: new Date().toISOString(),
         };
         const registroResponse = await axios.post("/api/movimientos/proveedores", registroProveedorData);
-        if (registroResponse.data.exito) {
+        if (registroResponse.data.success) {
+          toast.success("El Proveedor se a registrado con éxito");
           setProveedor({
             nombre: "",
             vendedor: "",
@@ -73,29 +91,17 @@ export default function FormularioProveedor() {
             direccion: "",
           });
         }
-        setExito("El Proveedor se a registrado con éxito");
       }
     } catch (error) {
-      console.error(error);
-      setError("Error al registrar el proveedor. Por favor, inténtelo de nuevo más tarde.");
+      toast.error("Error al registrar el proveedor. Por favor, inténtelo de nuevo más tarde.");
     }
   };
 
   return (
     <div className="bg-white min-h-screen p-8">
+      <ToastContainer />
       <div className="mx-auto p-6 bg-cyan-950 text-white rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold mb-4">Registrar Nuevo Proveedor</h1>
-
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
-        {exito && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {exito}
-          </div>
-        )}
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>

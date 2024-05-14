@@ -1,14 +1,15 @@
 import { conn } from "@/libs/mysql";
 import { NextResponse } from "next/server";
 
+
 export async function GET() {
   try {
-    const totalProductsResult = await conn.query(
-      "SELECT COUNT(*) AS totalProducts FROM Productos"
+    const totalUsersResult = await conn.query(
+      "SELECT COUNT(*) AS totalUsers FROM Usuarios"
     );
-    const totalProducts = totalProductsResult[0].totalProducts;
+    const totalUsers = totalUsersResult[0].totalUsers;
 
-    const results = { totalProducts };
+    const results = { totalUsers };
 
     return NextResponse.json(results);
   } catch (error) {
