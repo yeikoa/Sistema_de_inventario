@@ -8,7 +8,7 @@ export default function BillsMovements() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBill, setSelectedBill] = useState(null);
   const [data, setData] = useState([]);
-  const[data2, setData2] = useState([]); 
+  const [data2, setData2] = useState([]);
   const [billDetails, setBillDetails] = useState(null);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function BillsMovements() {
     setSelectedBill(bill);
     axios.get(`/api/movimientos/detalle/${bill.factura_id}`)
       .then((response) => {
-        setBillDetails(response.data); 
+        setBillDetails(response.data);
       })
       .catch((error) => {
         console.error("Error al obtener detalles de la factura", error);
@@ -36,6 +36,18 @@ export default function BillsMovements() {
     setSelectedBill(null);
     setBillDetails(null);
   };
+
+// Función para formatear la fecha
+const formatDate = (dateTime) => {
+  if (!dateTime) return ''; // Devuelve una cadena vacía si la fecha no está definida
+  const dateObj = new Date(dateTime);
+  const formattedDate = dateObj.toLocaleDateString('es-CR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  return formattedDate;
+};
 
   return (
     <div className="max-w-7xl mx-auto px-4 bg-gray-200">
@@ -65,46 +77,45 @@ export default function BillsMovements() {
             <h2 className="text-lg font-semibold text-white">{movement.codigoFactura}</h2>
             <p className="text-gray-200 mt-2">Proveedor: {movement.proveedor_nombre}</p>
             <p className="text-gray-200">Precio: {movement.total} </p>
-            <p className="text-gray-200">Fecha: {movement.fecha}</p>
-
+            <p className="text-gray-200">Fecha: {formatDate(movement.fecha)}</p>
             <button
-            id='btnDetalleFactura'
+              id='btnDetalleFactura'
               className="ml-auto w-16 h-16 flex items-center justify-center"
               onClick={() => openBillDetails(movement)}
             >
-              <FcFinePrint  className=" text-5xl inline-block mt--4 mr-2" />
+              <FcFinePrint className=" text-5xl inline-block mt--4 mr-2" />
             </button>
           </div>
         ))}
       </div>
 
       {selectedBill && (
-  <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50 transition duration-300 ease-in-out">
-    <div className="bg-gray-200 w-full max-w-lg p-6 rounded-lg shadow-xl border-2 border-white relative overflow-y-auto" style={{ maxHeight: "80vh" }}>
-      <button
-      id='btnCerrarDetalleFactura'
-        onClick={closeBillDetails}
-        className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition duration-200 ease-in-out"
-      >
-        <AiFillCloseCircle className="text-2xl" />
-      </button>
-      <h2 className="text-xl font-semibold text-cyan-950 mb-4">Detalles de Factura - {selectedBill.codigoFactura}</h2>
-      <div className="mb-4">
-        {/*  más detalles del encabezado de la factura  */}
-      </div>
-      <div>
-        {billDetails && billDetails.map((detail, index) => (
-          <div key={index} className="border-b border-black py-2">
-            <p className="text-gray-500 font-medium">Producto: {index + 1}</p>
-            <p>Producto: {detail.nombreProducto}</p>
-            <p>Cantidad: {detail.cantidad}</p>
-            <p>Precio Unitario: {detail.precio_compra}</p>
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50 transition duration-300 ease-in-out">
+          <div className="bg-gray-200 w-full max-w-lg p-6 rounded-lg shadow-xl border-2 border-white relative overflow-y-auto" style={{ maxHeight: "80vh" }}>
+            <button
+              id='btnCerrarDetalleFactura'
+              onClick={closeBillDetails}
+              className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition duration-200 ease-in-out"
+            >
+              <AiFillCloseCircle className="text-2xl" />
+            </button>
+            <h2 className="text-xl font-semibold text-cyan-950 mb-4">Detalles de Factura - {selectedBill.codigoFactura}</h2>
+            <div className="mb-4">
+              {/*  más detalles del encabezado de la factura  */}
+            </div>
+            <div>
+              {billDetails && billDetails.map((detail, index) => (
+                <div key={index} className="border-b border-black py-2">
+                  <p className="text-gray-500 font-medium">Producto: {index + 1}</p>
+                  <p>Producto: {detail.nombreProducto}</p>
+                  <p>Cantidad: {detail.cantidad}</p>
+                  <p>Precio Unitario: {detail.precio_compra}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
-)}
+        </div>
+      )}
     </div>
   );
 }

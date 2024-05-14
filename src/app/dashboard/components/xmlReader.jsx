@@ -262,6 +262,16 @@ export default function Home() {
           progress: undefined,
         });
         const productId = productResponse.data.id;
+        const factura = facturaEnviar();
+        const detallesFactura = detalleFactura();
+        const datosEnvio = {
+          factura,
+          detalles: detallesFactura,
+        };
+        const facturaResponse = await axios.post(
+          "/api/movimientos/facturas",
+          datosEnvio
+        );
         for (const producto of productos) {
           const registroInventarioData = {
             productoR_id: producto.productId, 
@@ -305,16 +315,6 @@ export default function Home() {
     }
 
     try {
-      const factura = facturaEnviar();
-      const detallesFactura = detalleFactura();
-      const datosEnvio = {
-        factura,
-        detalles: detallesFactura,
-      };
-      const facturaResponse = await axios.post(
-        "/api/movimientos/facturas",
-        datosEnvio
-      );
       if (facturaResponse.status === 200) {
        // console.log("Datos enviados correctamente");
       } else {
