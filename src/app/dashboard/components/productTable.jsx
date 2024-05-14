@@ -26,7 +26,7 @@ function ProductTable() {
   const [itemsPerPage] = useState(10);
 
   useEffect(() => {
-    axios.get("/api/providerss").then((response) => {
+    axios.get("/api/proveedores").then((response) => {
       //setProviders(response.data);
       const providersWithRenamedField = response.data.map((provider) => ({
         ...provider,
