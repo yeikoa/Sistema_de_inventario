@@ -50,7 +50,7 @@ const Dashboard = () => {
           <div className="flex items-center space-x-2">
             <FaBox className="text-blue-600 text-3xl" />
             <div>
-              <h3 className="text-xl font-bold">Total de Productos</h3>
+              <h3 className="text-xl font-bold">Total de productos</h3>
               {totalProducts !== null ? (
                 <p className="text-gray-600">{totalProducts} Productos</p>
               ) : (
@@ -90,7 +90,7 @@ const Dashboard = () => {
           <div className="flex items-center space-x-2">
             <FaRegListAlt className="text-blue-600 text-3xl" />
             <div>
-              <h3 className="text-xl font-bold">Ver Inventario</h3>
+              <h3 className="text-xl font-bold">Ver inventario</h3>
               <button
                 onClick={() => router.push("/dashboard/repuestosAlmacen")}
                 className="text-gray-600"
@@ -104,12 +104,12 @@ const Dashboard = () => {
           <div className="flex items-center space-x-2">
             <FaChartBar className="text-blue-600 text-3xl" />
             <div>
-              <h3 className="text-xl font-bold">Ver Proveedores</h3>
+              <h3 className="text-xl font-bold">Ver proveedores</h3>
               <button
                 onClick={() => router.push("/dashboard/proveedoresTotal")}
                 className="text-gray-600"
               >
-                Ver Lista
+                Ver lista
               </button>
             </div>
           </div>
@@ -118,12 +118,12 @@ const Dashboard = () => {
           <div className="flex items-center space-x-2">
             <FaChartBar className="text-blue-600 text-3xl" />
             <div>
-              <h3 className="text-xl font-bold">Historial Facturas</h3>
+              <h3 className="text-xl font-bold">Historial facturas</h3>
               <button
                 onClick={() => router.push("/dashboard/movimientos/facturas")}
                 className="text-gray-600"
               >
-                Ver Lista
+                Ver lista
               </button>
             </div>
           </div>
@@ -132,12 +132,12 @@ const Dashboard = () => {
           <div className="flex items-center space-x-2">
             <FaChartBar className="text-blue-600 text-3xl" />
             <div>
-              <h3 className="text-xl font-bold">Usuarios Registrados</h3>
+              <h3 className="text-xl font-bold">Usuarios registrados</h3>
               <button
                 onClick={() => router.push("/dashboard/usuarios")}
                 className="text-gray-600"
               >
-                Ver Lista
+                Ver lista
               </button>
             </div>
           </div>
