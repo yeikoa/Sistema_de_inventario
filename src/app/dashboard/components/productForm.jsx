@@ -155,7 +155,7 @@ export function ProductForm() {
   }, [products.productPrice, products.utilidadP_id, products.ivaP_id]);
 
   return (
-    <div className="bg-white min-h-screen p-8">
+    <div className="bg-gray-200 min-h-screen p-8">
       <div className="mx-auto p-6 bg-cyan-950 text-white rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold mb-4">
           Registrar Nuevo Producto

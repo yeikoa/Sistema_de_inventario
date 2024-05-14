@@ -16,9 +16,9 @@ export default function DashboardLayout({ children }) {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <div className="flex flex-col h-screen bg-gray-200">
       <Navbar />
-      <div className="flex bg-white">
+      <div className="flex bg-gray-200">
         <div className={`fixed top-0 left-0 h-screen w-10 ${isSidebarOpen ? 'ml-0' : '-ml-64'}`} style={{ transition: 'margin-left 0.3s' }}>
           {isSidebarOpen && <Navsidebar />}
         </div>
