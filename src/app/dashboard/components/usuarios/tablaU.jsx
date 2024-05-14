@@ -64,11 +64,11 @@ export function UsersTable({ users, onDeleteUser }) {
   };
 
   return (
-    <div className="w-full px-4 py-5 bg-white shadow rounded-lg">
+    <div className="w-full px-4 py-5 bg-gray-200 shadow rounded-lg">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">
         Lista de Usuarios
       </h2>
-      <table className="w-full text-left bg-white border border-cyan-900">
+      <table className="w-full text-left bg-gray-200 border border-cyan-900">
         <thead className="bg-cyan-900 text-white">
           <tr className="text-white uppercase text-sm leading-normal">
             <th className="py-3 px-6">Nombre de Usuario</th>

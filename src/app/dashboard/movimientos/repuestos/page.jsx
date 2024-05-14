@@ -56,8 +56,8 @@ export default function ProductsMovements() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="mb-4 mt-8 flex border border-gray-300 rounded-md px-4 py-2">
+    <div className="max-w-7xl mx-auto px-4 bg-gray-200">
+      <div className="mb-4 mt-8 flex border border-gray-300 bg-white rounded-md px-4 py-2">
         <AiOutlineSearch className="h-5 w-5 text-gray-500 mr-2" />
         <input
           type="text"
@@ -69,13 +69,13 @@ export default function ProductsMovements() {
       </div>
 
       <div className="overflow-x-auto shadow-lg rounded-lg">
-        <table className="w-full text-left bg-slate-200 rounded-lg">
+        <table className="w-full text-left border border-cyan-900 bg-slate-200 rounded-lg">
           <thead className="text-xs font-semibold uppercase text-white bg-cyan-950">
             <tr>
-              <th className="px-6 py-3">Fecha y Hora</th>
-              <th className="px-6 py-3">Nombre</th>
-              <th className="px-6 py-3">Cantidad</th>
-              <th className="px-6 py-3">Tipo de Operación</th>
+              <th className="px-2 py-3">Fecha y Hora</th>
+              <th className="px-2 py-3">Nombre</th>
+              <th className="px-2 py-3">Cantidad</th>
+              <th className="px-2 py-3">Tipo de Operación</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-black">
@@ -91,10 +91,10 @@ export default function ProductsMovements() {
               })
               .map((movement, index) => (
                 <tr key={index} className="hover:bg-gray-500">
-                  <td className="px-6 py-4 text-black">{formatDateTime(movement.fecha)}</td>
-                  <td className="px-6 py-4 text-black">{movement.nombre}</td>
-                  <td className="px-6 py-4 text-black">{movement.cantidad}</td>
-                  <td className="px-6 py-4 flex items-center">
+                  <td className="px-2 py-2 text-black">{formatDateTime(movement.fecha)}</td>
+                  <td className="px-2 py-2 text-black">{movement.nombre}</td>
+                  <td className="px-2 py-2 text-black">{movement.cantidad}</td>
+                  <td className="px-2 py-2 flex items-center">
                     {getOperationIcon(movement.tipo_operacion)}
                     <span className="font-medium text-sm text-black">{movement.tipo_operacion}</span>
                   </td>

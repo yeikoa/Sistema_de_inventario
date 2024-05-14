@@ -103,7 +103,7 @@ function Tax() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center">
+    <div className="min-h-screen bg-gray-200 flex items-center justify-center">
       <div className="max-w-4xl w-full p-5 bg-cyan-950 rounded-lg shadow-xl">
         <h1 className="text-3xl font-bold text-center text-gray-200 mb-8">Administrador de Impuestos</h1>
 

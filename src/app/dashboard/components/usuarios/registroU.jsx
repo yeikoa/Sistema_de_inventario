@@ -30,7 +30,7 @@ export function UserRegistrationForm({onAddUser }) {
   };
 
   return (
-    <div className="w-full px-4 py-5 bg-white shadow rounded-lg">
+    <div className="w-full px-4 py-5 bg-gray-200 shadow rounded-lg">
       
         <h2 className="text-2xl font-semibold text-gray-800">
           Registrar nuevo usuario

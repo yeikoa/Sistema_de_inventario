@@ -231,12 +231,12 @@ function ProductTable() {
   }, [searchTerm, filterBy]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-200">
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-semibold mb-4 text-cyan-900">
           Inventario
         </h1>
-        <div className="mb-4 flex space-x-4">
+        <div className=" mb-4 flex space-x-4">
           <input
             type="text"
             placeholder="Buscar..."

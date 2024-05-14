@@ -192,8 +192,8 @@ export default function Provider() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4">
-      <div className="mb-4 mt-8 flex border border-gray-300 rounded-md px-4 py-2">
+    <div className="max-w-7xl mx-auto px-4 bg-gray-200">
+      <div className="mb-4 mt-8 flex border border-gray-300 bg-white rounded-md px-4 py-2">
         <AiOutlineSearch className="h-5 w-5 text-gray-500 mr-2" />
         <input
           id="search-provider"
