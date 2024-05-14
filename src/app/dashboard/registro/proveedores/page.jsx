@@ -123,7 +123,7 @@ export default function FormularioProveedor() {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full md:w-3/4 lg:w-2/3 xl:w-1/2">
+      <div className="bg-gray-200 p-8 rounded-lg shadow-md w-full md:w-3/4 lg:w-2/3 xl:w-1/2">
         <ToastContainer />
         <div className="mx-auto p-6 bg-cyan-950 text-white rounded-lg shadow-md">
           <h1 className="text-3xl font-semibold mb-8">

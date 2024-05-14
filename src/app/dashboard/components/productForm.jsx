@@ -164,8 +164,8 @@ export function ProductForm() {
 
 
   return (
-    <div className="bg-white min-h-screen flex items-center justify-center">
-      <div className="p-8 max-w-xl w-full bg-cyan-950 text-white rounded-lg shadow-md">
+    <div className="bg-gray-200 min-h-screen flex items-center justify-center">
+      <div className="p-8 max-w-3xl w-full bg-cyan-950 text-white rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold mb-4 text-center">
           Registrar nuevo producto
         </h1>
@@ -241,9 +241,6 @@ export function ProductForm() {
                 onChange={handleChanges}
               />
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
                 htmlFor="precioCompra"
@@ -262,6 +259,9 @@ export function ProductForm() {
                 onChange={handleChanges}
               />
             </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
                 htmlFor="utilidadP_id"
@@ -285,9 +285,6 @@ export function ProductForm() {
                 ))}
               </select>
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
             <div>
               <label
                 htmlFor="ivaP_id"
@@ -311,6 +308,9 @@ export function ProductForm() {
                 ))}
               </select>
             </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
             <div>
               <label
                 htmlFor="precioVenta"
@@ -328,9 +328,6 @@ export function ProductForm() {
                 readOnly
               />
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
                 htmlFor="proveedorP_id"
@@ -357,6 +354,9 @@ export function ProductForm() {
                 ))}
               </select>
             </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
                 htmlFor="categoriaP_id"
@@ -383,15 +383,16 @@ export function ProductForm() {
                 ))}
               </select>
             </div>
+            <div>
+                <button
+                type="submit"
+                className="w-full bg-gray-800 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center justify-center mt-7"
+              >
+                <FaSave className="mr-2" />
+                Registrar producto
+              </button>
+            </div>
           </div>
-
-          <button
-            type="submit"
-            className="w-full bg-gray-800 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center justify-center"
-          >
-            <FaSave className="mr-2" />
-            Registrar producto
-          </button>
         </form>
         <ToastContainer />
       </div>
