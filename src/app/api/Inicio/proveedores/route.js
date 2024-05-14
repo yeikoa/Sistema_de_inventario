@@ -12,7 +12,6 @@ export async function GET() {
 
     return NextResponse.json(results);
   } catch (error) {
-    //console.log(error);
     return NextResponse.json(
       {
         message: error.message,
@@ -20,6 +19,37 @@ export async function GET() {
       {
         status: 500,
       }
+    );
+  }
+}
+export async function POST(request) {
+  try {
+    const requestData = await request.json();
+    const { nombre, vendedor, telefono, email, direccion } = requestData;
+
+    const sql = "INSERT INTO Proveedores SET ? ";
+
+    const result = await conn.query(sql, {
+      nombre,
+      vendedor,
+      telefono,
+      email,
+      direccion,
+    });
+
+    return NextResponse.json({
+      success: true,
+      nombre,
+      vendedor,
+      telefono,
+      email,
+      direccion,
+      proveedor_id: result.insertId,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Error al registrar el proveedor: " + error.message },
+      { status: 500 }
     );
   }
 }

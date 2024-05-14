@@ -95,7 +95,7 @@ export default function BillsMovements() {
       <div>
         {billDetails && billDetails.map((detail, index) => (
           <div key={index} className="border-b border-black py-2">
-            <p className="text-gray-500 font-medium">Detalle {index + 1}</p>
+            <p className="text-gray-500 font-medium">Producto: {index + 1}</p>
             <p>Producto: {detail.nombreProducto}</p>
             <p>Cantidad: {detail.cantidad}</p>
             <p>Precio Unitario: {detail.precio_compra}</p>
