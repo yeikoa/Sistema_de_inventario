@@ -73,7 +73,7 @@ export function LoginPage() {
         <div className="w-full md:w-1/2 p-12 bg-gray-300 shadow-md">
           <div className="flex items-center justify-center mb-6">
             <h1 className="text-3xl font-semibold text-cyan-900">
-              Iniciar Sesión
+              Iniciar sesión
             </h1>
           </div>
           <form className="space-y-4">
@@ -145,7 +145,7 @@ export function LoginPage() {
                 className="text-cyan-900"
                 onClick={handleShowRecoverPass}
               >
-                ¿Recuperar Cuenta?
+                ¿Recuperar cuenta?
               </a>
             </p>
           </div>

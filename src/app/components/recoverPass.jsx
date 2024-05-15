@@ -71,7 +71,7 @@ export function RecoverPass() {
         <form className="space-y-4">
           <div className="mb-4 transition-transform duration-300 transform hover:-translate-y-1">
             <label className="block text-cyan-900 ml-8">
-              Correo Electrónico
+              Correo electrónico
             </label>
             <div className="flex items-center">
               <span className="mr-4 text-black-400">

@@ -14,8 +14,8 @@ export function ChangePass() {
   const [verificationCode, setVerificationCode] = useState(localStorage.getItem('verificationCode') || '');
   const [enteredCode, setEnteredCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  console.log("Email:", email);
-  console.log("Verification Code:", verificationCode);
+ // console.log("Email:", email);
+  //console.log("Verification Code:", verificationCode);
 
   const handlePassChange = async () => {
     if (enteredCode !== verificationCode) {
@@ -84,7 +84,7 @@ export function ChangePass() {
             </div>
           </div>
           <div className="mb-4 transition-transform duration-300 transform hover:-translate-y-1">
-            <label className="block text-cyan-900 ml-8">Nueva Contraseña</label>
+            <label className="block text-cyan-900 ml-8">Nueva contraseña</label>
             <div className="flex items-center">
               <span className="mr-4 text-black-400">
                 <FaLock />

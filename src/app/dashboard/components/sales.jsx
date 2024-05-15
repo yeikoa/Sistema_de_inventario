@@ -145,7 +145,7 @@ export default function Sales() {
       <ToastContainer />
       <div className="flex-1">
         <h1 className="text-xl font-semibold text-gray-800 mb-4 mt-10">
-          Registrar Venta
+          Registrar venta
         </h1>
         <form onSubmit={agregarVenta} className="space-y-3">
           <div>
@@ -253,7 +253,7 @@ export default function Sales() {
               {/* Fila para mostrar el total de salidas */}
               <tr>
                 <td className="px-6 py-2 whitespace-nowrap text-sm text-black border-b border-cyan-900">
-                  Precio total de salida de productos
+                  Tota:
                 </td>
                 <td colSpan="3" className="px-6 py-2 whitespace-nowrap text-right text-sm text-black border-b border-cyan-900">
                   {/* Suma total de los precios de los productos seleccionados */}
