@@ -354,6 +354,7 @@ export default function Home() {
             onChange={handleFileChange}
             className="hidden"
             id="fileInput"
+            accept=".xml"
           />
           {fileName && <p className="mt-2">Archivo cargado: {fileName}</p>}
         </div>

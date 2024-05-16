@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { AiOutlineSearch, AiFillCloseCircle } from 'react-icons/ai';
 import { FcFinePrint } from "react-icons/fc";
@@ -21,6 +21,34 @@ export default function BillsMovements() {
       });
   }, []);
 
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        closeBillDetails();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [wrapperRef]);
+
+  const handleEscape = (event) => {
+    if (event.keyCode === 27) {
+      closeBillDetails();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
   const openBillDetails = (bill) => {
     setSelectedBill(bill);
     axios.get(`/api/movimientos/detalle/${bill.factura_id}`)
@@ -37,20 +65,19 @@ export default function BillsMovements() {
     setBillDetails(null);
   };
 
-// Función para formatear la fecha
-const formatDate = (dateTime) => {
-  if (!dateTime) return ''; // Devuelve una cadena vacía si la fecha no está definida
-  const dateObj = new Date(dateTime);
-  const formattedDate = dateObj.toLocaleDateString('es-CR', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  });
-  return formattedDate;
-};
+  const formatDate = (dateTime) => {
+    if (!dateTime) return ''; 
+    const dateObj = new Date(dateTime);
+    const formattedDate = dateObj.toLocaleDateString('es-CR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+    return formattedDate;
+  };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 bg-gray-200">
+    <div className="max-w-7xl mx-auto px-4 bg-gray-200" ref={wrapperRef}>
       <div className="mb-4 mt-8 flex border border-gray-300 bg-white rounded-md px-4 py-2">
         <AiOutlineSearch className="h-5 w-5 text-gray-500 mr-2" />
         <input
