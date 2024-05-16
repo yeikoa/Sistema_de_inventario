@@ -87,7 +87,7 @@ export default function FormularioProveedor() {
           email: "",
           direccion: "",
         });
-      } else {
+      
         const providerId = respuesta.data.id;
         const registroProveedorData = {
           proveedor_id: providerId,
@@ -103,16 +103,6 @@ export default function FormularioProveedor() {
           "/api/movimientos/proveedores",
           registroProveedorData
         );
-        if (registroResponse.data.success) {
-          toast.success("El Proveedor se a registrado con éxito");
-          setProveedor({
-            nombre: "",
-            vendedor: "",
-            telefono: "",
-            email: "",
-            direccion: "",
-          });
-        }
       }
     } catch (error) {
       toast.error(
