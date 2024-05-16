@@ -94,6 +94,10 @@ export default function Sales() {
         cantidad: v.cantidad,
       }));
       const productResponse = await axios.put("/api/salidas", ventasParaEnviar);
+      if (ventasParaEnviar.length === 0) {
+        toast.error("No hay productos para enviar");
+        return;
+      }
       if (productResponse.status === 200) {
         toast.success("Datos enviados correctamente");
         setVentas([]);
@@ -253,7 +257,7 @@ export default function Sales() {
               {/* Fila para mostrar el total de salidas */}
               <tr>
                 <td className="px-6 py-2 whitespace-nowrap text-sm text-black border-b border-cyan-900">
-                  Tota:
+                  Total:
                 </td>
                 <td colSpan="3" className="px-6 py-2 whitespace-nowrap text-right text-sm text-black border-b border-cyan-900">
                   {/* Suma total de los precios de los productos seleccionados */}

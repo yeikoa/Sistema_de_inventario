@@ -102,6 +102,7 @@ export function ProductForm() {
             categoriaP_id: "",
             ivaP_id: "",
             utilidadP_id: "",
+            precioCompra: "",
           });
           toast.success("Producto registrado con éxito");
         } else {

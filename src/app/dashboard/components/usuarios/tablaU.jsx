@@ -74,7 +74,7 @@ export function UsersTable({ users, onDeleteUser }) {
             <th className="py-3 px-6">Nombre de Usuario</th>
             <th className="py-3 px-6">Nombre Completo</th>
             <th className="py-3 px-6">Correo Electrónico</th>
-            <th className="py-3 px-6">Estado</th>
+          
             <th className="py-3 px-6">Acciones</th>
           </tr>
         </thead>
@@ -120,20 +120,7 @@ export function UsersTable({ users, onDeleteUser }) {
                   user.email
                 )}
               </td>
-              <td className="py-3 px-6 border-b border-cyan-900 text-sm">
-                {editUserId === user.usuario_id ? (
-                  <select
-                    value={editedUser.estado}
-                    onChange={(e) => handleInputChange(e, "estado")}
-                    className="border-2 border-gray-300 p-2 rounded-lg"
-                  >
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
-                  </select>
-                ) : (
-                  user.estado
-                )}
-              </td>
+        
               <td className="py-3 px-6 border-b border-cyan-900 items-center  ">
                 {editUserId === user.usuario_id ? (
                   <>
