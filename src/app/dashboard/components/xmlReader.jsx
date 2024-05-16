@@ -439,7 +439,7 @@ export default function Home() {
           <label htmlFor="total" className="block font-medium">
             Total:
           </label>
-          <span className="p-1 bg-gray-200">₡</span>
+          <span className="p-1 bg-gray-200"></span>
           <input
             readOnly
             type="number"
