@@ -76,7 +76,7 @@ const formatDate = (dateTime) => {
           <div key={index} className="border border-white bg-cyan-950  hover:bg-cyan-800 p-4 rounded-md shadow-md w-full">
             <h2 className="text-lg font-semibold text-white">{movement.codigoFactura}</h2>
             <p className="text-gray-200 mt-2">Proveedor: {movement.proveedor_nombre}</p>
-            <p className="text-gray-200">Precio: {movement.total} </p>
+            <p className="text-gray-200">Precio: ₡{movement.total} </p>
             <p className="text-gray-200">Fecha: {formatDate(movement.fecha)}</p>
             <button
               id='btnDetalleFactura'
@@ -109,7 +109,7 @@ const formatDate = (dateTime) => {
                   <p className="text-gray-500 font-medium">Producto: {index + 1}</p>
                   <p>Producto: {detail.nombreProducto}</p>
                   <p>Cantidad: {detail.cantidad}</p>
-                  <p>Precio Unitario: {detail.precio_compra}</p>
+                  <p>Precio Unitario: ₡{detail.precio_compra}</p>
                 </div>
               ))}
             </div>
